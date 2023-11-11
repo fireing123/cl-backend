@@ -20,6 +20,28 @@ export default function KakaoLogin() {
   );
 }
 
+async function SignUpCheck() {
+
+  await signIn(undefined, { callbackUrl: "/signup" })
+
+  const { data: session, status } = useSession();
+  
+  const email = session?.user?.email
+
+  const { has } : any = await fetch("/api/users", {
+    method: "GET",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: email
+    })
+  })
+
+  if (has) {
+    signOut({ callbackUrl: "/" })
+  }
+
+}
+
 async function LogInCheck(type: string) {
   
   signIn(type, { callbackUrl: "/" })

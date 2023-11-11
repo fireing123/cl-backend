@@ -15,6 +15,8 @@ export default function SignUp() {
 
     const email = session?.user?.email
 
+
+    
     const [name, setName] = useState('');
     const [nickname, setNickname] = useState('');
 

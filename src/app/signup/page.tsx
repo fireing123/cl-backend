@@ -20,7 +20,6 @@ export default function SignUp() {
 
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault()
-        console.log(name, email, nickname)
         try {
             const body = { name, nickname, email }
             const result = await fetch(`/api/users/signup`, {
@@ -28,8 +27,14 @@ export default function SignUp() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)
             })
-            console.log(await result.json())
-            router.push('/mypage')
+            const { type } = result
+            if (type) {
+                router.push('/mypage')
+            } else {
+                router.push('/login')
+            }
+
+            
         } catch (error) {
             console.error(error)
         }

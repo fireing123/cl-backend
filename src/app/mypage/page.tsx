@@ -50,6 +50,7 @@ export default function MyPage() {
     } else {
         return (
             <div>
+                <button onClick={() => signOut()}>로그 아웃</button>
                 당신은 계정을 생성하지 않았습니다
             </div>
         )

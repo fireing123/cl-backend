@@ -47,5 +47,11 @@ export default function MyPage() {
                 </div>
             </div>
         )
+    } else {
+        return (
+            <div>
+                당신은 계정을 생성하지 않았습니다
+            </div>
+        )
     }
 }

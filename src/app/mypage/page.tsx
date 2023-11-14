@@ -35,7 +35,7 @@ export default function MyPage() {
         const user = await value.json()
         setUser(user)
     })
-    if (user.has) {
+    if (user?.has) {
         return (
             <div>마이 페이지
                 <button onClick={() => signOut()}>로그 아웃</button>

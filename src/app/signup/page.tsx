@@ -15,8 +15,6 @@ export default function SignUp() {
 
     const email = session?.user?.email
 
-
-    
     const [name, setName] = useState('');
     const [nickname, setNickname] = useState('');
 
@@ -24,7 +22,7 @@ export default function SignUp() {
         e.preventDefault()
         try {
             const body = { name, nickname, email }
-            const result = await fetch(`/api/users/signup`, {
+            const result = await fetch(`/api/users`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)

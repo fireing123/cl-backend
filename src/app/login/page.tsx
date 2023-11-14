@@ -3,7 +3,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import { KakaoBtn } from "@/styles/AuthStyle";
 
-export default function KakaoLogin() {
+export default function Login() {
   return (
     <div className="loginbar">
       <KakaoBtn onClick={() => LogInCheck("kakao")}>
@@ -17,29 +17,7 @@ export default function KakaoLogin() {
       </KakaoBtn>
       <button onClick={() => signIn(undefined, { callbackUrl: "/signup" })}>Sign Up</button>
     </div>
-  );
-}
-
-async function SignUpCheck() {
-
-  await signIn(undefined, { callbackUrl: "/signup" })
-
-  const { data: session, status } = useSession();
-  
-  const email = session?.user?.email
-
-  const { has } : any = await fetch("/api/users", {
-    method: "GET",
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: email
-    })
-  })
-
-  if (has) {
-    signOut({ callbackUrl: "/" })
-  }
-
+   );
 }
 
 async function LogInCheck(type: string) {

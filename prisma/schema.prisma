@@ -13,5 +13,28 @@ model User {
   nickname  String
   name      String
   rank      String  @default("person")
+  postsId   String[]
+  profilePic String?
+  posts     String[]
 }
 
+model Post {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  date      DateTime
+  published Boolean @default(false)
+  authorId  String
+  content   String
+}
+
+model Suggestion {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  image     String
+  url       String
+}
+
+model YoutubeSuggestion {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  url       String
+}

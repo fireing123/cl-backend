@@ -46,8 +46,12 @@ export async function GET(req: NextRequest) {
             has: true,
             id: user?.id,
             email: user?.email,
+            nickname: user?.nickname,
             name: user?.name,
-            nickname: user?.nickname
+            rank: user.rank,
+            image: user.profilePic,
+            posts: user.posts
         })
     }
 }
+

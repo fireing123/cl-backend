@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-    const { email } : any = req.body;
+    const { email } : any = await req.json();
     const user = await prisma.user.findFirst({
         where: {
             email: email

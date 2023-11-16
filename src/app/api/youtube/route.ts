@@ -1,16 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(req: NextRequest) {
-    const { id }: any = await req.json();
-    const youtubes = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?
-    part=snippet&
-    maxResults=50&
-    status=&
-    playlistId=${id}&
-    key=${process.env.YOUTUBE_API_KEY}
-    `).then(async value => {
-        const { items } = await value.json()
-        return items
+    const youtubes = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&status=&playlistId=${process.env.YOUTUBE_PLAYLIST_ID}&key=${process.env.YOUTUBE_API_KEY}`).then(async value => {
+        return await value.json()
     })
-    return NextResponse.json(youtubes)
+    return NextResponse.json({ list: youtubes })
 }

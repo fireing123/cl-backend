@@ -18,21 +18,27 @@ export default function AvatarUploadPage() {
           if (!inputFileRef.current?.files) {
             throw new Error("No file selected");
           }
-
+          
           const file = inputFileRef.current.files[0];
 
-          const response = await fetch(
-            `/api/file?filename=${file.name}`,
-            {
-              method: 'POST',
-              body: file,
-            },
-          );
-          setReal(response.status)
-            
-          const newBlob = (await response.json()) as PutBlobResult;
+          if (file.name.endsWith(".mdx")) {
+            const response = await fetch(
+              `/api/file?filename=${file.name}`,
+              {
+                method: 'POST',
+                body: file,
+              },
+            );
+            setReal(response.status)
+              
+            const newBlob = (await response.json()) as PutBlobResult;
+  
+            setBlob(newBlob);
 
-          setBlob(newBlob);
+              
+
+
+          }
         }}
       >
         <input name="file" ref={inputFileRef} type="file" required />

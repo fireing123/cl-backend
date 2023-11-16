@@ -22,3 +22,22 @@
 .linkitem {
   height: 20px;
 }
+
+.Youtube {
+  background-color: transparent;
+  border: solid 1px var(--border-color);
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.Youtube:focus,
+.Youtube:hover {
+  cursor: pointer;
+  background-color: var(--border-color);
+  color: white;
+}
+
+.Youtube.brand {
+  border: solid 1px var(--border-color);
+  color: var(--border-color);
+}

@@ -1,12 +1,10 @@
 import NextAuth from "next-auth";
+import type { NextAuthOptions } from "next-auth";
 import KakaoProvider from "next-auth/providers/kakao";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
-import { config } from "dotenv";
 
-config();
-
-const handler = NextAuth({
+export const authOptions : NextAuthOptions = {
   providers: [
     KakaoProvider({
       clientId: process.env.KAKAO_CLIENT_ID!,
@@ -21,6 +19,8 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!
     })
   ]
-});
+}
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

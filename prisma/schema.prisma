@@ -21,7 +21,7 @@ model User {
 model Post {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   name      String
-  date      DateTime
+  date      String
   published Boolean @default(false)
   authorId  String
   content   String
@@ -31,10 +31,5 @@ model Suggestion {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   image     String
-  url       String
-}
-
-model YoutubeSuggestion {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
   url       String
 }

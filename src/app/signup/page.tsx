@@ -5,23 +5,14 @@ import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function SignUp() {
 
-    const { data: session, status } = useSession();
-
-    const router = useRouter();
-
-    if (!session && status !== "loading") {
-      router.push("/")
-    }
-
-    const email = session?.user?.email
-
+    const router = useRouter()
     const [name, setName] = useState('');
     const [nickname, setNickname] = useState('');
 
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault()
         try {
-            const body = { name, nickname, email }
+            const body = { name, nickname }
             const result = await fetch(`/api/users`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

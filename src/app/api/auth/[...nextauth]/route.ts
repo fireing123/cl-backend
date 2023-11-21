@@ -1,8 +1,11 @@
-import NextAuth from "next-auth";
+import NextAuth, { getServerSession } from "next-auth";
 import type { NextAuthOptions } from "next-auth";
 import KakaoProvider from "next-auth/providers/kakao";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import prisma from "@/lib/prisma";
+
 
 export const authOptions : NextAuthOptions = {
   providers: [
@@ -20,6 +23,8 @@ export const authOptions : NextAuthOptions = {
     })
   ]
 }
+
+export const getAuthSession = () => getServerSession(authOptions);
 
 const handler = NextAuth(authOptions);
 

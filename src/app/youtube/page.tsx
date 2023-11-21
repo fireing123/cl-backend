@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default async function YoutubeList() {
-    const list = await fetch(`/api/youtube`)
+    const list = await fetch(`${process.env.NEXTAUTH_URL}/api/youtube`)
         .then(async value => {
             const list = await value.json()
             return list.list.items

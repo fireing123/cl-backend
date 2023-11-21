@@ -1,10 +1,10 @@
 import { MDXRemote } from "next-mdx-remote/rsc"
 
-export default async function Modify({ params } : { params: { id: string } }) {
+export default async function Modify({ params }: { params: {id: string} }) {
 
-    const res = await fetch(`/api/post/${params.id}`)
+    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/post?id=${params.id}`)
     const { type, name, date, authorId, content } = await res.json()
-    if (!type) {
+    if (type) {
         return <div>공개되지않음</div>
     }
     const mdRes = await fetch(content)
@@ -12,7 +12,7 @@ export default async function Modify({ params } : { params: { id: string } }) {
     
     return (
         <div>
-            <div>{name}</div>
+            <h1>Name : {name}</h1>
             <div>{date}</div>
             <MDXRemote source={md} />
         </div>

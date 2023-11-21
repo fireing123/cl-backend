@@ -4,32 +4,29 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
 }
 
 model User {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  email     String  @unique
-  nickname  String
-  name      String
-  rank      String  @default("person")
-  postsId   String[]
-  profilePic String?
-  posts     String[]
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  email String @unique
+  rank  String @default("person")
+  comments  Comment[] 
+  posts Post[]
+}
+
+model Comment {
+  id  String  @id @default(auto()) @map("_id") @db.ObjectId
+  text  String
+  date DateTime @default(now())
+  userId String @db.ObjectId
+  user  User @relation(fields: [userId], references: [id])
 }
 
 model Post {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  date      String
-  published Boolean @default(false)
-  authorId  String
-  content   String
-}
-
-model Suggestion {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  image     String
-  url       String
+  id  String  @id @default(auto()) @map("_id") @db.ObjectId
+  url String
+  date DateTime @default(now())
+  userId String @db.ObjectId
+  user User @relation(fields: [userId], references: [id])
 }

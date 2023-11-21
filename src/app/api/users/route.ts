@@ -31,10 +31,11 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-    const { email } : any = await req.json();
+    const { searchParams } = new URL(req.url);
+    const email = searchParams.get('email');  
     const user = await prisma.user.findFirst({
         where: {
-            email: email
+            email: email!
         }
     })
     if (!user) {

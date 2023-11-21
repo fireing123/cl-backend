@@ -2,20 +2,21 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import { KakaoBtn } from "@/styles/AuthStyle";
+import Link from "next/link";
 
 export default function Login() {
   return (
     <div className="loginbar">
-      <KakaoBtn onClick={() => LogInCheck("kakao")}>
+      <KakaoBtn onClick={() => LogInCheck("github")}>
         <Image
           src="/images/kakao_logo.png"
           alt="kakao-login"
           width={20}
           height={20}
         />
-        <a>카카오 로그인</a>
+        <a>임시 깃호부 로그인</a>
       </KakaoBtn>
-      <button onClick={() => signIn(undefined, { callbackUrl: "/signup" })}>Sign Up</button>
+      <Link href="/signup">Sign Up</Link>
     </div>
    );
 }

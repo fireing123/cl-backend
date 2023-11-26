@@ -9,7 +9,6 @@ export default function AvatarUploadPage() {
   const { data: session, status } = useSession();
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [blob, setBlob] = useState<PutBlobResult | null>(null);
-  const [real, setReal] = useState(0);
   
   if (status === "loading") {
     return (
@@ -18,7 +17,7 @@ export default function AvatarUploadPage() {
   }
   return (
     <>
-      <h1>Upload Your Avatar</h1>
+      <h1>Upload Your Post</h1>
 
       <form
         onSubmit={async (event) => {
@@ -41,12 +40,12 @@ export default function AvatarUploadPage() {
             const newBlob = (await response.json()) as PutBlobResult;
   
             setBlob(newBlob);
-            console.log(blob?.url)
+
             const res = await fetch(`/api/post`, {
               method: "POST",
               body: JSON.stringify({
-                fileurl: blob?.url,
-                name: file.name.replace(".mdx", ""),
+                fileurl: newBlob.url,
+                title: file.name.replace(".mdx", ""),
                 pubished: true
               })
             }).then(async res => {
@@ -65,7 +64,7 @@ export default function AvatarUploadPage() {
           Blob url: <a href={blob.url}>{blob.url}</a>
         </div>
       )}
-      {real}
+
     </>
   );
 }

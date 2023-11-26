@@ -1,27 +1,29 @@
+"use client"
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export default async function YoutubeList() {
-    const list = await fetch(`${process.env.NEXTAUTH_URL}/api/youtube`)
+export default function YoutubeList() {
+    const [list, setList] = useState([]);
+    useEffect(()=> {
+        fetch(`/api/youtube`)
         .then(async value => {
             const list = await value.json()
-            return list.list.items
-            
+            setList(list)
         })
+    }, [])
     return (
         <ul>
             {list.map((value: any, i: any) => {
-                const title = value.snippet.title
-                const image = value.snippet.thumbnails.default
-                const id = value.snippet.resourceId.videoId;
+
                 return (
                     <div key={i}>
                         <div className="description">
-                            <h2>{title}</h2>
-                            <Link className="Youtube brand" href={`https://www.youtube.com/watch?v=${id}`}>들어가</Link>
+                            <h2>{value.title}</h2>
+                            <Link className="Youtube brand" href={`https://www.youtube.com/watch?v=${value.id}`}>들어가기</Link>
                         </div>
                         <div className="thumbnail">
-                            <Image src={image.url} width={image.width} height={image.height} alt="youtube"/>
+                            <Image src={value.image} width={120} height={90} alt="youtube"/>
                         </div>
                     </div>
                 )

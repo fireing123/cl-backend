@@ -3,8 +3,7 @@ import type { NextAuthOptions } from "next-auth";
 import KakaoProvider from "next-auth/providers/kakao";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import prisma from "@/lib/prisma";
+import { getUser } from "@/lib/prisma";
 
 
 export const authOptions : NextAuthOptions = {
@@ -21,7 +20,8 @@ export const authOptions : NextAuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!
     })
-  ]
+  ],
+  session: { strategy: "jwt" }
 }
 
 export const getAuthSession = () => getServerSession(authOptions);

@@ -18,6 +18,12 @@ const nextConfig = {
         hostname: 'bzblbjctcnn3zidp.public.blob.vercel-storage.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },

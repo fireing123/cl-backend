@@ -4,7 +4,7 @@ import { authOptions } from "../auth/[...nextauth]/route"
 import { getServerSession } from "next-auth"
 
 export async function POST(req: Request) {
-    const { fileurl, name, pubished } = await req.json()
+    const { fileurl, title, pubished } = await req.json()
     const session = await getServerSession(authOptions)
     
     if (!session) {
@@ -15,33 +15,28 @@ export async function POST(req: Request) {
     } else {
         const email = session.user?.email
         if (email) {
-            const user = await prisma.user.findFirst({
+            const user : any = await prisma.user.findFirst({
                 where: {
                     email: email
                 }
             })
 
-            const date = new Date()
-            const stringDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
-
-            console.log(fileurl, name, pubished)
+            console.log(fileurl, title, pubished)
 
             const value = await prisma.post.create({
                 data: {
-                    name,
-                    date: stringDate,
-                    published: pubished,
-                    authorId: user?.id!,
-                    content: fileurl
+                    title: title,
+                    url: fileurl,
+                    userId: user.id
                 }
             })
-
+            const newPosts : any = [...user?.posts!, value.id]
             await prisma.user.update({
                 where: {
-                    email: user?.email
+                    email: email
                 },
                 data: {
-                    posts: [...user?.posts!, value.id]
+                    posts: newPosts
                 }
             })
             return NextResponse.json({ type: true,
@@ -62,11 +57,8 @@ export async function GET(req: NextRequest) {
         }
     })
     return NextResponse.json({
-        id: post?.id,
-        name: post?.name,
-        date: post?.date,
-        content: post?.content,
-        published: post?.published,
-        authorId: post?.authorId
+        title: post?.title,
+        url: post?.url,
+        date: post?.date
     })
 }

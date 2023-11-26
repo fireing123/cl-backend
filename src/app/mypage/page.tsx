@@ -1,6 +1,6 @@
 "use client"; // 필수!
 import { User } from "@/types/types";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -23,6 +23,7 @@ export default function MyPage() {
   return (
     <div>
       <h1>내 정보 보기</h1>
+      <button onClick={() => {signOut()}}>로그아웃</button>
       <button onClick={() => {findUser(session?.user?.email!)}}>확인하기</button>
       {user && 
       <div>

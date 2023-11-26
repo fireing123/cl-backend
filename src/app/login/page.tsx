@@ -16,6 +16,7 @@ export default function Login() {
         />
         <a>임시 깃호부 로그인</a>
       </KakaoBtn>
+      <button onClick={() => signIn()} >로그인</button>
       <Link href="/signup">Sign Up</Link>
     </div>
    );

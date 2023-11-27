@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function Login() {
   return (
     <div className="loginbar">
-      <KakaoBtn onClick={() => LogInCheck("github")}>
+      <KakaoBtn onClick={() => signIn("github", { callbackUrl: "/" })}>
         <Image
           src="/images/kakao_logo.png"
           alt="kakao-login"
@@ -16,7 +16,7 @@ export default function Login() {
         />
         <a>임시 깃호부 로그인</a>
       </KakaoBtn>
-      <KakaoBtn onClick={() => LogInCheck("google")}>
+      <KakaoBtn onClick={() => signIn("google", { callbackUrl: "/" })}>
         <Image
           src="/images/kakao_logo.png"
           alt="kakao-login"
@@ -29,25 +29,4 @@ export default function Login() {
       <Link href="/signup">Sign Up</Link>
     </div>
    );
-}
-
-async function LogInCheck(type: string) {
-  
-  signIn(type, { callbackUrl: "/" })
-
-  const { data: session, status } = useSession();
-  
-  const email = session?.user?.email
-
-  const { has } : any = await fetch(`/api/users?email=${email}`, {
-    method: "GET"})
-  if (!has) {
-    fetch(`/api/users`, {
-      method: "POST",
-      headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: email
-    })
-    })
-  }
 }

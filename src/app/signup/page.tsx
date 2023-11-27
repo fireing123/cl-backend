@@ -8,49 +8,31 @@ export default function SignUp() {
     const router = useRouter()
     const [name, setName] = useState('');
     const [nickname, setNickname] = useState('');
+    const { data: session, status } = useSession();
+    const email = session?.user?.email
 
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault()
-        try {
-            const body = { name, nickname }
-            const result = await fetch(`/api/users`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
-            })
-            const { type } = result
-            if (type) {
-                router.push('/mypage')
-            } else {
-                router.push('/login')
-            }
 
-            
-        } catch (error) {
-            console.error(error)
+        const { has } : any = await fetch(`/api/users?email=${email}`, {
+          method: "GET"})
+        if (!has) {
+          fetch(`/api/users`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email
+          })
+          })
         }
     }    
 
     return (
         <div>
             <form onSubmit={submitData}>
-                <h1>Set Name</h1>
-                <input 
-                  autoFocus 
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder='Name'
-                  type='text'
-                  value={name}
-                />
-                <input
-                  onChange={(e => setNickname(e.target.value))}
-                  placeholder='NickName'
-                  type='text'
-                  value={nickname}
-                />
+                <p>로그인한 상태여야함</p>
                 <input disabled={!name || !nickname} type='submit' value="SignUp"/>
             </form>
-            <button onClick={() => signOut({ callbackUrl: "/" })}>Cancel</button>
         </div>
     )
 }

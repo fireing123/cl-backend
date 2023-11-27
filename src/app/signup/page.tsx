@@ -31,7 +31,7 @@ export default function SignUp() {
         <div>
             <form onSubmit={submitData}>
                 <p>로그인한 상태여야함</p>
-                <input disabled={!name || !nickname} type='submit' value="SignUp"/>
+                <input type='submit' value="SignUp"/>
             </form>
         </div>
     )

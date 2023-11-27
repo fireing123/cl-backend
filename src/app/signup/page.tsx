@@ -1,13 +1,9 @@
 'use client'
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export default function SignUp() {
 
-    const router = useRouter()
-    const [name, setName] = useState('');
-    const [nickname, setNickname] = useState('');
     const { data: session, status } = useSession();
     const email = session?.user?.email
 

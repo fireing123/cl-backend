@@ -51,14 +51,26 @@ export async function POST(req: Request) {
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
-    const post = await prisma.post.findFirst({
-        where: {
-            id: id!
-        }
-    })
-    return NextResponse.json({
-        title: post?.title,
-        url: post?.url,
-        date: post?.date
-    })
+    if (id) {
+        const post = await prisma.post.findFirst({
+            where: {
+                id: id!
+            }
+        })
+        return NextResponse.json({
+            title: post?.title,
+            url: post?.url,
+            date: post?.date
+        })
+    } else {
+        const posts = await prisma.post.findMany({
+            where: {
+
+            }
+        })
+        return NextResponse.json({
+            posts
+        })
+    }
+    
 }

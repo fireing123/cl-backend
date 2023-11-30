@@ -23,7 +23,12 @@ export default function SignUp() {
         }
     }    
 
-    return (
+    if (status === "loading") {
+      return (
+        <p>로딩중...</p>
+      )
+    } else if (status === "authenticated") {
+      return (
         <div>
             <form onSubmit={submitData}>
                 <p>로그인한 상태여야함</p>
@@ -31,4 +36,5 @@ export default function SignUp() {
             </form>
         </div>
     )
+    }
 }

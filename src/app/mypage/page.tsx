@@ -2,11 +2,15 @@
 import { User } from "@/types/types";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function MyPage() {
   const { data: session, status } = useSession();
   const [user, setUser] = useState<User>();
+
+  useEffect(() => {
+    findUser(session?.user?.email!)
+  }, [session?.user?.email])
 
   if (status === "loading") return <p>로딩중...</p>
   else if (status === "unauthenticated") return <p>로그인하지 않음</p>
@@ -24,7 +28,6 @@ export default function MyPage() {
     <div>
       <h1>내 정보 보기</h1>
       <button onClick={() => {signOut()}}>로그아웃</button>
-      <button onClick={() => {findUser(session?.user?.email!)}}>확인하기</button>
       {user && 
       <div>
         <Image src={session?.user?.image!} alt="user image" width={50} height={50}/>

@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 export default function SignUp() {
 
@@ -30,6 +30,7 @@ export default function SignUp() {
     } else if (status === "authenticated") {
       return (
         <div>
+            
             <form onSubmit={submitData}>
                 <p>로그인한 상태여야함</p>
                 <input type='submit' value="SignUp"/>

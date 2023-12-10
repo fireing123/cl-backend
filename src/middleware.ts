@@ -12,10 +12,10 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/login', request.url))
       }
     } else {
-      const user = await fetch(`/api/users?email=${token.email}`)
-        .then(async res => await res.json())
-      if (user!.rank != 'admin') {
-        if (request.nextUrl.pathname.startsWith('/admin')) {
+      if (request.nextUrl.pathname.startsWith('/admin')) {
+        const user = await fetch(`/api/users?email=${token.email}`)
+          .then(async res => await res.json())
+        if (user!.rank != 'admin') {
           return NextResponse.redirect(new URL('/', request.url))
         }
       }

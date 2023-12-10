@@ -10,16 +10,13 @@ export async function POST(req: NextRequest) {
         }
     })
     if (user) {
-        await transporter.sendMail({
+        const res = await transporter.sendMail({
             from: process.env.EMAIL,
             to: email,
             subject: "CL 동아리 인증",
             html: `<a href=${process.env.DISCORD_URL}/api/connect?userId=${user.id}&token=${token}>이동하기</a>`.toString()
         });
-        return NextResponse.json({
-            id: id,
-            token: token
-        })
+        return NextResponse.json(res)
     } else {
         return NextResponse.json({
             message: "이 email의 계정은 생성되지않았습니다."

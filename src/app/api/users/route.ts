@@ -1,4 +1,6 @@
+import { authOptions } from "@/lib/authOptions";
 import prisma from "@/lib/prisma";
+import { getServerSession } from "next-auth/next";
 import { NextRequest, NextResponse, } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -48,3 +50,29 @@ export async function GET(req: NextRequest) {
     }
 }
 
+export async function PATCH(req: NextRequest) {
+    const session = await getServerSession(authOptions);
+    const { email, rank } = await req.json();
+    if (session) {
+        const user = await prisma.user.findFirst({
+            where: {
+                email: session.user?.email!
+            }
+        });
+        if (user?.rank === 'admin' && rank ==! 'admin') {
+            await prisma.user.update({
+                where: {
+                    email: email
+                },
+                data: {
+                    rank: rank
+                }
+            });
+            const res = await fetch(`${process.env.DISCORD_URL}/api/rankup?email=${email}`)
+            return NextResponse.json({
+                message: await res.text()
+            })
+        }
+    }
+    
+}

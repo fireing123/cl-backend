@@ -14,7 +14,10 @@ export async function POST(req: NextRequest) {
             from: process.env.EMAIL,
             to: email,
             subject: "CL 동아리 인증",
-            html: `<a href=${process.env.DISCORD_URL}/api/connect?userId=${user.id}&token=${token}>이동하기</a>`.toString()
+            html: `<div>
+                <p>클릭하시면 연결합니다 </p>
+                <a href=${process.env.DISCORD_URL}/api/connect?userId=${user.id}&token=${token}>이동하기</a>
+            </div>`
         });
         return NextResponse.json(res)
     } else {

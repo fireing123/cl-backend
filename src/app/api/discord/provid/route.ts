@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
             from: process.env.EMAIL,
             to: email,
             subject: "CL 동아리 인증",
-            html: `<a href=${process.env.DISCORD_URL}/api/connect?userId=${user.id}&token=${token}>이동하기</a>`
+            html: `<a href=${process.env.DISCORD_URL}/api/connect?userId=${user.id}&token=${token}>이동하기</a>`.normalize('NFC')
         });
         return NextResponse.json({
             id: id,

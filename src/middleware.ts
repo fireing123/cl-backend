@@ -1,7 +1,7 @@
 import { getToken } from 'next-auth/jwt'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import prisma from './lib/prisma'
+import envFetch from './lib/envfetch'
 
 export async function middleware(request: NextRequest) {
     const token = await getToken({
@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
       }
     } else {
       if (request.nextUrl.pathname.startsWith('/admin')) {
-        const user = await fetch(`/api/users?email=${token.email}`)
+        const user = await envFetch(`/api/users?email=${token.email}`)
           .then(async res => await res.json())
         if (user!.rank != 'admin') {
           return NextResponse.redirect(new URL('/', request.url))

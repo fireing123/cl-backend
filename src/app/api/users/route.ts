@@ -59,20 +59,47 @@ export async function PATCH(req: NextRequest) {
                 email: session.user?.email!
             }
         });
-        if (user?.rank === 'admin' && rank ==! 'admin') {
-            await prisma.user.update({
+        if (user?.rank === 'admin' && rank !== 'admin') {
+            const rankUser = await prisma.user.findFirst({
                 where: {
                     email: email
-                },
-                data: {
-                    rank: rank
                 }
-            });
-            const res = await fetch(`${process.env.DISCORD_URL}/api/rankup?email=${email}`)
+            })
+            if (rankUser) {
+                if (rankUser.rank === 'admin') {
+                    return NextResponse.json({
+                        message: "당신은 관리자를 변경하려 시도했습니다!!"
+                    })
+                }
+                await prisma.user.update({
+                    where: {
+                        email: email
+                    },
+                    data: {
+                        rank: rank
+                    }
+                });
+                const res = await fetch(`${process.env.DISCORD_URL}/api/rankup?email=${email}`, {
+                    method: "PATCH"
+                })
+                return NextResponse.json({
+                    message: await res.text()
+                })
+            } else {
+                return NextResponse.json({
+                    message: "해당 이메일의 유저는 존재하지 않습니다."
+                })
+            }
+            
+        } else {
             return NextResponse.json({
-                message: await res.text()
+                message: "당신이 어드민이 아니거나 변경할 랭크가 관리자 입니다"
             })
         }
+    } else {
+        return NextResponse.json({
+            message: "세션없음"
+        })
     }
     
 }

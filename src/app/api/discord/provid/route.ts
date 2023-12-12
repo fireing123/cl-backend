@@ -19,7 +19,9 @@ export async function POST(req: NextRequest) {
                 <a href=${process.env.DISCORD_URL}/api/connect?userId=${user.id}&token=${token}>이동하기</a>
             </div>`
         });
-        return NextResponse.json(res)
+        return NextResponse.json({
+            message: "메세지 전달 성공"
+        })
     } else {
         return NextResponse.json({
             message: "이 email의 계정은 생성되지않았습니다."

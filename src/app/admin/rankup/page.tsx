@@ -5,17 +5,20 @@ import { useState } from "react";
 export default function Home() {
     const [email, setEmail] = useState('');
     const [rank, setRank] = useState('');
+    const [update, setUpdate] = useState('slow');
 
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault()
-        await fetch('/api/users', {
+        const res = await fetch('/api/users', {
             method: "PATCH",
             body: JSON.stringify({
                 email,
                 rank
             })
         })
-    } 
+        const dat = await res.text()
+        setUpdate(dat)
+    }
 
   return (
     <div>
@@ -24,6 +27,7 @@ export default function Home() {
             <input name="rank" type="text" value={rank} onChange={v => setRank(v.target.value)}/>        
             <input type='submit' value="SignUp"/>
         </form>
+        {update}
     </div>
   )
 }

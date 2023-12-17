@@ -2,23 +2,24 @@
  
 import Giscus from '@giscus/react';
  
-const Comments = ({ id, repo, repoId, category, categoryId }: { id: string, repo: `${string}/${string}`, repoId: string, category: string, categoryId: string }) => {
+const Comments = ({term}: {term : string}) => {
 	return (
 		<Giscus
-            id={id}
-			repo={repo}
-			repoId={repoId}
-			category={category}
-			categoryId={categoryId}
-			mapping="pathname"
-			reactionsEnabled="1"
-			emitMetadata="0"
-			inputPosition="top"
-			theme="preferred_color_scheme"
+            id="comments"
+			repo="fireing123/cl-backend"
+			repoId="R_kgDOKpz8cQ"
+			category="General"
+			categoryId="DIC_kwDOKpz8cc4Cbzrt"
+			mapping="specific"
+            term={term}
+            reactionsEnabled="1"
+            emitMetadata="0"
+            inputPosition="top"
+            theme="light"
 			lang="en"
 			loading="lazy"
-		/>
+		    />
 	);
 };
- 
+
 export default Comments;

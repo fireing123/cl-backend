@@ -1,13 +1,34 @@
 const withMDX = require('@next/mdx')()
  
+const ContentSecurityPolicy = `
+    default-src 'self' vercel.live;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' vercel.live vitals.vercel-insights.com;
+    style-src 'self' 'unsafe-inline';
+    img-src * blob: data:;
+    media-src 'none';
+    frame-src giscus.app;
+    connect-src *;
+    font-src 'self';
+`;
+ 
+const securityHeaders = [
+	{
+		key: 'Content-Security-Policy',
+		value: ContentSecurityPolicy.replace(/\n/g, ''),
+	},
+	// Other security headers
+	// ...
+];
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  env: {
-    COMMENTS_REPO: 'fireing123/cl-backend',
-		COMMENTS_REPO_ID: 'R_kgDOKpz8cQ',
-		COMMENTS_CATEGORY: 'General',
-		COMMENT_CATEGORY_ID: 'DIC_kwDOKpz8cc4Cbzrt',
-  },
+  headers() {
+		return [
+			{
+				source: '/(.*)',
+				headers: securityHeaders,
+			},
+		];
+	},
   // Configure `pageExtensions` to include MDX files
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   // Optionally, add any other Next.js config below

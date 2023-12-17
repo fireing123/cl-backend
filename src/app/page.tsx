@@ -1,5 +1,6 @@
+'use client'
 import Link from "next/link";
-
+import Giscus from '@giscus/react';
 export default function Home() {
   return (
     <div>

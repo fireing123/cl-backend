@@ -8,8 +8,9 @@ import ThemeProviders from '@/components/providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'CL 동아리',
+  title: '전일 고등학교 CL 동아리',
   description: '전일고의 CL 동아리 사이트',
+  
 }
 
 export default function RootLayout({

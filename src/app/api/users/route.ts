@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
             error: "이미 해당 이메일에 계정이 존재합니다"
         })
     } else {
+        console.log(email)
         const newUser = await prisma.user.create({
             data: {
                 email: email

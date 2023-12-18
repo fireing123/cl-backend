@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function Login() {
   return (
     <div className="loginbar">
-      <KakaoBtn onClick={() => signIn("github", { callbackUrl: "/" })}>
+      <KakaoBtn onClick={() => signIn("github", { callbackUrl: "/signup" })}>
         <Image
           src="/images/kakao_logo.png"
           alt="kakao-login"
@@ -16,7 +16,7 @@ export default function Login() {
         />
         <a>개발용 로그인</a>
       </KakaoBtn>
-      <KakaoBtn onClick={() => signIn("google", { callbackUrl: "/" })}>
+      <KakaoBtn onClick={() => signIn("google", { callbackUrl: "/signup" })}>
         <Image
           src="/images/kakao_logo.png"
           alt="kakao-login"

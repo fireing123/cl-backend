@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
         const res = await transporter.sendMail({
             from: process.env.EMAIL,
             to: email,
-            subject: "CL 동아리 인증",
+            subject: "CL 동아리 디스코드 연결",
             html: `<div>
                 <p>클릭하시면 연결합니다 </p>
                 <a href=${process.env.DISCORD_URL}/api/connect?userId=${user.id}&token=${token}>이동하기</a>

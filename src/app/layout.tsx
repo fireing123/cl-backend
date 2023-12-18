@@ -4,7 +4,9 @@ import './globals.css'
 import '@mantine/dates/styles.css';
 import '@mantine/core/styles.css';
 import '@mantine/tiptap/styles.css';
-import { MantineProvider, ColorSchemeScript } from '@mantine/core';
+import { MantineProvider, Affix, Button, Text, Transition, rem } from '@mantine/core';
+import { IconArrowUp } from '@tabler/icons-react';
+import { useWindowScroll } from '@mantine/hooks';
 import AuthContext from '@/context/AuthContext'
 import Floor from '@/components/floor'
 import ThemeProviders from '@/components/providers'
@@ -14,7 +16,8 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: '전일 고등학교 CL 동아리',
   description: '전일고의 CL 동아리 사이트',
-  
+  robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+  keywords: "전일고, 전일고등학교, 동아리, CL, 코딩, 전주"
 }
 
 export default function RootLayout({

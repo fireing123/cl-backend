@@ -1,6 +1,3 @@
-'use client'
-
-import { Indicator } from '@mantine/core';
 import { Calendar } from '@mantine/dates';
 
 export default function Home() {

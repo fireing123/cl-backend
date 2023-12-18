@@ -1,70 +1,115 @@
 
 'use client';
-
+import { RichTextEditor, Link } from '@mantine/tiptap';
+import { useEditor } from '@tiptap/react';
+import Highlight from '@tiptap/extension-highlight';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
+import Superscript from '@tiptap/extension-superscript';
+import SubScript from '@tiptap/extension-subscript';
 import type { PutBlobResult } from '@vercel/blob';
 import { useSession } from 'next-auth/react';
-import { useState, useRef } from 'react';
-
-export default function AvatarUploadPage() {
+import { useState } from 'react';
+import fs from 'fs';
+export default function CreateBlog() {
   const { data: session, status } = useSession();
-  const inputFileRef = useRef<HTMLInputElement>(null);
-  const [blob, setBlob] = useState<PutBlobResult | null>(null);
-  
-  if (status === "loading") {
-    return (
-      <p>loading...</p>
-    )
+  const [title, setTitle] = useState('');
+
+  const editer = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      Link,
+      Superscript,
+      SubScript,
+      Highlight,
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+    ],
+  })
+
+  const submit = async (event: any) => {
+    event.preventDefault();
+    
+    const file = new File([editer?.getHTML() || ""], `${title}`)
+
+      const response = await fetch(
+        `/api/file?filename=${file.name}`,
+        {
+          method: 'POST',
+          body: file,
+        },
+      );
+      const newBlob = (await response.json()) as PutBlobResult;
+
+      const res = await fetch(`/api/post`, {
+        method: "POST",
+        body: JSON.stringify({
+          fileurl: newBlob.url,
+          title: file.name.replace(".mdx", ""),
+          pubished: true
+        })
+      }).then(async res => {
+        return await res.json()
+      })
+      console.log(res)
+
+    
   }
-  return (
-    <>
-      <h1>Upload Your Post</h1>
-
-      <form
-        onSubmit={async (event) => {
-          event.preventDefault();
-
-          if (!inputFileRef.current?.files) {
-            throw new Error("No file selected");
-          }
-          
-          const file = inputFileRef.current.files[0];
-
-          if (file.name.endsWith(".mdx")) {
-            const response = await fetch(
-              `/api/file?filename=${file.name}`,
-              {
-                method: 'POST',
-                body: file,
-              },
-            );
-            const newBlob = (await response.json()) as PutBlobResult;
+  if (session?.user) {
+    return (
+      <>
+        <h1>Upload Your Post</h1>
+        <input type='text' value={title} onChange={(e) => {setTitle(e.target.value)}} />
+        <RichTextEditor editor={editer}>
+        <RichTextEditor.Toolbar sticky stickyOffset={60}>
+          <RichTextEditor.ControlsGroup>
+            <RichTextEditor.Bold />
+            <RichTextEditor.Italic />
+            <RichTextEditor.Underline />
+            <RichTextEditor.Strikethrough />
+            <RichTextEditor.ClearFormatting />
+            <RichTextEditor.Highlight />
+            <RichTextEditor.Code />
+          </RichTextEditor.ControlsGroup>
   
-            setBlob(newBlob);
-
-            const res = await fetch(`/api/post`, {
-              method: "POST",
-              body: JSON.stringify({
-                fileurl: newBlob.url,
-                title: file.name.replace(".mdx", ""),
-                pubished: true
-              })
-            }).then(async res => {
-              return await res.json()
-            })
-            console.log(res)
-
-          }
-        }}
-      >
-        <input name="file" ref={inputFileRef} type="file" required />
-        <button type="submit">Upload</button>
-      </form>
-      {blob && (
-        <div>
-          Blob url: <a href={blob.url}>{blob.url}</a>
-        </div>
-      )}
-
-    </>
-  );
+          <RichTextEditor.ControlsGroup>
+            <RichTextEditor.H1 />
+            <RichTextEditor.H2 />
+            <RichTextEditor.H3 />
+            <RichTextEditor.H4 />
+          </RichTextEditor.ControlsGroup>
+  
+          <RichTextEditor.ControlsGroup>
+            <RichTextEditor.Blockquote />
+            <RichTextEditor.Hr />
+            <RichTextEditor.BulletList />
+            <RichTextEditor.OrderedList />
+            <RichTextEditor.Subscript />
+            <RichTextEditor.Superscript />
+          </RichTextEditor.ControlsGroup>
+  
+          <RichTextEditor.ControlsGroup>
+            <RichTextEditor.Link />
+            <RichTextEditor.Unlink />
+          </RichTextEditor.ControlsGroup>
+  
+          <RichTextEditor.ControlsGroup>
+            <RichTextEditor.AlignLeft />
+            <RichTextEditor.AlignCenter />
+            <RichTextEditor.AlignJustify />
+            <RichTextEditor.AlignRight />
+          </RichTextEditor.ControlsGroup>
+        </RichTextEditor.Toolbar>
+  
+        <RichTextEditor.Content />
+        </RichTextEditor>
+        <form
+          onSubmit={submit}>
+          <button type="submit">Upload</button>
+        </form>
+        
+      </>
+    );
+  }
 }

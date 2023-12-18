@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import '@mantine/dates/styles.css';
+import '@mantine/core/styles.css';
+import '@mantine/tiptap/styles.css';
+import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import AuthContext from '@/context/AuthContext'
 import Floor from '@/components/floor'
 import ThemeProviders from '@/components/providers'
@@ -21,12 +25,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <MantineProvider>
         <ThemeProviders>
         <AuthContext>
           <Floor />
           {children}
         </AuthContext>
         </ThemeProviders>
+        </MantineProvider>
       </body>
     </html>
   )

@@ -1,6 +1,5 @@
 import Comments from "@/components/comments"
 import envFetch from "@/lib/envfetch"
-import { MDXRemote } from "next-mdx-remote/rsc"
 
 export default async function Modify({ params }: { params: {id: string} }) {
 
@@ -13,7 +12,7 @@ export default async function Modify({ params }: { params: {id: string} }) {
         <div>
             <h1>Name : {title}</h1>
             <div>{date}</div>
-            <MDXRemote source={md} />
+            <div dangerouslySetInnerHTML={{__html: md}} />
             <Comments term={title} />
         </div>
     )

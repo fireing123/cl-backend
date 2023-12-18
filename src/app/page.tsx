@@ -5,7 +5,7 @@ export default function Home() {
     <div>
       
       <h1 className="title">CL 동아리</h1>
-      <a href="http://google.com">구글</a>
+      <a href="https://discord.gg/DbmcPRDNTD">디스코드</a>
       <Calendar static />
     </div>
   )

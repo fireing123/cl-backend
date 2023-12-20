@@ -46,7 +46,7 @@ export default function CreateBlog() {
         method: "POST",
         body: JSON.stringify({
           fileurl: newBlob.url,
-          title: file.name.replace(".mdx", ""),
+          title: file.name,
           pubished: true
         })
       }).then(async res => {

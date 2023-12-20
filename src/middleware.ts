@@ -11,6 +11,9 @@ export async function middleware(request: NextRequest) {
       if (request.nextUrl.pathname.startsWith('/signup')) {
         return NextResponse.redirect(new URL('/login', request.url))
       }
+      if (request.nextUrl.pathname.startsWith('/mypage')) {
+        return NextResponse.redirect(new URL('/login', request.url))
+      }
     } else {
       if (request.nextUrl.pathname.startsWith('/admin')) {
         const user = await envFetch(`/api/users?email=${token.email}`)

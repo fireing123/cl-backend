@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
         const fixed = youtubes.items.map((item: any) => {
             return {
                 title: item.snippet.title,
-                image: item.snippet.thumbnails.default.url,
+                image: item.snippet.thumbnails.maxres,
                 id: item.snippet.resourceId.videoId
             }
         })

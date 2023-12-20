@@ -15,13 +15,6 @@ model User {
   posts String[]
 }
 
-model Comment {
-  id  String  @id @default(auto()) @map("_id") @db.ObjectId
-  text  String
-  date DateTime @default(now())
-  userId String @db.ObjectId
-}
-
 model Post {
   id  String  @id @default(auto()) @map("_id") @db.ObjectId
   title String

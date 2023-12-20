@@ -3,30 +3,44 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import { KakaoBtn } from "@/styles/AuthStyle";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useToggle, upperFirst } from '@mantine/hooks';
+import { useForm } from '@mantine/form';
+import {
+  TextInput,
+  PasswordInput,
+  Text,
+  Paper,
+  Group,
+  PaperProps,
+  Button,
+  Divider,
+  Checkbox,
+  Anchor,
+  Stack,
+} from '@mantine/core';
+import { GithubButton } from "@/components/GithubButton";
+import { GoogleButton } from "@/components/GoogleButton";
+import classes from './login.module.css'
+export default function Login(props: PaperProps) {
+  const searchParams = useSearchParams();
+  const sign = (provid: string) => {
+    signIn(provid, { callbackUrl: searchParams.get('callbackUrl')! })
+  }
+  
 
-export default function Login() {
+
   return (
-    <div className="loginbar">
-      <KakaoBtn onClick={() => signIn("github", { callbackUrl: "/signup" })}>
-        <Image
-          src="/images/kakao_logo.png"
-          alt="kakao-login"
-          width={20}
-          height={20}
-        />
-        <a>개발용 로그인</a>
-      </KakaoBtn>
-      <KakaoBtn onClick={() => signIn("google", { callbackUrl: "/signup" })}>
-        <Image
-          src="/images/kakao_logo.png"
-          alt="kakao-login"
-          width={20}
-          height={20}
-        />
-        <a>구글 로그인</a>
-      </KakaoBtn>
-      <button onClick={() => signIn()} >로그인</button>
-      <Link href="/signup">Sign Up</Link>
-    </div>
+    <Paper shadow="xl" radius="md" p="xl" withBorder {...props} className={classes.login}  >
+      <Text size="lg" fw={500}>
+        Welcome to CL, login with
+      </Text>
+
+      <Group grow mb="md" mt="md">
+        <GithubButton radius="xl" onClick={() => sign("github")}>Github</GithubButton>
+        <GoogleButton radius="xl" onClick={() => sign("google")}>Google</GoogleButton>
+      </Group>
+    </Paper>
+
    );
 }

@@ -1,9 +1,12 @@
 "use client"
-import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { SimpleGrid, Card, Image, Text, Container, AspectRatio } from '@mantine/core';
+import classes from './ArticlesCardsGrid.module.css';
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function YoutubeList() {
+    const { data: session, status } = useSession();
     const [list, setList] = useState([]);
     useEffect(()=> {
         fetch(`/api/youtube`)
@@ -12,22 +15,29 @@ export default function YoutubeList() {
             setList(list)
         })
     }, [])
-    return (
-        <ul>
-            {list.map((value: any, i: any) => {
-
-                return (
-                    <div key={i}>
-                        <div className="description">
-                            <h2>{value.title}</h2>
-                            <Link className="Youtube brand" href={`https://www.youtube.com/watch?v=${value.id}`}>들어가기</Link>
-                        </div>
-                        <div className="thumbnail">
-                            <Image src={value.image} width={120} height={90} alt="youtube"/>
-                        </div>
-                    </div>
-                )
-            })}
-        </ul>
-    )
+    if (status === "authenticated") {
+        return (
+            <Container py="xl">
+                <SimpleGrid cols={{ base: 1, sm: 2}}>{list.map((value: any, i: any) => {
+                    return (
+                        <Card key={i} p="md" radius="md" component="a" href={`https://www.youtube.com/watch?v=${value.id}`} className={classes.card}>
+                            <AspectRatio ratio={1920 / 1080}>
+                                <Image src={value.image.url} alt="youtube image" />
+                            </AspectRatio>
+                            <Text mt={5}>
+                                {value.title}
+                            </Text>
+                        </Card>
+                    )
+                })}
+                </SimpleGrid>
+            </Container>
+        )
+    } else {
+        return (
+            <div>
+                로그인 하지 않았거나 로딩중 입니다!
+            </div>
+        )
+    }
 }

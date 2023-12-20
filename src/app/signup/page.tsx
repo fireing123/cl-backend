@@ -1,43 +1,35 @@
-'use client'
-import React, { useEffect, useState } from 'react'
-import { useSession } from "next-auth/react";
+import { authOptions } from "@/lib/authOptions";
+import envFetch from "@/lib/envfetch";
+import { getServerSession } from "next-auth/next";
 
-export default function SignUp() {
+export default async function SignUp() {
 
-    const { data: session, status } = useSession();
+    const session = await getServerSession(authOptions);
     const email = session?.user?.email;
-    const [isLogin, SetIsLogin] = useState(false);
-
-    useEffect(() => {
-      if (status === "authenticated") {
-        fetch(`/api/users`, {
+    if (!session) {
+      return (
+        <>로그인을 하세요</>
+      )
+    } else {
+      const res = await envFetch(`/api/users?email=${email}`)
+      const { has } = await res.json()
+      console.log(email)
+      console.log(has)
+      if (has) {
+        return <div>로그인 성공</div>
+      } else {
+        const res = await envFetch(`/api/users`, {
           method: "POST",
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: email
+          })
         })
-        }).then(async res => {
-          const { type } = await res.json()
-          SetIsLogin(type)
-        })
+        if ((await res.json()).type) {
+          return <div>회원가입 성공</div>
+        } else {
+          return <div>실패</div>
+        }
       }
-    }, [email, status])
-
-    if (status === "loading") {
-      return (
-        <p>로딩중...</p>
-      )
-    } else if (status === "authenticated") {
-      
-      return (
-        <>
-        {!isLogin && <div>회원가입 중입니다 나가지 마세요!</div>}
-        {isLogin && <div>가입 완료! 나가셔도 됩니다</div>}
-        </>
-      )
-    } else if (status === "unauthenticated") {
-      return (
-        <>로그인 하세요</>
-      )
     }
 }

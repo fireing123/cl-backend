@@ -10,11 +10,21 @@ import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
 import type { PutBlobResult } from '@vercel/blob';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
-import fs from 'fs';
+import { useRouter } from 'next/navigation';
+import { notifications } from '@mantine/notifications';
+import { useForm } from '@mantine/form';
+import { Box, Button, Group, TextInput } from '@mantine/core';
 export default function CreateBlog() {
   const { data: session, status } = useSession();
-  const [title, setTitle] = useState('');
+  const router = useRouter();
+  const form = useForm({
+    initialValues: {
+      title: '',
+    },
+    validate: {
+      title: (value: any) => (/^\S+$/.test(value) ? null : 'Invalid title')
+    }
+  })
 
   const editer = useEditor({
     extensions: [
@@ -28,10 +38,9 @@ export default function CreateBlog() {
     ],
   })
 
-  const submit = async (event: any) => {
-    event.preventDefault();
+  const submit = async (values: { title: string }) => {
     
-    const file = new File([editer?.getHTML() || ""], `${title}`)
+    const file = new File([editer?.getHTML() || ""], `${values.title}`)
 
       const response = await fetch(
         `/api/file?filename=${file.name}`,
@@ -52,64 +61,66 @@ export default function CreateBlog() {
       }).then(async res => {
         return await res.json()
       })
-      console.log(res)
+      notifications.show({
+        title: 'create Blog',
+        message: `Success Create Blog ${values.title}`
+      })
 
-    
+      router.push('/')
   }
   if (session?.user) {
     return (
-      <>
-        <h1>Upload Your Post</h1>
-        <input type='text' value={title} onChange={(e) => {setTitle(e.target.value)}} />
+    <Box maw={700} mx="auto">
+      <form onSubmit={form.onSubmit((values) => submit(values))}>
+        <TextInput
+         withAsterisk
+         label="Title"
+         placeholder='title'
+         {...form.getInputProps('title')}
+        />
         <RichTextEditor editor={editer}>
-        <RichTextEditor.Toolbar sticky stickyOffset={60}>
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.Bold />
-            <RichTextEditor.Italic />
-            <RichTextEditor.Underline />
-            <RichTextEditor.Strikethrough />
-            <RichTextEditor.ClearFormatting />
-            <RichTextEditor.Highlight />
-            <RichTextEditor.Code />
-          </RichTextEditor.ControlsGroup>
-  
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.H1 />
-            <RichTextEditor.H2 />
-            <RichTextEditor.H3 />
-            <RichTextEditor.H4 />
-          </RichTextEditor.ControlsGroup>
-  
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.Blockquote />
-            <RichTextEditor.Hr />
-            <RichTextEditor.BulletList />
-            <RichTextEditor.OrderedList />
-            <RichTextEditor.Subscript />
-            <RichTextEditor.Superscript />
-          </RichTextEditor.ControlsGroup>
-  
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.Link />
-            <RichTextEditor.Unlink />
-          </RichTextEditor.ControlsGroup>
-  
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.AlignLeft />
-            <RichTextEditor.AlignCenter />
-            <RichTextEditor.AlignJustify />
-            <RichTextEditor.AlignRight />
-          </RichTextEditor.ControlsGroup>
-        </RichTextEditor.Toolbar>
-  
-        <RichTextEditor.Content />
+          <RichTextEditor.Toolbar sticky stickyOffset={60}>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.Bold />
+              <RichTextEditor.Italic />
+              <RichTextEditor.Underline />
+              <RichTextEditor.Strikethrough />
+              <RichTextEditor.ClearFormatting />
+              <RichTextEditor.Highlight />
+              <RichTextEditor.Code />
+            </RichTextEditor.ControlsGroup>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.H1 />
+              <RichTextEditor.H2 />
+              <RichTextEditor.H3 />
+              <RichTextEditor.H4 />
+            </RichTextEditor.ControlsGroup>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.Blockquote />
+              <RichTextEditor.Hr />
+              <RichTextEditor.BulletList />
+              <RichTextEditor.OrderedList />
+              <RichTextEditor.Subscript />
+              <RichTextEditor.Superscript />
+            </RichTextEditor.ControlsGroup>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.Link />
+              <RichTextEditor.Unlink />
+            </RichTextEditor.ControlsGroup>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.AlignLeft />
+              <RichTextEditor.AlignCenter />
+              <RichTextEditor.AlignJustify />
+              <RichTextEditor.AlignRight />
+            </RichTextEditor.ControlsGroup>
+          </RichTextEditor.Toolbar>
+          <RichTextEditor.Content />
         </RichTextEditor>
-        <form
-          onSubmit={submit}>
-          <button type="submit">Upload</button>
-        </form>
-        
-      </>
+        <Group justify="flex-end" mt="md">
+          <Button type="submit">Submit</Button>
+        </Group>
+      </form>
+    </Box>
     );
   }
 }

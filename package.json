@@ -16,6 +16,7 @@
     "@mantine/dropzone": "^7.3.2",
     "@mantine/form": "^7.3.2",
     "@mantine/hooks": "^7.3.2",
+    "@mantine/notifications": "^7.3.2",
     "@mantine/tiptap": "^7.3.2",
     "@mantinex/dev-icons": "^1.0.2",
     "@mantinex/mantine-logo": "^1.0.1",

@@ -1,7 +1,8 @@
 "use client"
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Table, Progress, Anchor, Text, Group } from '@mantine/core';
+import { Table, Progress, Anchor, Text, Group, Paper } from '@mantine/core';
+import classes from './blog.module.css'
 
 export default function List() {
     const [list, setList] = useState([]);
@@ -11,7 +12,9 @@ export default function List() {
         })
     }, [])
     return (
-        <Table.ScrollContainer minWidth={800}>
+        <Paper radius="md" p="xl" className={classes.blog} withBorder >
+            <Text fw={700}>Blog</Text>
+            <Table.ScrollContainer minWidth={800}>
             <Table verticalSpacing="xs">
                 <Table.Thead>
                     <Table.Tr>
@@ -40,5 +43,6 @@ export default function List() {
                 </Table.Tbody>
             </Table>
         </Table.ScrollContainer>
+        </Paper>
     )
 }

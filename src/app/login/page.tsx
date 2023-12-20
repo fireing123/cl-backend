@@ -22,7 +22,7 @@ import {
 import { GithubButton } from "@/components/GithubButton";
 import { GoogleButton } from "@/components/GoogleButton";
 import classes from './login.module.css'
-export default function Login(props: PaperProps) {
+export default function Login() {
   const searchParams = useSearchParams();
   const sign = (provid: string) => {
     signIn(provid, { callbackUrl: searchParams.get('callbackUrl')! })
@@ -31,7 +31,7 @@ export default function Login(props: PaperProps) {
 
 
   return (
-    <Paper shadow="xl" radius="md" p="xl" withBorder {...props} className={classes.login}  >
+    <Paper shadow="xl" radius="md" p="xl" withBorder className={classes.login}  >
       <Text size="lg" fw={500}>
         Welcome to CL, login with
       </Text>

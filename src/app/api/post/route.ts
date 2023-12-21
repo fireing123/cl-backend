@@ -1,7 +1,7 @@
-import { NextResponse, NextRequest } from "next/server"
-import prisma from "@/lib/prisma"
-import { authOptions } from "@lib/authOptions"
 import { getServerSession } from "next-auth"
+import { NextResponse, NextRequest } from "next/server"
+import { authOptions } from "@lib/authOptions"
+import prisma from "@/lib/prisma"
 
 export async function POST(req: Request) {
     const { fileurl, title, pubished } = await req.json()
@@ -20,8 +20,6 @@ export async function POST(req: Request) {
                     email: email
                 }
             })
-
-            console.log(fileurl, title, pubished)
 
             const value = await prisma.post.create({
                 data: {
@@ -51,6 +49,7 @@ export async function POST(req: Request) {
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
+    const user = searchParams.get('user');
     if (id) {
         const post = await prisma.post.findFirst({
             where: {
@@ -62,15 +61,70 @@ export async function GET(req: NextRequest) {
             url: post?.url,
             date: post?.date
         })
+    } else if (user) {
+        const posts = await prisma.post.findMany({
+            where: {
+                userId: user
+            }
+        })
+        return NextResponse.json({
+            posts
+        })
     } else {
         const posts = await prisma.post.findMany({
             where: {
-
             }
         })
         return NextResponse.json({
             posts
         })
     }
-    
+}
+
+export async function DELETE(req: NextRequest) {
+    const session = await getServerSession(authOptions)
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+    if (id && session) {
+        const post = await prisma.post.findFirst({
+            where: {
+                id
+            }
+        })
+        if (post) {
+            const user = await prisma.user.findFirst({
+                where: {
+                    id: post.userId
+                }
+            })
+            const you = await prisma.user.findFirst({
+                where: {
+                    email: session.user?.email!
+                }
+            })
+            if (user?.email === session?.user?.email || you?.rank === "admin") {
+                await prisma.post.delete({
+                    where: {
+                        id
+                    }
+                })
+                await fetch(`/api/file?url=${post.url}`, {
+                    method: "DELETE"
+                })
+                return NextResponse.json({
+                    title: post?.title,
+                    url: post?.url,
+                    date: post?.date
+                })
+            } else {
+                return NextResponse.json({
+                    message: '당신은 이 블로그를 삭제할 권한이 없습니다'
+                })
+            }
+        }
+    } else {
+        return NextResponse.json({
+            message: 'id 결핍됨!'
+        })
+    }
 }

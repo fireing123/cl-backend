@@ -1,6 +1,6 @@
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import envFetch from "@/lib/envfetch";
-import { getServerSession } from "next-auth/next";
 
 export default async function SignUp() {
 

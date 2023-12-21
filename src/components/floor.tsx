@@ -33,9 +33,6 @@ import {
 import classes from './HeaderTabs.module.css';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import { useRouter } from "next/navigation";
-import RootLayout from "@/app/layout";
-
-
 
 const tabs = [
     ['Home', '/'],
@@ -49,7 +46,6 @@ const tabs = [
 export default function Floor() {
     const router = useRouter();
     const { data: session, status } = useSession();
-    const theme = useMantineTheme();
     const [opened, { toggle }] = useDisclosure(false);
     const [userMenuOpened, setUserMenuOpened] = useState(false);
 
@@ -64,7 +60,9 @@ export default function Floor() {
         <Container className={classes.mainSection} size="md">
           <Group justify="space-between">
 
-            <MantineLogo size={28} />
+            <Text component="a" href="/">
+              <MantineLogo size={28} />
+            </Text>
 
             <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
 

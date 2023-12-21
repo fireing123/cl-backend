@@ -1,7 +1,7 @@
+import { NextRequest, NextResponse, } from "next/server";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import prisma from "@/lib/prisma";
-import { getServerSession } from "next-auth/next";
-import { NextRequest, NextResponse, } from "next/server";
 
 export async function POST(req: NextRequest) {
     const { email } = await req.json();
@@ -45,6 +45,7 @@ export async function GET(req: NextRequest) {
     } else {
         return NextResponse.json({
             has: true,
+            id: user.id,
             email: user?.email,
             rank: user.rank
         })
@@ -53,7 +54,7 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
     const session = await getServerSession(authOptions);
-    const { email, rank } = await req.json();
+    const { email, rank, phoneNumber } = await req.json();
     if (session) {
         const user = await prisma.user.findFirst({
             where: {
@@ -69,6 +70,7 @@ export async function PATCH(req: NextRequest) {
             if (rankUser) {
                 if (rankUser.rank === 'admin') {
                     return NextResponse.json({
+                        type: false,
                         message: "당신은 관리자를 변경하려 시도했습니다!!"
                     })
                 }
@@ -77,28 +79,49 @@ export async function PATCH(req: NextRequest) {
                         email: email
                     },
                     data: {
-                        rank: rank
+                        rank: rank,
+                        phoneNubmer: phoneNumber
                     }
                 });
                 const res = await fetch(`${process.env.DISCORD_URL}/api/rankup?email=${email}`, {
                     method: "PATCH"
                 })
                 return NextResponse.json({
+                    type: true,
                     message: await res.text()
                 })
             } else {
                 return NextResponse.json({
+                    type: false,
                     message: "해당 이메일의 유저는 존재하지 않습니다."
                 })
             }
             
         } else {
-            return NextResponse.json({
-                message: "당신이 어드민이 아니거나 변경할 랭크가 관리자 입니다"
-            })
+            if (user?.rank === 'admin') {
+                await prisma.user.update({
+                    where: {
+                        email: email
+                    },
+                    data: {
+                        phoneNubmer: phoneNumber
+                    }
+                });
+                return NextResponse.json({
+                    type: true,
+                    message: "관리자 에게 접근함"
+                })
+            } else {
+                return NextResponse.json({
+                    type: false,
+                    message: "당신은 관리자도 아닌주제에 왜 유저에게 직접 접근했습니까?"
+                })
+            }
+            
         }
     } else {
         return NextResponse.json({
+            type: false,
             message: "세션없음"
         })
     }

@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { Table, Anchor, Text, Paper } from '@mantine/core';
 import classes from './blog.module.css'
 
-export default function List() {
+export default function Application() {
     const [list, setList] = useState([]);
     useEffect(() => {
-        fetch("/api/post").then(async (res) => {
-            setList((await res.json()).posts)
+        fetch("/api/application").then(async (res) => {
+            setList((await res.json()).applications)
         })
     }, [])
     return (
@@ -19,6 +19,7 @@ export default function List() {
                 <Table.Thead>
                     <Table.Tr>
                         <Table.Th>title</Table.Th>
+                        <Table.Th>UserEmail</Table.Th>
                         <Table.Th>date</Table.Th>
                     </Table.Tr>
                 </Table.Thead>
@@ -26,11 +27,16 @@ export default function List() {
                     return (
                         <Table.Tr key={value.id}>
                             <Table.Td>
-                                <Link href={`/blog/${value.id}`}>
+                                <Link href={`/admin/application/${value.id}`}>
                                 <Anchor component="button" fz="sm">
                                     {value.title}
                                 </Anchor>
                                 </Link>
+                            </Table.Td>
+                            <Table.Td>
+                                <Anchor component="button" fz="sm">
+                                    {value.email}
+                                </Anchor>
                             </Table.Td>
                             <Table.Td>
                                 <Anchor component="button" fz="sm">

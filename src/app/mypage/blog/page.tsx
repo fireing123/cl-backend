@@ -3,14 +3,22 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Table, Anchor, Text, Paper } from '@mantine/core';
 import classes from './blog.module.css'
+import { useSession } from "next-auth/react";
 
 export default function List() {
     const [list, setList] = useState([]);
+    const { data: session, status } = useSession();
     useEffect(() => {
-        fetch("/api/post").then(async (res) => {
-            setList((await res.json()).posts)
-        })
-    }, [])
+        if (status === "authenticated" && session) {
+            fetch(`/api/users?email=${session.user?.email}`)
+                .then(async (res: any) => {
+                    const user = await res.json() 
+                    const posts = await fetch(`/api/post?user=${user.id}`) 
+                        .then(async res => await res.json())
+                    setList(posts.posts)
+                })
+        }
+    }, [session, status])
     return (
         <Paper radius="md" p="xl" className={classes.blog} withBorder >
             <Text fw={700}>Blog</Text>

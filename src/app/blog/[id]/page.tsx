@@ -1,5 +1,7 @@
+import { Paper } from "@mantine/core"
 import Comments from "@/components/comments"
 import envFetch from "@/lib/envfetch"
+import classes from './blogpage.module.css'
 
 export default async function Modify({ params }: { params: {id: string} }) {
 
@@ -11,8 +13,10 @@ export default async function Modify({ params }: { params: {id: string} }) {
     return (
         <div>
             <h1>Name : {title}</h1>
-            <div>{date}</div>
-            <div dangerouslySetInnerHTML={{__html: md}} />
+            <Paper radius="md" p="xl" withBorder className={classes.page} >
+                <div>{date}</div>
+                <div dangerouslySetInnerHTML={{__html: md}} />
+            </Paper>
             <Comments term={title} />
         </div>
     )

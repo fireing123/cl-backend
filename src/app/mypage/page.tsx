@@ -1,40 +1,50 @@
-"use client"; // 필수!
-import { User } from "@/types/types";
-import { signOut, useSession } from "next-auth/react";
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import { authOptions } from "@/lib/authOptions";
+import { getServerSession } from "next-auth/next";
 
-export default function MyPage() {
-  const { data: session, status } = useSession();
-  const [user, setUser] = useState<User>();
+import {
+  Text,
+  Title,
+  SimpleGrid,
+  TextInput,
+  Textarea,
+  Button,
+  Group,
+  ActionIcon,
+} from '@mantine/core';
+import { IconBrandTwitter, IconBrandYoutube, IconBrandInstagram, IconPhone } from '@tabler/icons-react';
+import classes from './ContactUs.module.css';
+import envFetch from "@/lib/envfetch";
+import { User } from "@prisma/client";
+import ContactIcon from "@/components/ContactIcons";
+import { IconAt } from "@tabler/icons-react";
 
-  useEffect(() => {
-    findUser(session?.user?.email!)
-  }, [session?.user?.email])
+const social = [IconBrandTwitter, IconBrandYoutube, IconBrandInstagram];
 
-  if (status === "loading") return <p>로딩중...</p>
-  else if (status === "unauthenticated") return <p>로그인하지 않음</p>
+export default async function ContactUs() {
+  const session = await getServerSession(authOptions)
 
-  const findUser = async (email: string) => {
-    const user = await fetch(`/api/users?email=${email}`)
+  if (session) {
+    const user = (await envFetch(`/api/users?email=${session?.user?.email}`)
       .then(async res => {
         return await res.json();
-      })
-      console.log(user)
-    setUser(user)
-  }
+      })) as User
 
+      
   return (
-    <div>
-      <h1>내 정보 보기</h1>
-      <button onClick={() => {signOut()}}>로그아웃</button>
-      {user && 
-      <div>
-        <Image src={session?.user?.image!} alt="user image" width={50} height={50}/>
-        <h3>{user.email}</h3>
-        <p>{user.name}</p>
-        <p>{user.rank}</p>
-      </div>}
+    <div className={classes.wrapper}>
+      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing={50}>
+        <div>
+          <Title className={classes.title}>My Page</Title>
+          <Text className={classes.description} mt="sm" mb={30}>
+            Leave your email and we will get back to you within 24 hours
+          </Text>
+          <ContactIcon icon={IconAt} title="email" description={user.email} />
+          <Group>
+          <ContactIcon icon={IconPhone} title="phone" description={user.phoneNubmer || "전화번호를 등록하지 않음"} />
+          </Group>
+        </div>
+      </SimpleGrid>
     </div>
-  )
+  );
+  }
 }

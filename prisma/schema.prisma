@@ -11,8 +11,19 @@ model User {
   id    String  @id @default(auto()) @map("_id") @db.ObjectId
   email String @unique
   rank  String @default("person")
-  comments  String[] 
+  phoneNubmer String?
   posts String[]
+  applicationId String?
+}
+
+model Application {
+  id  String  @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  email String
+  phoneNumber String
+  url String
+  date DateTime @default(now())
+  userId String? @db.ObjectId
 }
 
 model Post {

@@ -1,9 +1,8 @@
 "use client"
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { SimpleGrid, Card, Image, Text, Container, AspectRatio } from '@mantine/core';
 import classes from './ArticlesCardsGrid.module.css';
-import Link from "next/link";
-import { useEffect, useState } from "react";
 
 export default function YoutubeList() {
     const { data: session, status } = useSession();

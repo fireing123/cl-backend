@@ -1,6 +1,8 @@
-
 'use client';
-import { RichTextEditor, Link } from '@mantine/tiptap';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import type { PutBlobResult } from '@vercel/blob';
+
 import { useEditor } from '@tiptap/react';
 import Highlight from '@tiptap/extension-highlight';
 import StarterKit from '@tiptap/starter-kit';
@@ -8,12 +10,12 @@ import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
-import type { PutBlobResult } from '@vercel/blob';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+
+import { Box, Button, Group, TextInput } from '@mantine/core';
+import { RichTextEditor, Link } from '@mantine/tiptap';
 import { notifications } from '@mantine/notifications';
 import { useForm } from '@mantine/form';
-import { Box, Button, Group, TextInput } from '@mantine/core';
+
 export default function CreateBlog() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -51,16 +53,15 @@ export default function CreateBlog() {
       );
       const newBlob = (await response.json()) as PutBlobResult;
 
-      const res = await fetch(`/api/post`, {
+      await fetch(`/api/post`, {
         method: "POST",
         body: JSON.stringify({
           fileurl: newBlob.url,
           title: file.name,
           pubished: true
         })
-      }).then(async res => {
-        return await res.json()
       })
+
       notifications.show({
         title: 'create Blog',
         message: `Success Create Blog ${values.title}`

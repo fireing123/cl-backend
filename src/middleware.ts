@@ -8,6 +8,9 @@ export async function middleware(request: NextRequest) {
       req: request
     })
     if (!token) {
+      if (request.nextUrl.pathname.startsWith('/admin')) {
+        return NextResponse.rewrite(new URL('/404', request.url))
+      }
       if (request.nextUrl.pathname.startsWith('/signup')) {
         return NextResponse.redirect(new URL('/login', request.url))
       }

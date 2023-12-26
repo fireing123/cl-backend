@@ -7,6 +7,7 @@ import classes from './ArticlesCardsGrid.module.css';
 export default function YoutubeList() {
     const { data: session, status } = useSession();
     const [list, setList] = useState([]);
+
     useEffect(()=> {
         fetch(`/api/youtube`)
         .then(async value => {

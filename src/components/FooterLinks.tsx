@@ -26,10 +26,7 @@ const data = [
     {
       title: 'Community',
       links: [
-        { label: 'Join Discord', link: 'https://discord.gg/DbmcPRDNTD' },
-        { label: 'Follow on Twitter', link: '#' },
-        { label: 'Email newsletter', link: '#' },
-        { label: 'GitHub discussions', link: '#' },
+        { label: 'Join Discord', link: 'https://discord.gg/DbmcPRDNTD' }
       ],
     },
   ];

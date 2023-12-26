@@ -1,35 +1,45 @@
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/authOptions";
-import envFetch from "@/lib/envfetch";
+'use client'
+import { useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export default async function SignUp() {
 
-    const session = await getServerSession(authOptions);
+export default function SignUp() {
+    const { data: session, status } = useSession()
+    const router = useRouter()
     const email = session?.user?.email;
-    if (!session) {
-      return (
-        <>로그인을 하세요</>
-      )
-    } else {
-      const res = await envFetch(`/api/users?email=${email}`)
-      const { has } = await res.json()
-      console.log(email)
-      console.log(has)
-      if (has) {
-        return <div>로그인 성공</div>
-      } else {
-        const res = await envFetch(`/api/users`, {
-          method: "POST",
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: email
-          })
+    const [create, setCreate] = useState('잠시 기다려 주세요...')
+    const searchParams = useSearchParams();
+    const callbackUrl = searchParams.get('callbackUrl')
+
+    useEffect(() => {
+      fetch(`/api/users?email=${email}`)
+        .then(async (res) => {
+          const { has } = await res.json()
+          if (!has) {
+            const user = await fetch(`/api/users`, {
+              method: "POST",
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: email
+              })
+            }).then(async (r) => await r.json())
+
+            if (user.type) {
+              router.push(callbackUrl || '/')
+            } else {
+              setCreate('이상한 에러')
+            }
+          } else {
+            router.push(callbackUrl || '/')
+          }
         })
-        if ((await res.json()).type) {
-          return <div>회원가입 성공</div>
-        } else {
-          return <div>실패</div>
-        }
-      }
-    }
+    }, [callbackUrl, email, router])
+
+    return (
+      <div>
+        {create}
+      </div>
+    )
+
 }

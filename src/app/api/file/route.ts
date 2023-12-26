@@ -26,7 +26,7 @@ export async function DELETE(request: NextRequest) {
   if (session) {
     const { searchParams } = new URL(request.url);
     const urlToDelete = searchParams.get('url') as string;
-    await del(urlToDelete);
+    await del(`${process.env.BLOB_URL}/${urlToDelete}`);
     return NextResponse.json({
       message: `delete ${urlToDelete}`
     })
@@ -38,6 +38,13 @@ export async function DELETE(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+    const bool = searchParams.get('all')!;
   const { blobs } = await list();
+  if (bool === 'true') {
+    blobs.map((blob) => {
+      del(blob.url)
+    })
+  }
   return NextResponse.json(blobs);
 }

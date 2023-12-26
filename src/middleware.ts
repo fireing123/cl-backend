@@ -12,10 +12,13 @@ export async function middleware(request: NextRequest) {
         return NextResponse.rewrite(new URL('/404', request.url))
       }
       if (request.nextUrl.pathname.startsWith('/signup')) {
-        return NextResponse.redirect(new URL('/login', request.url))
+        return NextResponse.redirect(new URL('/login?callbackUrl=/signup', request.url))
       }
       if (request.nextUrl.pathname.startsWith('/mypage')) {
-        return NextResponse.redirect(new URL('/login', request.url))
+        return NextResponse.redirect(new URL('/login?callbackUrl=/signup?callbackUrl=/mypage', request.url))
+      }
+      if (request.nextUrl.pathname.startsWith('/application')) {
+        return NextResponse.redirect(new URL('/login?callbackUrl=/signup?callbackUrl=/application', request.url))
       }
     } else {
       if (request.nextUrl.pathname.startsWith('/admin')) {

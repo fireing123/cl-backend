@@ -24,7 +24,7 @@ export async function POST(req: Request) {
             const value = await prisma.post.create({
                 data: {
                     title: title,
-                    url: fileurl,
+                    url: fileurl.replace(`${process.env.BLOB_URL}/`, ""),
                     userId: user.id
                 }
             })
@@ -56,6 +56,7 @@ export async function GET(req: NextRequest) {
                 id: id!
             }
         })
+        
         return NextResponse.json({
             title: post?.title,
             url: post?.url,
@@ -85,6 +86,7 @@ export async function DELETE(req: NextRequest) {
     const session = await getServerSession(authOptions)
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
+
     if (id && session) {
         const post = await prisma.post.findFirst({
             where: {
@@ -105,12 +107,13 @@ export async function DELETE(req: NextRequest) {
             if (user?.email === session?.user?.email || you?.rank === "admin") {
                 await prisma.post.delete({
                     where: {
-                        id
+                        id: id
                     }
                 })
-                await fetch(`/api/file?url=${post.url}`, {
+                const res = await fetch(`${process.env.NEXTAUTH_URL}/api/file?url=${post.url}`, {
                     method: "DELETE"
                 })
+                console.log(await res.json())
                 return NextResponse.json({
                     title: post?.title,
                     url: post?.url,
@@ -121,6 +124,10 @@ export async function DELETE(req: NextRequest) {
                     message: '당신은 이 블로그를 삭제할 권한이 없습니다'
                 })
             }
+        } else {
+            return NextResponse.json({
+                message: '포스트가 존재하지 않음'
+            })
         }
     } else {
         return NextResponse.json({

@@ -40,15 +40,15 @@ export default function Blog({ params }: { params: {id: string} }) {
                         if (user.rank != "person") {
                             rank = user.rank
                         }
-                        console.log('ee')
-                        const res = await fetch('/api/users', {
+
+                        const nres = await fetch('/api/users', {
                             method: "PATCH",
                             body: JSON.stringify({
                                 email: app.email,
                                 rank: rank,
                                 phoneNumber: app.phoneNumber
                             })})
-                        const { type } = await res.json();
+                        const { type } = await nres.json();
                             if (type) {
                                 notifications.show({
                                     title: "정상 합격처리 되셨습니다",

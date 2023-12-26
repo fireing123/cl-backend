@@ -3,11 +3,11 @@ import Comments from "@/components/comments"
 import envFetch from "@/lib/envfetch"
 import classes from './blogpage.module.css'
 
-export default async function Modify({ params }: { params: {id: string} }) {
+export default async function Blog({ params }: { params: {id: string} }) {
 
     const res = await envFetch(`/api/post?id=${params.id}`)
     const { title, url, date } = await res.json()
-    const mdRes = await fetch(url)
+    const mdRes = await fetch(`${process.env.BLOB_URL}/${url}`)
     const md = await mdRes.text()
     
     return (

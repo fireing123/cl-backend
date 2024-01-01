@@ -7,7 +7,6 @@ import classes from './blog.module.css'
 import { useSession } from "next-auth/react";
 import { IconTrash } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
-import { Noticia_Text } from "next/font/google";
 import { useRouter } from "next/navigation";
 
 export default function MyBlog() {
@@ -33,21 +32,31 @@ export default function MyBlog() {
     const DeleteBlog = (id: string) => {
         fetch(`/api/post?id=${id}`, { method: "DELETE" })
             .then(async (res) => {
+                
             const newm = await res.json()
             console.log(newm)
             const { message } = newm
             if (!message) {
-                notifications.show({
-                    message: "삭제 성공"
-                })
-                router.refresh()
+                const {fileId } = newm
+                const { type, message } = await fetch(`api/file?url=${fileId}`, {
+                    method: "DELETE"
+                }).then(async r => await r.json())
+                if (type) {
+                    notifications.show({
+                        message: message,
+                        color: "red"
+                    })
+                } else {
+                    notifications.show({
+                        message: "삭제 성공"
+                    })
+                    router.refresh()
+                }
             } else {
-                
                 notifications.show({
                     message: "삭제 실패",
                     color: "red"
                 })
-                router.refresh()
             }
         })
     }

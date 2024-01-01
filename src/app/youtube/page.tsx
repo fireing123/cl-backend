@@ -1,7 +1,7 @@
 "use client"
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { SimpleGrid, Card, Image, Text, Container, AspectRatio } from '@mantine/core';
+import { SimpleGrid, Card, Image, Text, Container, AspectRatio, Center, Loader } from '@mantine/core';
 import classes from './ArticlesCardsGrid.module.css';
 
 export default function YoutubeList() {
@@ -33,11 +33,13 @@ export default function YoutubeList() {
                 </SimpleGrid>
             </Container>
         )
+    } else if (status == "unauthenticated") {
+        return <div>로그인이 필요한 페이지입니다.</div>
     } else {
         return (
-            <div>
-                로그인 하지 않았거나 로딩중 입니다!
-            </div>
+            <Center>
+                <Loader />
+            </Center>
         )
     }
 }

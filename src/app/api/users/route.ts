@@ -2,6 +2,8 @@ import { NextRequest, NextResponse, } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import prisma from "@/lib/prisma";
+import { User } from "@prisma/client";
+import { isAdmin } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
     const { email } = await req.json();
@@ -32,21 +34,32 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
-    const email = searchParams.get('email');
+    const id = searchParams.get('id');
+    const email = searchParams.get('email')
     const auth = searchParams.get('auth');
     const session = await getServerSession(authOptions);
-    const user = await prisma.user.findFirst({
-        where: {
-            email: email!
-        }
-    })
+    let user : User | null
+    if (id) {
+        user = await prisma.user.findFirst({
+            where: {
+                id: id!
+            }
+        })
+    } else {
+        user = await prisma.user.findFirst({
+            where: {
+                email: email!
+            }
+        }) 
+    }
     if (!user) {
         return NextResponse.json({
-            has: false
+            has: false,
+            message: "id params undefined"
         })
     } else if (auth) {
         if (session) {
-            if (user && user.rank === 'admin') {
+            if (user.rank === 'admin') {
                 return NextResponse.json({
                     has: true,
                     id: user.id,
@@ -59,7 +72,7 @@ export async function GET(req: NextRequest) {
             }
             
         }
-    } else if (session && session.user?.email === email) {
+    } else if (session && session.user?.email === user.email) {
         return NextResponse.json({
             has: true,
             id: user.id,
@@ -70,8 +83,6 @@ export async function GET(req: NextRequest) {
             applicationId: user.applicationId
         })
     } else {
-        console.log(session?.user?.email, " ", email)
-        console.log(session)
         return NextResponse.json({
             has: true,
             id: user.id,
@@ -85,59 +96,38 @@ export async function GET(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
     const session = await getServerSession(authOptions);
     const { searchParams } = new URL(req.url);
+    const phoneNumber = searchParams.get('phoneNumber')!;
+    const image = searchParams.get('image')!;
     const email = searchParams.get('email')!;
     const rank = searchParams.get('rank')!;
-    const phoneNumber = searchParams.get('phoneNumber')!;
+    const name = searchParams.get('name')!;
 
     if (session) {
-        const user = await prisma.user.findFirst({
+        const self = await prisma.user.findFirst({
             where: {
                 email: session.user?.email!
             }
         });
-        const rankUser = await prisma.user.findFirst({
+        const other = await prisma.user.findFirst({
             where: {
                 email: email
             }
         })
-        if (user?.rank === 'admin' && rank !== 'admin' && rankUser?.rank !== 'admin') {
-            if (rankUser) {
-                if (rank) {
-                    await prisma.user.update({
-                        where: {
-                            email: email
-                        },
-                        data: {
-                            rank: rank
-                        }
-                    });
-                    await fetch(`${process.env.DISCORD_URL}/api/rankup?email=${email}`, {
-                        method: "PATCH"
-                    })
-                }
-                if (phoneNumber) {
-                    await prisma.user.update({
-                        where: {
-                            email: email
-                        },
-                        data: {
-                            phoneNumber: phoneNumber
-                        }
-                    });
-                }
-                return NextResponse.json({
-                    type: true,
-                    message: '변경됨'
-                })
-            } else {
-                return NextResponse.json({
-                    type: false,
-                    message: "해당 이메일의 유저는 존재하지 않습니다."
+        if (other) {
+            if (rank && isAdmin(self?.rank!) || rank !== 'admin' && other?.rank !== 'admin') { 
+                await prisma.user.update({
+                    where: {
+                        email: email
+                    },
+                    data: {
+                        rank: rank
+                    }
+                });
+                await fetch(`${process.env.DISCORD_URL}/api/rankup?email=${email}`, {
+                    method: "PATCH"
                 })
             }
-            
-        } else {
-            if (session.user?.email === email) {
+            if (phoneNumber && (self == other || isAdmin(self?.rank!))) {
                 await prisma.user.update({
                     where: {
                         email: email
@@ -146,17 +136,36 @@ export async function PATCH(req: NextRequest) {
                         phoneNumber: phoneNumber
                     }
                 });
-                return NextResponse.json({
-                    type: true,
-                    message: "자신에게 접근함"
-                })
-            } else {
-                return NextResponse.json({
-                    type: false,
-                    message: "권한이 없으면서 다른유저에 접근함"
+            }
+            if (name && (self == other || isAdmin(self?.rank!))) {
+                await prisma.user.update({
+                    where: {
+                        email: email
+                    },
+                    data: {
+                        name: name
+                    }
                 })
             }
-            
+            if (image && (self == other || isAdmin(self?.rank!))) {
+                await prisma.user.update({
+                    where: {
+                        email: email,
+                    },
+                    data: {
+                        image: image
+                    }
+                })
+            }
+            return NextResponse.json({
+                type: true,
+                message: '변경됨'
+            })
+        } else {
+            return NextResponse.json({
+                type: false,
+                message: "해당 이메일의 유저는 존재하지 않습니다."
+            })
         }
     } else {
         return NextResponse.json({

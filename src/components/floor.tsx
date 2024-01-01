@@ -88,11 +88,11 @@ export default function Floor() {
                 </UnstyledButton>
               </Menu.Target>
                 {!session && <Group visibleFrom="sm">
-                  <Button onClick={() => router.push('/login?callbackUrl=/signup')} >Login</Button>
+                  <Button component="a" href={'/login?callbackUrl=/signup'}>Login</Button>
                 </Group>}
               <Menu.Dropdown>
                 <Menu.Label>Settings</Menu.Label>
-                  <Menu.Item onClick={() => router.push('/mypage')}
+                  <Menu.Item component="a" href={'/mypage'}
                     leftSection={
                       <IconSettings style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                     }
@@ -103,7 +103,7 @@ export default function Floor() {
                     }
                   >Logout</Menu.Item>
                   <Menu.Label>Blog</Menu.Label>
-                  <Menu.Item onClick={() => router.push('/blog/create')}
+                  <Menu.Item component="a" href={'/blog/create'}
                     leftSection={
                       <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                     }
@@ -131,11 +131,3 @@ export default function Floor() {
     </div>
   )
 }
-
-/**<Link href="/">
-            <
-        </Link>
-        <Link href="/blog">목록</Link>
-        <Link href="/youtube">추천</Link>
-        <Link href={"/mypage"}>{session?.user?.name}</Link>
-        <Image src={session?.user?.image!} alt="user" width={30} height={30}/> */

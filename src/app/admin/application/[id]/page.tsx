@@ -1,29 +1,25 @@
-'use client'
-import { useEffect, useState } from "react"
 
-import { notifications } from '@mantine/notifications';
 import { Button, Group, Paper, Text } from "@mantine/core"
 
 import classes from './blogpage.module.css'
+import { DeleteButton, PassButton } from "@/components/applicationButton";
 
-export default function Blog({ params }: { params: {id: string} }) {
-    const [app, setApp] = useState<{ title: string, md: string, email: string, phoneNumber: string, date: string} | null>(null);
-    useEffect(() => {
-        fetch(`/api/application?id=${params.id}`)
-            .then(async (res) => {
-                const { title, url, email, phoneNumber, date } = await res.json()
-                const mdRes = await fetch(url)
-                const md = await mdRes.text()
-                setApp({title, md, email, phoneNumber, date})
-            })
-    }, [params.id])
+export default async function Blog({ params }: { params: {id: string} }) {
+
+    const app = await fetch(`${process.env.BLOB_URL}/api/application?id=${params.id}`)
+        .then(async (res) => {
+            const { name, title, fileId, email, phoneNumber, date } = await res.json()
+            const md = await fetch(`/api/file?id=${fileId}`)
+                .then(async (res) => await res.text())
+            return {title, name, md, email, phoneNumber, date}
+        })
 
     return (
         <div>
             {app &&
                 <Paper radius="md" p="xl" withBorder className={classes.page} >
                 <Group>
-                    <h1>title : {app.title}</h1>
+                    <h1>{app.title}</h1>
                     <div>{app.date}</div>
                 </Group>
                 <Group>
@@ -32,43 +28,8 @@ export default function Blog({ params }: { params: {id: string} }) {
                 </Group>
                 <div dangerouslySetInnerHTML={{__html: app.md}} />
                 <Group>
-                    <Button onClick={async () => {
-                        const res = await fetch(`/api/users?email=${app.email}`)
-                        const user = await res.json()
-                        if (user.has) {
-                            let rank = "member"
-                        if (user.rank != "person") {
-                            rank = user.rank
-                        }
-
-                        const nres = await fetch('/api/users', {
-                            method: "PATCH",
-                            body: JSON.stringify({
-                                email: app.email,
-                                rank: rank,
-                                phoneNumber: app.phoneNumber
-                            })})
-                        const { type } = await nres.json();
-                            if (type) {
-                                notifications.show({
-                                    title: "정상 합격처리 되셨습니다",
-                                    message: "이 유저는 이제 CL 동아리 멤버입니다!"
-                                })
-                            } else {
-                                notifications.show({
-                                    color: "red",
-                                    title: "예상지 못한 에러",
-                                    message: "어떤 에러인지 모릅니다!"
-                                })
-                            }
-
-                        } else {
-                            notifications.show({
-                                color: 'red',
-                                title: "Undefined User",
-                                message: "이 이메일은 회원 가입을 진행하지 않았습니다!"
-                            })
-                        }}}>합격</Button>
+                    <PassButton app={app} />
+                    <DeleteButton app={app} />
                 </Group>
             </Paper>}
         </div>

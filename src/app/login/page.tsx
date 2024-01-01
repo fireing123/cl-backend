@@ -13,8 +13,6 @@ export default function Login() {
     signIn(provid, { callbackUrl: searchParams.get('callbackUrl')! })
   }
   
-
-
   return (
     <Paper shadow="xl" radius="md" p="xl" withBorder className={classes.login}  >
       <Text size="lg" fw={500}>

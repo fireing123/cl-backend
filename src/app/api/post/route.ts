@@ -4,10 +4,10 @@ import { authOptions } from "@lib/authOptions"
 import prisma from "@/lib/prisma"
 
 export async function POST(req: Request) {
-    const { fileurl, title, pubished } = await req.json()
+    const { url, title } = await req.json()
     const session = await getServerSession(authOptions)
     
-    if (!session) {
+    if (!(url && title && session)) {
         return NextResponse.json({
             type: false,
             message: "fail undefined user"
@@ -15,31 +15,44 @@ export async function POST(req: Request) {
     } else {
         const email = session.user?.email
         if (email) {
-            const user : any = await prisma.user.findFirst({
+            const user = await prisma.user.findFirst({
                 where: {
                     email: email
+                }
+            })
+            const file = await prisma.file.findFirst({
+                where: {
+                    url: url.replace(`${process.env.BLOB_URL}/`, "")
                 }
             })
 
-            const value = await prisma.post.create({
-                data: {
-                    title: title,
-                    url: fileurl.replace(`${process.env.BLOB_URL}/`, ""),
-                    userId: user.id
-                }
-            })
-            const newPosts : any = [...user?.posts!, value.id]
-            await prisma.user.update({
-                where: {
-                    email: email
-                },
-                data: {
-                    posts: newPosts
-                }
-            })
-            return NextResponse.json({ type: true,
-                message: "success create new post" 
-            })
+            if (file) {
+                const value = await prisma.post.create({
+                    data: {
+                        title: title,
+                        fileId: file.id,
+                        userId: user?.id!
+                    }
+                })
+                const newPosts : any = [...user?.posts!, value.id]
+                await prisma.user.update({
+                    where: {
+                        email: email
+                    },
+                    data: {
+                        posts: newPosts
+                    }
+                })
+                return NextResponse.json({
+                    type: true,
+                    message: "success create new post" 
+                })
+            } else {
+                return NextResponse.json({
+                    type: false,
+                    message: "해당 id의 파일이 존재하지 않음!"
+                })
+            }
         } else {
             return NextResponse.json({ type: false, message: "유저의 이메일이 존재하지 않음" })
         }
@@ -56,12 +69,7 @@ export async function GET(req: NextRequest) {
                 id: id!
             }
         })
-        
-        return NextResponse.json({
-            title: post?.title,
-            url: post?.url,
-            date: post?.date
-        })
+        return NextResponse.json(post)
     } else if (user) {
         const posts = await prisma.post.findMany({
             where: {
@@ -110,14 +118,17 @@ export async function DELETE(req: NextRequest) {
                         id: id
                     }
                 })
-                const res = await fetch(`${process.env.NEXTAUTH_URL}/api/file?url=${post.url}`, {
-                    method: "DELETE"
+                const removed = user?.posts.filter((value) => value !== id )
+                await prisma.user.update({
+                    where: {
+                        email: user?.email
+                    },
+                    data: {
+                        posts: removed
+                    }
                 })
-                console.log(await res.json())
                 return NextResponse.json({
-                    title: post?.title,
-                    url: post?.url,
-                    date: post?.date
+                    fileId: post.fileId
                 })
             } else {
                 return NextResponse.json({

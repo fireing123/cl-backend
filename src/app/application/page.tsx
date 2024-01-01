@@ -10,11 +10,11 @@ import TextAlign from '@tiptap/extension-text-align';
 import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
 
-import { Box, Button, Checkbox, Group, TextInput } from '@mantine/core';
+import { Box, Button, Center, Checkbox, Group, Loader, TextInput } from '@mantine/core';
 import { RichTextEditor, Link } from '@mantine/tiptap';
 import { notifications } from '@mantine/notifications';
 import type { PutBlobResult } from '@vercel/blob';
-import { useForm } from '@mantine/form';
+import { isEmail, isNotEmpty, useForm } from '@mantine/form';
 
 export default function Application() {
 
@@ -23,14 +23,15 @@ export default function Application() {
     const form = useForm({
       initialValues: {
         title: '',
+        name: '',
         email: '',
         phoneNumber: '',
-        termsOfService: false,
       },
       validate: {
-        title: (value) => (/^\S+$/.test(value) ? null : 'Invalid title'),
-        email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-        phoneNumber: (value) => (/^\S+/.test(value)) ? null : 'Invalid phoneNumber'
+        title: isNotEmpty('Enter title'),
+        name: isNotEmpty('Enter name'),
+        email: isEmail('Invalid email'), 
+        phoneNumber: (value) => (/^\S+/.test(value)) ? null : 'Invalid phoneNumber',
       }
     })
 
@@ -49,9 +50,9 @@ export default function Application() {
     
   const submit = async (values: {
     title: string;
+    name: string;
     email: string;
     phoneNumber: string;
-    termsOfService: boolean;
 }) => {
     
     const file = new File([editer?.getHTML() || ""], `${values.title}`)
@@ -70,6 +71,7 @@ export default function Application() {
         body: JSON.stringify({
           fileurl: newBlob.url,
           title: file.name,
+          name: values.name,
           email: values.email,
           phoneNumber: values.phoneNumber
         })
@@ -95,6 +97,12 @@ export default function Application() {
              {...form.getInputProps('title')}
             />
             <Group mt="md">
+                <TextInput
+                    withAsterisk
+                    label="name"
+                    placeholder='name'
+                    {...form.getInputProps('name')}
+                />
                 <TextInput
                     withAsterisk
                     label="email"
@@ -149,15 +157,16 @@ export default function Application() {
             <Group justify="flex-end" mt="md">
               <Button type="submit">Submit</Button>
             </Group>
-            <Checkbox
-                mt="md"
-                label="I agree to sell my privacy"
-                {...form.getInputProps('termsOfService', { type: 'checkbox' })}
-            />
           </form>
         </Box>
         );
+  } else if (status === "loading") {
+    return (
+      <Center>
+        <Loader />
+      </Center>
+    )
   } else {
-    <div>로그인을 진행한 후 신청해주세요</div>
+    return <div>로그인이 필요한 페이지입니다.</div>
   }
 }

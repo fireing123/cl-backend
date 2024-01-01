@@ -11,13 +11,15 @@ import TextAlign from '@tiptap/extension-text-align';
 import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
 
-import { Box, Button, Group, TextInput } from '@mantine/core';
+import { Box, Button, Center, Group, Loader, TextInput } from '@mantine/core';
 import { RichTextEditor, Link } from '@mantine/tiptap';
 import { notifications } from '@mantine/notifications';
 import { useForm } from '@mantine/form';
+import { useState } from 'react';
 
 export default function CreateBlog() {
   const { data: session, status } = useSession();
+  const [canSubmit, setCanSubmit] = useState(false);
   const router = useRouter();
   const form = useForm({
     initialValues: {
@@ -41,7 +43,7 @@ export default function CreateBlog() {
   })
 
   const submit = async (values: { title: string }) => {
-    
+    setCanSubmit(true)
     const file = new File([editer?.getHTML() || ""], `${values.title}`)
 
       const response = await fetch(
@@ -53,22 +55,30 @@ export default function CreateBlog() {
       );
       const newBlob = (await response.json()) as PutBlobResult;
 
-      await fetch(`/api/post`, {
+      const { type, message } = await fetch(`/api/post`, {
         method: "POST",
         body: JSON.stringify({
-          fileurl: newBlob.url,
+          url: newBlob.url,
           title: file.name,
-          pubished: true
         })
-      })
+      }).then(async res => await res.json())
 
-      notifications.show({
-        title: 'create Blog',
-        message: `Success Create Blog ${values.title}`
-      })
-
-      router.push('/')
+      if (type) {
+        notifications.show({
+          title: 'create Blog',
+          message: `Success Create Blog ${values.title}`
+        })
+  
+        router.push('/')
+      } else {
+        notifications.show({
+          color: "red",
+          title: 'fail create',
+          message: message
+        })
+      } 
   }
+
   if (session?.user) {
     return (
     <Box maw={700} mx="auto">
@@ -118,10 +128,16 @@ export default function CreateBlog() {
           <RichTextEditor.Content />
         </RichTextEditor>
         <Group justify="flex-end" mt="md">
-          <Button type="submit">Submit</Button>
+          <Button loading={canSubmit} loaderProps={{ type: "dots" }} type="submit">Submit</Button>
         </Group>
       </form>
     </Box>
     );
+  } else {
+    return (
+      <Center>
+        <Loader />
+      </Center>
+    )
   }
 }

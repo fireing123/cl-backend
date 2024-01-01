@@ -2,9 +2,10 @@
  
 import Giscus from '@giscus/react';
  
-const Comments = ({term}: {term : string}) => {
+const Comments = ({term}: {term : string | undefined}) => {
 	return (
-		<Giscus
+		<div>
+			{term && <Giscus
             id="comments"
 			repo="fireing123/cl-backend"
 			repoId="R_kgDOKpz8cQ"
@@ -18,7 +19,8 @@ const Comments = ({term}: {term : string}) => {
             theme="light"
 			lang="en"
 			loading="lazy"
-		    />
+		    />}
+		</div>
 	);
 };
 

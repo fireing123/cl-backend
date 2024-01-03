@@ -11,7 +11,7 @@ export async function PassButton({ app }: { app: { title: string, name: string, 
             rank = user.rank
         }
 
-        const { type, message } = await fetch(`/api/users?rank=${rank}&name=${app.name}&phoneNumber=${app.phoneNumber}`, {
+        const { type, message } = await fetch(`/api/users?email=${app.email}&rank=${rank}&name=${app.name}&phoneNumber=${app.phoneNumber}`, {
             method: "PATCH"}).then(async (res) => res.json())
 
             if (type) {

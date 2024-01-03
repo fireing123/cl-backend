@@ -76,17 +76,13 @@ export async function GET(req: NextRequest) {
                 userId: user
             }
         })
-        return NextResponse.json({
-            posts
-        })
+        return NextResponse.json(posts)
     } else {
         const posts = await prisma.post.findMany({
             where: {
             }
         })
-        return NextResponse.json({
-            posts
-        })
+        return NextResponse.json(posts)
     }
 }
 

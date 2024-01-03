@@ -23,7 +23,7 @@ export default function MyBlog() {
                     const user = await res.json() 
                     const posts = await fetch(`/api/post?user=${user.id}`) 
                         .then(async res => await res.json())
-                    setList(posts.posts)
+                    setList(posts)
                     
                 })
         }

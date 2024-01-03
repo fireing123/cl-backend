@@ -6,7 +6,7 @@ import { User } from "@prisma/client";
 import { isAdmin } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
-    const { email } = await req.json();
+    const { email, image } = await req.json();
     const findUser = await prisma.user.count({
         where: {
             email: email
@@ -22,7 +22,8 @@ export async function POST(req: NextRequest) {
         console.log(email)
         const newUser = await prisma.user.create({
             data: {
-                email: email
+                email: email,
+                image: image
             }
         })
         return NextResponse.json({
@@ -62,12 +63,7 @@ export async function GET(req: NextRequest) {
             if (user.rank === 'admin') {
                 return NextResponse.json({
                     has: true,
-                    id: user.id,
-                    email: user.email,
-                    rank: user.rank,
-                    phoneNumber: user.phoneNumber,
-                    posts: user.posts,
-                    applicationId: user.applicationId
+                    ...user
                 })
             }
             
@@ -75,18 +71,15 @@ export async function GET(req: NextRequest) {
     } else if (session && session.user?.email === user.email) {
         return NextResponse.json({
             has: true,
-            id: user.id,
-            email: user.email,
-            rank: user.rank,
-            phoneNumber: user.phoneNumber,
-            posts: user.posts,
-            applicationId: user.applicationId
+            ...user
         })
     } else {
         return NextResponse.json({
             has: true,
             id: user.id,
-            email: user?.email,
+            name: user.name,
+            image: user.image,
+            email: user.email,
             posts: user.posts,
             rank: user.rank
         })
@@ -101,7 +94,6 @@ export async function PATCH(req: NextRequest) {
     const email = searchParams.get('email')!;
     const rank = searchParams.get('rank')!;
     const name = searchParams.get('name')!;
-
     if (session) {
         const self = await prisma.user.findFirst({
             where: {

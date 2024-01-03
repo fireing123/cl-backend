@@ -23,12 +23,13 @@ export default function SignUp() {
               method: "POST",
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                email: email
+                email: email,
+                image: session.user?.image
               })
             }).then(async (r) => await r.json())
 
             if (user.type) {
-              await fetch(`/api/users?image=${session.user?.image}`, {
+              await fetch(`/api/users?email=${email}&image=${session.user?.image}`, {
                 method: "PATCH"
               })
 
@@ -41,6 +42,9 @@ export default function SignUp() {
               router.push('/')
             }
           } else {
+            await fetch(`/api/users?email=${email}&image=${session.user?.image}`, {
+              method: "PATCH"
+            })
             router.push(callbackUrl || '/')
           }
         })

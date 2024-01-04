@@ -1,6 +1,6 @@
 'use client'
 
-import MyBlog from "@/components/myblog";
+import MyBlog from "@/components/Blog/myblog";
 import { User } from "@/types/types"
 import { Avatar, Center, Loader, Paper, Text } from "@mantine/core";
 import { useEffect, useState } from "react"

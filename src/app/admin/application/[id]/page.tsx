@@ -2,7 +2,7 @@
 import { Button, Group, Paper, Text } from "@mantine/core"
 
 import classes from './blogpage.module.css'
-import { DeleteButton, PassButton } from "@/components/applicationButton";
+import { DeleteButton, PassButton } from "@/components/Application/applicationButton";
 
 export default async function Blog({ params }: { params: {id: string} }) {
 

@@ -1,6 +1,6 @@
 "use client"
 import { Box, Center, Group, Loader, Paper, Title } from "@mantine/core"
-import Comments from "@/components/comments"
+import Comments from "@/components/Comment/comments"
 import classes from './blogpage.module.css'
 import { useEffect, useState } from "react"
 import Link from "next/link"

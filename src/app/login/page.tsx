@@ -3,8 +3,8 @@ import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { Text, Paper, Group } from '@mantine/core';
 
-import { GithubButton } from "@/components/GithubButton";
-import { GoogleButton } from "@/components/GoogleButton";
+import { GithubButton } from "@/components/Auth/GithubButton";
+import { GoogleButton } from "@/components/Auth/GoogleButton";
 import classes from './login.module.css'
 
 export default function Login() {

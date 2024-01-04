@@ -13,7 +13,7 @@ import {
 import { IconBrandTwitter, IconBrandYoutube, IconBrandInstagram, IconPhone } from '@tabler/icons-react';
 import classes from './ContactUs.module.css';
 import { User } from "@prisma/client";
-import ContactIcon from "@/components/ContactIcons";
+import ContactIcon from "@/components/ContactIcons/ContactIcons";
 import { IconAt } from "@tabler/icons-react";
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';

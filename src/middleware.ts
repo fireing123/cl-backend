@@ -7,6 +7,11 @@ export async function middleware(request: NextRequest) {
     const token = await getToken({
       req: request
     })
+    if (process.env.NODE_ENV == 'production') {
+      if (request.nextUrl.pathname.startsWith('/development')) {
+        return NextResponse.rewrite(new URL('/404', request.url))
+      }
+    }
     if (!token) {
       if (request.nextUrl.pathname.startsWith('/admin')) {
         return NextResponse.rewrite(new URL('/404', request.url))

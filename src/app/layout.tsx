@@ -10,9 +10,9 @@ import { Notifications } from '@mantine/notifications';
 import { MantineProvider, createTheme } from '@mantine/core';
 
 import AuthContext from '@/context/AuthContext'
-import Floor from '@/components/floor'
+import Floor from '@/components/Header/Header'
 import ThemeProviders from '@/components/providers'
-import { FooterLinks } from '@/components/FooterLinks';
+import { FooterLinks } from '@/components/Footer/FooterLinks';
 
 const inter = Inter({ subsets: ['latin'] })
 

@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { transporter } from "@lib/email"
 import prisma from "@/lib/prisma";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
     const { id, token, email } = await req.json();
     const user = await prisma.user.findFirst({
         where: {
@@ -20,10 +20,12 @@ export async function POST(req: NextRequest) {
             </div>`
         });
         return NextResponse.json({
+            type: true,
             message: "메세지 전달 성공"
         })
     } else {
         return NextResponse.json({
+            type: false,
             message: "이 email의 계정은 생성되지않았습니다."
         })
     }

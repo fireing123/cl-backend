@@ -38,7 +38,7 @@ export default function MyBlog() {
             const { message } = newm
             if (!message) {
                 const {fileId } = newm
-                const { type, message } = await fetch(`api/file?url=${fileId}`, {
+                const { type, message } = await fetch(`/api/file?url=${fileId}`, {
                     method: "DELETE"
                 }).then(async r => await r.json())
                 if (type) {

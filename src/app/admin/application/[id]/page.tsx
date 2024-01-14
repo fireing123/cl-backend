@@ -3,10 +3,11 @@ import { Button, Group, Paper, Text } from "@mantine/core"
 
 import classes from './blogpage.module.css'
 import { DeleteButton, PassButton } from "@/components/Application/applicationButton";
+import envFetch from "@/lib/envfetch";
 
 export default async function Blog({ params }: { params: {id: string} }) {
 
-    const app = await fetch(`${process.env.BLOB_URL}/api/application?id=${params.id}`)
+    const app = await envFetch(`/api/application?id=${params.id}`)
         .then(async (res) => {
             const { name, title, fileId, email, phoneNumber, date } = await res.json()
             const md = await fetch(`/api/file?id=${fileId}`)

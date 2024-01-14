@@ -8,7 +8,7 @@ export default function List() {
     const [list, setList] = useState([]);
     useEffect(() => {
         fetch("/api/post").then(async (res) => {
-            setList((await res.json()).posts)
+            setList((await res.json()))
         })
     }, [])
     return (

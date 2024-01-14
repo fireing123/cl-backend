@@ -9,6 +9,7 @@ import {
   Button,
   Group,
   ActionIcon,
+  Avatar,
 } from '@mantine/core';
 import { IconBrandTwitter, IconBrandYoutube, IconBrandInstagram, IconPhone } from '@tabler/icons-react';
 import classes from './ContactUs.module.css';
@@ -24,7 +25,7 @@ const social = [IconBrandTwitter, IconBrandYoutube, IconBrandInstagram];
 export default function Mypage() {
   const { data: session, status } = useSession();
   const [user, setUser] = useState<User>();
-  const [visible, setVisible] = useState(true)
+  const [visible, setVisible] = useState(false)
   useEffect(() => {
     if (status === "authenticated") {
       fetch(`/api/users?email=${session?.user?.email}`)
@@ -34,19 +35,30 @@ export default function Mypage() {
         setVisible(false)
       })
     }
-  }, [session?.user?.email, status]) 
+  }, [status]) 
   
   return (
     <div className={classes.wrapper}>
       <SimpleGrid cols={{ base: 1, sm: 2 }} spacing={50}>
         <div>
-          <Title className={classes.title}>My Page</Title>
-          <br></br>
-          <Text className={classes.description} mt="sm" mb={30}>
-            Leave your email and we will get back to you within 24 hours
-          </Text>
+        <Title className={classes.title}>My Page</Title>
+        <br></br>
+        <Avatar
+          src={session?.user.image}
+          size={120}
+          radius={120}
+          mx="auto"
+        />
+        <Text ta="center" fz="lg" fw={500} mt="md">
+          {user?.username || "이름이 등록되지않음"}
+        </Text>
+        <Text ta="center" c="dimmed" fz="sm">
+          {user?.name} • {user?.rank}
+        </Text>
+
+        
           <Skeleton visible={visible}>
-            <ContactIcon icon={IconAt} title="email" description={user?.email} />
+            <ContactIcon icon={IconAt} title="email" description={session?.user?.email} />
           </Skeleton>
           <br></br>
           <Group>
@@ -55,11 +67,11 @@ export default function Mypage() {
           </Skeleton>
           </Group>
           <br></br>
-          <Group>
-            <Button  component="a" href="/mypage/blog">Blog</Button>
-          </Group>
         </div>
       </SimpleGrid>
+        <Group>
+          <Button  component="a" href="/mypage/blog">Blog</Button>
+        </Group>
     </div>
   );
 

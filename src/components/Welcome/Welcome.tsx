@@ -4,10 +4,14 @@ import { IconCheck } from '@tabler/icons-react';
 import image from './image.svg';
 import classes from './welcome.module.css';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 export default function Welcome() {
   const router = useRouter();
-
+  const { data: session, status } = useSession();
+  if (status === "authenticated") {
+    console.log(session?.user)
+  }
   return (
     <Container size="md">
       <div className={classes.inner}>
@@ -19,7 +23,6 @@ export default function Welcome() {
             코딩 학습을 기반으로 기초, 심화 문제를 탐구하는 동아리
             컴퓨터공학, SW공학, AI등에 관심 있는 학생 환영
           </Text>
-
           <List
             mt={30}
             spacing="sm"

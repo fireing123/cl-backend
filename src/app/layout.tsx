@@ -9,10 +9,10 @@ import { Inter } from 'next/font/google'
 import { Notifications } from '@mantine/notifications';
 import { MantineProvider, createTheme } from '@mantine/core';
 
-import AuthContext from '@/context/AuthContext'
 import Floor from '@/components/Header/Header'
 import ThemeProviders from '@/components/providers'
 import { FooterLinks } from '@/components/Footer/FooterLinks';
+import { SessionLayout } from '@/components/Layout/Session';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -29,7 +29,7 @@ const theme = createTheme({
 });
 
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -39,12 +39,12 @@ export default function RootLayout({
       <body className={inter.className}>
         <MantineProvider theme={theme} >
         <ThemeProviders>
-        <AuthContext>
+          <SessionLayout>
           <Notifications />
           <Floor />
           {children}
           <FooterLinks />
-        </AuthContext>
+          </SessionLayout>
         </ThemeProviders>
         </MantineProvider>
       </body>

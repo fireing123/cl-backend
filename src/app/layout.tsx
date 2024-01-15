@@ -36,10 +36,6 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning >
-      <head>
-        <meta http-equiv="refresh" content="0; url=https://jeonil.vercel.app/" />
-        <link rel="canonical" href="https://jeonil.vercel.app/"/>
-      </head>
       <body className={inter.className}>
         <MantineProvider theme={theme} >
         <ThemeProviders>

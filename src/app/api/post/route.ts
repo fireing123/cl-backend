@@ -15,11 +15,6 @@ export async function POST(req: Request) {
     } else {
         const email = session.user?.email
         if (email) {
-            const user = await prisma.user.findFirst({
-                where: {
-                    email: email
-                }
-            })
             const file = await prisma.file.findFirst({
                 where: {
                     url: url.replace(`${process.env.BLOB_URL}/`, "")
@@ -27,22 +22,18 @@ export async function POST(req: Request) {
             })
 
             if (file) {
-                const value = await prisma.post.create({
+                await prisma.post.create({
                     data: {
                         title: title,
                         fileId: file.id,
-                        userId: user?.id!
+                        user: {
+                            connect:{
+                                email: email
+                            }
+                        }
                     }
                 })
-                const newPosts : any = [...user?.posts!, value.id]
-                await prisma.user.update({
-                    where: {
-                        email: email
-                    },
-                    data: {
-                        posts: newPosts
-                    }
-                })
+
                 return NextResponse.json({
                     type: true,
                     message: "success create new post" 
@@ -64,7 +55,7 @@ export async function GET(req: NextRequest) {
     const id = searchParams.get('id');
     const user = searchParams.get('user');
     if (id) {
-        const post = await prisma.post.findFirst({
+        const post = await prisma.post.findUnique({
             where: {
                 id: id!
             }
@@ -112,15 +103,6 @@ export async function DELETE(req: NextRequest) {
                 await prisma.post.delete({
                     where: {
                         id: id
-                    }
-                })
-                const removed = user?.posts.filter((value) => value !== id )
-                await prisma.user.update({
-                    where: {
-                        email: user?.email
-                    },
-                    data: {
-                        posts: removed
                     }
                 })
                 return NextResponse.json({

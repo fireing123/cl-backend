@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { SimpleGrid, Card, Image, Text, Container, AspectRatio, Center, Loader } from '@mantine/core';
 import classes from './ArticlesCardsGrid.module.css';
 
+
+
+
 export default function YoutubeList() {
     const { data: session, status } = useSession();
     const [list, setList] = useState([]);

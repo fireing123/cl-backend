@@ -5,34 +5,6 @@ import prisma from "@/lib/prisma";
 import { User } from "@prisma/client";
 import { isAdmin } from "@/lib/auth";
 
-export async function POST(req: NextRequest) {
-    const { email, image } = await req.json();
-    const findUser = await prisma.user.count({
-        where: {
-            email: email
-        }
-    });
-
-    if (findUser > 0) {
-        return NextResponse.json({
-            type: false,
-            error: "이미 해당 이메일에 계정이 존재합니다"
-        })
-    } else {
-        console.log(email)
-        const newUser = await prisma.user.create({
-            data: {
-                email: email,
-                image: image
-            }
-        })
-        return NextResponse.json({
-            type: true,
-            message: `${email} 으로 생성됨`
-        })
-    }
-}
-
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
@@ -63,7 +35,14 @@ export async function GET(req: NextRequest) {
             if (user.rank === 'admin') {
                 return NextResponse.json({
                     has: true,
-                    ...user
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    image: user.image,
+                    username: user.username,
+                    rank: user.rank,
+                    phoneNumber: user.phoneNumber,
+                    
                 })
             }
             
@@ -71,29 +50,29 @@ export async function GET(req: NextRequest) {
     } else if (session && session.user?.email === user.email) {
         return NextResponse.json({
             has: true,
-            ...user
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            image: user.image,
+            username: user.username,
+            rank: user.rank,
+            phoneNumber: user.phoneNumber,
         })
     } else {
         return NextResponse.json({
             has: true,
             id: user.id,
-            name: user.name,
-            image: user.image,
+            username: user.username,
             email: user.email,
-            posts: user.posts,
-            rank: user.rank
+            rank: user.rank,
+            phoneNumber: user.phoneNumber
         })
     }
 }
 
-export async function PATCH(req: NextRequest) {
+export async function PATCH(req: Request) {
     const session = await getServerSession(authOptions);
-    const { searchParams } = new URL(req.url);
-    const phoneNumber = searchParams.get('phoneNumber')!;
-    const image = searchParams.get('image')!;
-    const email = searchParams.get('email')!;
-    const rank = searchParams.get('rank')!;
-    const name = searchParams.get('name')!;
+    const { email ,rank  ,name  ,phoneNumber } =  await req.json();
     if (session) {
         const self = await prisma.user.findFirst({
             where: {
@@ -136,16 +115,6 @@ export async function PATCH(req: NextRequest) {
                     },
                     data: {
                         name: name
-                    }
-                })
-            }
-            if (image && (self == other || isAdmin(self?.rank!))) {
-                await prisma.user.update({
-                    where: {
-                        email: email,
-                    },
-                    data: {
-                        image: image
                     }
                 })
             }

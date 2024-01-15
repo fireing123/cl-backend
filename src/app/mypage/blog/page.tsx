@@ -17,7 +17,7 @@ export default function MyBlog() {
     const router = useRouter();
 
     useEffect(() => {
-        if (status === "authenticated" && session) {
+        if (status === "authenticated") {
             fetch(`/api/users?email=${session.user?.email}`)
                 .then(async (res: any) => {
                     const user = await res.json() 
@@ -34,11 +34,10 @@ export default function MyBlog() {
             .then(async (res) => {
                 
             const newm = await res.json()
-            console.log(newm)
             const { message } = newm
             if (!message) {
                 const {fileId } = newm
-                const { type, message } = await fetch(`api/file?url=${fileId}`, {
+                const { type, message } = await fetch(`/api/file?url=${fileId}`, {
                     method: "DELETE"
                 }).then(async r => await r.json())
                 if (type) {

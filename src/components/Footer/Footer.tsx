@@ -1,38 +1,13 @@
 'use client'
-import { Text, Container, ActionIcon, Group, rem } from '@mantine/core';
-import { MantineLogo } from '@mantinex/mantine-logo';
-import classes from './FooterLinks.module.css';
+import { Text, Container, ActionIcon, Group, rem, RemoveScroll, Image } from '@mantine/core';
+import classes from './Footer.module.css';
+import { DiscordButton } from '../SocialButton/DiscordButton';
+import { links } from '../public/footer';
 
-const data = [
-    {
-      title: 'About',
-      links: [
-        { label: 'Features', link: '#' },
-        { label: 'Pricing', link: '#' },
-        { label: 'Support', link: '#' },
-        { label: 'Forums', link: '#' },
-      ],
-    },
-    {
-      title: 'Project',
-      links: [
-        { label: 'Contribute', link: '#' },
-        { label: 'Media assets', link: '#' },
-        { label: 'Changelog', link: '#' },
-        { label: 'Releases', link: '#' },
-      ],
-    },
-    {
-      title: 'Community',
-      links: [
-        { label: 'Join Discord', link: 'https://discord.gg/DbmcPRDNTD' }
-      ],
-    },
-  ];
   
-  export function FooterLinks() {
-    const groups = data.map((group) => {
-      const links = group.links.map((link, index) => (
+  export default function FooterLinks() {
+    const groups = links.map((group) => {
+      const footerLink = group.links.map((link, index) => (
         <Text<'a'>
           key={index}
           className={classes.link}
@@ -46,7 +21,7 @@ const data = [
       return (
         <div className={classes.wrapper} key={group.title}>
           <Text className={classes.title}>{group.title}</Text>
-          {links}
+          {footerLink}
         </div>
       );
     });
@@ -55,7 +30,7 @@ const data = [
       <footer className={classes.footer}>
         <Container className={classes.inner}>
           <div className={classes.logo}>
-            <MantineLogo size={30} />
+            <Image src="/main.svg" alt='Logo' />
             <Text size="xs" c="dimmed" className={classes.description}>
               Build fully functional accessible web applications faster than ever
             </Text>
@@ -66,8 +41,9 @@ const data = [
           <Text c="dimmed" size="sm">
             © 2024 jeonil.vercel.app. All rights reserved.
           </Text>
-  
-        
+            <div className={classes.social}>
+              <DiscordButton href='https://discord.gg/DbmcPRDNTD'>Join Discord community</DiscordButton>
+            </div>
         </Container>
       </footer>
     );

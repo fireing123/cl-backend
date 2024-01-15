@@ -1,11 +1,10 @@
 "use client"
 import { signOut, useSession } from "next-auth/react";
-import Image from "next/image";
-import Link from 'next/link';
+import { Image } from "@mantine/core";
 import cx from 'clsx';
 import { useState } from 'react';
 import {
-    Button, ButtonProps,
+    Button, 
   Container,
   Avatar,
   UnstyledButton,
@@ -13,20 +12,12 @@ import {
   Text,
   Menu,
   Tabs,
-  Burger,
   rem,
-  useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
   IconLogout,
-  IconHeart,
-  IconStar,
-  IconMessage,
   IconSettings,
-  IconPlayerPause,
-  IconTrash,
-  IconSwitchHorizontal,
   IconPencil,
   IconChevronDown,
 } from '@tabler/icons-react';
@@ -46,7 +37,6 @@ const tabs = [
 export default function Header() {
     const router = useRouter();
     const { data: session, status } = useSession();
-    const [opened, { toggle }] = useDisclosure(false);
     const [userMenuOpened, setUserMenuOpened] = useState(false);
 
     const items = tabs.map((tab) => (
@@ -61,11 +51,9 @@ export default function Header() {
           <Group justify="space-between">
 
             <Text component="a" href="/">
-              <MantineLogo size={28} />
+              <Image src="/main.svg" alt='Logo' />
             </Text>
-
-            <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
-
+            
             <Menu
               width={260}
               position="bottom-end"
@@ -87,8 +75,8 @@ export default function Header() {
                   </Group>}
                 </UnstyledButton>
               </Menu.Target>
-                {!session && <Group visibleFrom="sm">
-                  <Button component="a" href={'/login?callbackUrl=/signup'}>Login</Button>
+                {!session && <Group>
+                  <Button component="a" href={'/login'}>Login</Button>
                 </Group>}
               <Menu.Dropdown>
                 <Menu.Label>Settings</Menu.Label>

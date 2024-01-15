@@ -11,8 +11,8 @@ import { MantineProvider, createTheme } from '@mantine/core';
 
 import Header from '@/components/Header/Header'
 import ThemeProviders from '@/components/providers'
-import { FooterLinks } from '@/components/Footer/FooterLinks';
 import { SessionLayout } from '@/components/Layout/Session';
+import Footer from '@/components/Footer/Footer';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -43,7 +43,7 @@ export default async function RootLayout({
           <Notifications />
           <Header />
           {children}
-          <FooterLinks />
+          <Footer />
           </SessionLayout>
         </ThemeProviders>
         </MantineProvider>

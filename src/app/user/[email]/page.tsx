@@ -6,19 +6,15 @@ import { Avatar, Center, Loader, Paper, Text } from "@mantine/core";
 import { useEffect, useState } from "react"
 
 export default function UserPage({ params }: { params: { email: string} }) {
-    // 유저페이지 
-    // 유저명 이메일 블로그 사진 적절히 배치
     const [user, setUser] = useState<User>();
     const [type, setType] = useState<Boolean>(true);
 
     useEffect(() => {
         fetch(`/api/users?email=${params.email}`)
             .then(async (res) => {
-                const { has, id, name, image, email, rank } = await res.json()
+                const { has, id, name, image, email, rank, username, phoneNumber  } = await res.json()
                 if (has) {
-                    const posts = await fetch(`/api/post?user=${id}`)
-                        .then(async res => await res.json())
-                    setUser({ id, name, image, email, rank, posts, phoneNumber: null, applicationId: null })
+                    setUser({ id, name, image, email, rank, phoneNumber, username})
                 } else {
                     setType(false)
                 }
@@ -36,7 +32,7 @@ export default function UserPage({ params }: { params: { email: string} }) {
                         mx="auto"
                     />
                     <Text ta="center" fz="lg" fw={500} mt="md">
-                        {user.name || "이름없는 사나이"}
+                        {user.username || user.name}
                     </Text>
                     <Text ta="center" c="dimmed" fz="sm">
                       {user.email} • {user.rank}

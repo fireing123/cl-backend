@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 
 export default function MyBlog() {
     const [scrolled, setScrolled] = useState(false);
-    const [list, setList] = useState([]);
+    const [list, setList] = useState<[] | undefined>();
     const { data: session, status } = useSession();
 
     useEffect(() => {
@@ -18,7 +18,6 @@ export default function MyBlog() {
                     const user = await res.json() 
                     const posts = await fetch(`/api/post?user=${user.id}`) 
                         .then(async res => await res.json())
-                        console.log(posts)
                     setList(posts)
                 })
         }
@@ -36,7 +35,7 @@ export default function MyBlog() {
                         <Table.Th>date</Table.Th>
                     </Table.Tr>
                 </Table.Thead>
-                <Table.Tbody>{list.map((value: any, i: any) => {
+                <Table.Tbody>{list && list.map((value: any, i: any) => {
                     return (
                         <Table.Tr key={value.id}>
                             <Table.Td>

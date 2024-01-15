@@ -9,7 +9,7 @@ import { Inter } from 'next/font/google'
 import { Notifications } from '@mantine/notifications';
 import { MantineProvider, createTheme } from '@mantine/core';
 
-import Floor from '@/components/Header/Header'
+import Header from '@/components/Header/Header'
 import ThemeProviders from '@/components/providers'
 import { FooterLinks } from '@/components/Footer/FooterLinks';
 import { SessionLayout } from '@/components/Layout/Session';
@@ -41,7 +41,7 @@ export default async function RootLayout({
         <ThemeProviders>
           <SessionLayout>
           <Notifications />
-          <Floor />
+          <Header />
           {children}
           <FooterLinks />
           </SessionLayout>

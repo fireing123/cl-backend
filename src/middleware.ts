@@ -27,9 +27,7 @@ export async function middleware(request: NextRequest) {
       }
     } else {
       if (request.nextUrl.pathname.startsWith('/admin')) {
-        const user = await envFetch(`/api/users?email=${token.email}`)
-          .then(async res => await res.json())
-        if (user!.rank != 'admin') {
+        if (token.rank != 'admin') {
           return NextResponse.redirect(new URL('/', request.url))
         }
       }

@@ -43,7 +43,7 @@ const tabs = [
 
 
 
-export default function Floor() {
+export default function Header() {
     const router = useRouter();
     const { data: session, status } = useSession();
     const [opened, { toggle }] = useDisclosure(false);
@@ -116,9 +116,8 @@ export default function Floor() {
             </Container>
             <Container size="md">
           <Tabs
-            defaultValue="Home"
+            defaultValue=""
             variant="outline"
-            visibleFrom="sm"
             classNames={{
               root: classes.tabs,
               list: classes.tabsList,

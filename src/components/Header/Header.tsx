@@ -24,6 +24,7 @@ import {
 import classes from './HeaderTabs.module.css';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const tabs = [
     ['Home', '/'],
@@ -50,10 +51,10 @@ export default function Header() {
         <Container className={classes.mainSection} size="md">
           <Group justify="space-between">
 
-            <Text component="a" href="/">
-              <Image src="/main.svg" alt='Logo' />
-            </Text>
-            
+            <Link href={"/"}>
+              <Image src="/main.svg" alt='Logo' width={50} height={40} />
+            </Link>
+
             <Menu
               width={260}
               position="bottom-end"

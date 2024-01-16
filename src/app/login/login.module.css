@@ -1,5 +1,6 @@
 .login {
     width: 50%;
+    min-width: max-content;
     text-align: center;
     margin: 0 auto;
 }

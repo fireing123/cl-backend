@@ -1,11 +1,11 @@
 "use client"
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Table, Anchor, Text, Paper } from '@mantine/core';
+import { Table, Anchor, Text, Paper, Skeleton } from '@mantine/core';
 import classes from './blog.module.css'
 
 export default function List() {
-    const [list, setList] = useState([]);
+    const [list, setList] = useState<[]>();
     useEffect(() => {
         fetch("/api/post").then(async (res) => {
             setList((await res.json()))
@@ -22,7 +22,7 @@ export default function List() {
                         <Table.Th>date</Table.Th>
                     </Table.Tr>
                 </Table.Thead>
-                <Table.Tbody>{list.map((value: any, i: any) => {
+                <Table.Tbody>{list ? list.map((value: any, i: any) => {
                     return (
                         <Table.Tr key={value.id}>
                             <Table.Td>
@@ -39,7 +39,18 @@ export default function List() {
                             </Table.Td>
                         </Table.Tr>
                     )})
-                }
+                : (
+                    [0,1,2,3].map((value) => (
+                        <Table.Tr key={value}>
+                            <Table.Td>
+                                <Skeleton height={16} mt={6} radius="xl" width="80%" />
+                            </Table.Td>
+                            <Table.Td>
+                                <Skeleton height={16} mt={6} radius="xl" width="50%" />
+                            </Table.Td>
+                        </Table.Tr>
+                    ))
+                )}
                 </Table.Tbody>
             </Table>
         </Table.ScrollContainer>

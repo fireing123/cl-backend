@@ -8,9 +8,6 @@ import { DiscordButton } from "@/components/Auth/DiscordButton";
 
 export default function Login() {
   const searchParams = useSearchParams();
-  const sign = (provid: string) => {
-    signIn(provid, { callbackUrl: searchParams.get('callbackUrl')! })
-  }
   
   return (
     <Paper shadow="xl" radius="md" p="xl" withBorder className={classes.login}  >
@@ -19,7 +16,7 @@ export default function Login() {
       </Text>
 
       <Group grow mb="md" mt="md">
-        <DiscordButton radius="xl" onClick={() => sign("discord")}>Github</DiscordButton>
+        <DiscordButton radius="xl" onClick={() => signIn(undefined, { callbackUrl: searchParams.get('callbackUrl') || "/" })}>Discord</DiscordButton>
       </Group>
     </Paper>
 

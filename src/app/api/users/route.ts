@@ -62,10 +62,11 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({
             has: true,
             id: user.id,
-            username: user.username,
+            name: user.name,
             email: user.email,
+            image: user.image,
             rank: user.rank,
-            phoneNumber: user.phoneNumber
+            username: user.username
         })
     }
 }

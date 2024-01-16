@@ -16,17 +16,7 @@ export const authOptions : NextAuthOptions = {
     }),
     GithubProvider({
       clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
-      allowDangerousEmailAccountLinking: true,
-      profile(profile): User {
-        console.log("get set profile")
-        return {
-          ...profile,
-          username: profile.username,
-          rank: "랭크크크크",
-          phoneNumber: profile.phoneNumber
-        }
-      }
+      clientSecret: process.env.GITHUB_SECRET!
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,

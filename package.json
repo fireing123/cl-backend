@@ -63,7 +63,8 @@
     "react-dom": "^18",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
-    "styled-components": "^6.1.1"
+    "styled-components": "^6.1.1",
+    "swr": "^2.2.4"
   },
   "devDependencies": {
     "@types/cookie": "^0.5.4",

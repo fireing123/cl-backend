@@ -12,14 +12,16 @@ export default function UserPage({ params }: { params: { email: string} }) {
     useEffect(() => {
         fetch(`/api/users?email=${params.email}`)
             .then(async (res) => {
-                const { has, id, name, image, email, rank, username, phoneNumber  } = await res.json()
+                const aaa = await res.json()
+                console.log(JSON.stringify(aaa))
+                const { has, id, name, image, email, rank, username, phoneNumber  } = aaa
                 if (has) {
                     setUser({ id, name, image, email, rank, phoneNumber, username})
                 } else {
                     setType(false)
                 }
             })
-    })
+    }, [])
 
     if (type) {
         if (user) {

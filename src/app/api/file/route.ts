@@ -38,19 +38,19 @@ export async function POST(request: Request){
       } else {
         return NextResponse.json({
           type: false,
-          message: "blob error"
+          error: "blob error"
         })
       }
     } else {
       return NextResponse.json({
         type: false,
-        message: "유저 결핍"
+        error: "유저 결핍"
       })
     }
   } else {
     return NextResponse.json({ 
       type: false,
-      message: "No filename detected!" 
+      error: "No filename detected!" 
     })
   }
 }
@@ -93,27 +93,34 @@ export async function GET(request: NextRequest) {
       id: id 
     }
   })
-  if (file?.publicAuthority.includes("R")) {
-    const md = await fetch(`${process.env.BLOB_URL}/${file?.url}`)
-    .then(async res => await res.text())
-    return NextResponse.json({ 
-      type: true,
-      md
-     });
-  } else if (file) {
-    const session = await getServerSession(authOptions)
-    if (isAdmin(session?.user.rank!) && file.userId == session?.user.userId) {
+  if (file) {
+    if (file.publicAuthority.includes("R")) {
       const md = await fetch(`${process.env.BLOB_URL}/${file?.url}`)
-    .then(async res => await res.text())
-    return NextResponse.json({ 
-      type: true,
-      md
-     });
+      .then(async res => await res.text())
+      return NextResponse.json({ 
+        type: true,
+        md
+      });
     } else {
-      return NextResponse.json({
-        type: false,
-        message: "파일 없음"
-      })
+      const session = await getServerSession(authOptions)
+      if (isAdmin(session?.user.rank!) && file.userId == session?.user.userId) {
+        const md = await fetch(`${process.env.BLOB_URL}/${file?.url}`)
+          .then(async res => await res.text())
+        return NextResponse.json({ 
+          type: true,
+          md
+        });
+      } else {
+        return NextResponse.json({
+          type: false,
+          error: "읽기 권한없음"
+        })
+      }
     }
+  } else {
+    return NextResponse.json({
+      type: false,
+      error: "파일 없음"
+    })
   }
 }

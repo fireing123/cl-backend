@@ -12,16 +12,71 @@
       }
     }
 
-export interface User {
-    id: string;
+
+export interface MinUser {
+  id: string;
     name?: string | null;
     email?: string | null;
-    emailVerified?: Date | null;
     image?: string | null;
-    publicAddress?: string | null;
 
     username: string | null;
     rank: String;
+}
+
+export interface User extends MinUser {
     phoneNumber: string | null;
   }
   
+export interface Fetch {
+  type: boolean;
+}
+
+export interface FetchError extends Fetch {
+  error: string; 
+}
+
+export interface FetchUser extends User, Fetch {
+
+}
+
+export interface FetchMinUser extends MinUser, Fetch {
+
+}
+
+export interface FetchFile extends Fetch {
+  md: string;
+}
+
+export interface DBPost {
+  id: string;
+  title: string;
+  date: string;
+  fileId: string;
+  userId: string;
+}
+
+export interface FetchDBPost extends DBPost, Fetch {
+
+}
+
+export interface Post {
+  id: string
+  title: string;
+  date: string;
+  userId: string;
+  html: string
+}
+
+
+export interface FetchPost extends Post, Fetch {
+}
+
+export interface PostItem {
+  id: string;
+  title: string;
+  date: string;
+}
+
+export interface FetchPostItem extends Fetch {
+  posts: PostItem[];
+}

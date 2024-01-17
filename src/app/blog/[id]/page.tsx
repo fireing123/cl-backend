@@ -4,22 +4,29 @@ import Comments from "@/components/Comment/comments"
 import classes from './blogpage.module.css'
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { getPost } from "@/lib/data/post/get"
+import { MinUser, Post } from "@/types/types"
+import { NextResponse } from "next/server"
+import { useRouter } from "next/navigation"
+import { getUserById } from "@/lib/data/user/get"
 
 export default function Blog({ params }: { params: {id: string} }) {
 
-    const [blog, setBlog] = useState<{ title: string, md: string, dat: string, email: string, userId: string }>();
+    const [blog, setBlog] = useState<Post>();
+    const [user, setUser] = useState<MinUser>();
+    const router = useRouter();
 
     useEffect(() => {
-        fetch(`/api/post?id=${params.id}`)
-        .then(async (res) => {
-            const { title, fileId, date, userId } = await res.json()
-            const { md } = await fetch(`/api/file?id=${fileId}`)
-                .then(async (res) => await res.json())
-            const { email } = await fetch(`/api/users?id=${userId}`)
-                .then(async (res) => await res.json())
-            const dat = date.split("T")[0]
-            setBlog({ title, md, dat, email, userId })
-        })
+        try {
+            getPost(params.id).then((post) => {
+                getUserById(post.userId).then((user) => {
+                    setUser(user)
+                })
+                setBlog(post);
+            })
+        } catch (error) {
+            router.back()
+        }
     }, [params.id])
 
     if (blog) {
@@ -29,13 +36,13 @@ export default function Blog({ params }: { params: {id: string} }) {
                     <Title order={1}>{blog.title}</Title>
                     <br></br>
                     <Group className={classes.page}>
-                        <Link href={`/user/${blog.email}`}>{blog.email}</Link>
-                        <Title order={5}>{blog.dat}</Title>
+                        <Link href={`/user/${user?.email}`}>{user?.email}</Link>
+                        <Title order={5}>{blog.date}</Title>
                     </Group>
                 </Box>
                 <br></br>
                 <Paper radius="md" p="xl" withBorder className={classes.page} >
-                    <div dangerouslySetInnerHTML={{__html: blog.md}} />
+                    <div dangerouslySetInnerHTML={{__html: blog.html}} />
                     <br></br>
                     <Comments term={blog.title} />
                 </Paper>

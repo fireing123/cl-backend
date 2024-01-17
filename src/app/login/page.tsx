@@ -9,10 +9,6 @@ import classes from './login.module.css'
 
 export default function Login() {
   const searchParams = useSearchParams();
-  const sign = (provid: string) => {
-    signIn(provid, { callbackUrl: searchParams.get('callbackUrl')! })
-  }
-  
   return (
     <Paper shadow="xl" radius="md" p="xl" withBorder className={classes.login}  >
       <Text size="lg" fw={500}>
@@ -20,8 +16,8 @@ export default function Login() {
       </Text>
 
       <Group grow mb="md" mt="md">
-        <GithubButton radius="xl" onClick={() => sign("github")}>Github</GithubButton>
-        <GoogleButton radius="xl" onClick={() => sign("google")}>Google</GoogleButton>
+        <GithubButton radius="xl" onClick={() => signIn("github", { callbackUrl: searchParams.get('callbackUrl') || "/" }) }>Github</GithubButton>
+        <GoogleButton radius="xl" onClick={() => signIn("google", { callbackUrl: searchParams.get('callbackUrl') || "/" }) }>Google</GoogleButton>
       </Group>
     </Paper>
 

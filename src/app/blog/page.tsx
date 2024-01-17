@@ -3,12 +3,14 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Table, Anchor, Text, Paper, Skeleton } from '@mantine/core';
 import classes from './blog.module.css'
+import { getPostItems } from "@/lib/data/post/get";
+import { PostItem } from "@/types/types";
 
 export default function List() {
-    const [list, setList] = useState<[]>();
+    const [posts, setPosts] = useState<PostItem[]>();
     useEffect(() => {
-        fetch("/api/post").then(async (res) => {
-            setList((await res.json()))
+        getPostItems().then(items => {
+            setPosts(items)
         })
     }, [])
     return (
@@ -22,7 +24,7 @@ export default function List() {
                         <Table.Th>date</Table.Th>
                     </Table.Tr>
                 </Table.Thead>
-                <Table.Tbody>{list ? list.map((value: any, i: any) => {
+                <Table.Tbody>{posts ? posts.map((value, i) => {
                     return (
                         <Table.Tr key={value.id}>
                             <Table.Td>

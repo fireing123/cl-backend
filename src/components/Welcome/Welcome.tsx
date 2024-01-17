@@ -10,7 +10,6 @@ import SubText from './SubText';
 
 export default function Welcome() {
   const router = useRouter();
-  const { data: session, status } = useSession();
 
   return (
     <Container size="md">

@@ -60,20 +60,50 @@ export async function GET(req: NextRequest) {
                 id: id!
             }
         })
-        return NextResponse.json(post)
+        if (post) {
+            return NextResponse.json({
+                type: true,
+                ...post
+            })
+        } else {
+            return NextResponse.json({
+                type: false,
+                error: "해당 id 의 포스트가 존재하지않음"
+            })
+        }
     } else if (user) {
         const posts = await prisma.post.findMany({
             where: {
                 userId: user
             }
         })
-        return NextResponse.json(posts)
+        if (posts) {
+            return NextResponse.json({
+                type: true,
+                posts: posts
+            })
+        } else {
+            return NextResponse.json({
+                type: false,
+                error: "해당 id 의 포스트가 존재하지않음"
+            })
+        }
     } else {
         const posts = await prisma.post.findMany({
             where: {
             }
         })
-        return NextResponse.json(posts)
+        if (posts) {
+            return NextResponse.json({
+                type: true,
+                posts: posts
+            })
+        } else {
+            return NextResponse.json({
+                type: false,
+                error: "포스트가 생성되지않음"
+            })
+        }
     }
 }
 

@@ -16,7 +16,7 @@ export default function Login() {
       </Text>
 
       <Group grow mb="md" mt="md">
-        <DiscordButton radius="xl" onClick={() => signIn(undefined, { callbackUrl: searchParams.get('callbackUrl') || "/" })}>Discord</DiscordButton>
+        <DiscordButton radius="xl" onClick={() => signIn('discord', { callbackUrl: searchParams.get('callbackUrl') || "/" })}>Discord</DiscordButton>
       </Group>
     </Paper>
 

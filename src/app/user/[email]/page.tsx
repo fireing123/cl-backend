@@ -1,26 +1,23 @@
 'use client'
 
 import MyBlog from "@/components/Blog/myblog";
-import { User } from "@/types/types"
+import { getUserByEmail } from "@/lib/data/user/get";
+import { MinUser } from "@/types/types"
 import { Avatar, Center, Loader, Paper, Text } from "@mantine/core";
 import { useEffect, useState } from "react"
 
 export default function UserPage({ params }: { params: { email: string} }) {
-    const [user, setUser] = useState<User>();
+    const [user, setUser] = useState<MinUser>();
     const [type, setType] = useState<Boolean>(true);
 
     useEffect(() => {
-        fetch(`/api/users?email=${params.email}`)
-            .then(async (res) => {
-                const aaa = await res.json()
-                console.log(JSON.stringify(aaa))
-                const { has, id, name, image, email, rank, username, phoneNumber  } = aaa
-                if (has) {
-                    setUser({ id, name, image, email, rank, phoneNumber, username})
-                } else {
-                    setType(false)
-                }
+        try {
+            getUserByEmail(params.email).then((user) => {
+                setUser(user)
             })
+        } catch (error) {
+            setType(false)
+        }
     }, [])
 
     if (type) {

@@ -14,8 +14,22 @@ export async function GET(req: Request) {
 
             }
         })
+        const applicationItems = applications.map((value) => {
+            return {
+                id: value.id,
+                title: value.title,
+                email: value.email,
+                date: value.date
+            }
+        })
         return NextResponse.json({
-            applications
+            type: true,
+            applications: applicationItems
+        })
+    } else {
+        return NextResponse.json({
+            type: false,
+            error: "권한없음"
         })
     }
 }

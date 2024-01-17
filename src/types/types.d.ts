@@ -80,3 +80,29 @@ export interface PostItem {
 export interface FetchPostItem extends Fetch {
   posts: PostItem[];
 }
+
+export interface Application {
+  id: string;
+  name: string;
+  title: string;
+  email: string;
+  phoneNumber: string;
+  date: Date;
+  userId: string;
+  fileId: string;
+}
+
+export interface FetchApplication extends Application, Fetch {
+  
+}
+
+export interface ApplicationItem {
+  id: string;
+  title: string;
+  email: string;
+  date: Date;
+}
+
+export interface FetchApplicationItems extends Fetch {
+  applications: ApplicationItems[];
+}

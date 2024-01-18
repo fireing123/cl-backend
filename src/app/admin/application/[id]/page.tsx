@@ -14,7 +14,7 @@ export default async function Application({ params }: { params: {id: string} }) 
                     <Paper radius="md" p="xl" withBorder className={classes.page} >
                     <Group>
                         <h1>{application.title}</h1>
-                        <div>{application.date.toISOString()}</div>
+                        <div>{application!.date?.toISOString()}</div>
                     </Group>
                     <Group>
                         <Text>{application.email}</Text>

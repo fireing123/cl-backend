@@ -66,10 +66,10 @@ export interface FetchDBPost extends DBPost, Fetch {
 }
 
 export interface Post {
-  id: string
+  id?: string
   title: string;
-  date: string;
-  userId: string;
+  date?: string;
+  userId?: string;
   html: string
 }
 

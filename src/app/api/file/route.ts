@@ -21,7 +21,7 @@ export async function POST(request: Request){
       });
     
       if (blob) {
-        await prisma.file.create({
+        const file = await prisma.file.create({
           data: {
             url: blob.url.replace(`${process.env.BLOB_URL}/`, ""),
             user: {
@@ -33,7 +33,9 @@ export async function POST(request: Request){
         })
         return NextResponse.json({
           type: true,
-          ...blob
+          fileId: file.id,
+          userId: file.userId,
+          publicAuthority: file.publicAuthority
         });        
       } else {
         return NextResponse.json({

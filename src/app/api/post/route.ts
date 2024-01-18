@@ -4,50 +4,25 @@ import { authOptions } from "@lib/authOptions"
 import prisma from "@/lib/prisma"
 
 export async function POST(req: Request) {
-    const { url, title } = await req.json()
+    const { fileId, title } = await req.json()
     const session = await getServerSession(authOptions)
-    
-    if (!(url && title && session)) {
-        return NextResponse.json({
-            type: false,
-            message: "fail undefined user"
-        })
-    } else {
-        const email = session.user?.email
-        if (email) {
-            const file = await prisma.file.findFirst({
-                where: {
-                    url: url.replace(`${process.env.BLOB_URL}/`, "")
+
+    const post = await prisma.post.create({
+        data: {
+            title: title,
+            fileId: fileId,
+            user: {
+                connect:{
+                    id: session?.user.userId
                 }
-            })
-
-            if (file) {
-                await prisma.post.create({
-                    data: {
-                        title: title,
-                        fileId: file.id,
-                        user: {
-                            connect:{
-                                email: email
-                            }
-                        }
-                    }
-                })
-
-                return NextResponse.json({
-                    type: true,
-                    message: "success create new post" 
-                })
-            } else {
-                return NextResponse.json({
-                    type: false,
-                    message: "해당 id의 파일이 존재하지 않음!"
-                })
             }
-        } else {
-            return NextResponse.json({ type: false, message: "유저의 이메일이 존재하지 않음" })
         }
-    }
+    })
+
+    return NextResponse.json({
+        type: true,
+        ...post
+    })
 }
 
 export async function GET(req: NextRequest) {

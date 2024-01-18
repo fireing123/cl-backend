@@ -1,16 +1,23 @@
 import { Application, ApplicationItem, FetchApplication, FetchApplicationItems, FetchError } from "@/types/types";
+import { getFile } from "../file/get";
 
-export async function getApplication(id : string) {
+export async function getApplication(id : string) : Promise<Application> {
     const application = await fetch(`/api/applications/${id}`)
         .then(async (res) => await res.json()) as FetchApplication | FetchError
     if ('error' in application) {
         throw new Error(application.error)
     } else {
-        const app = {
-            ...application,
-            type: undefined
-        } as Application
-        return app
+        const file = await getFile(application.fileId)
+        return {
+            id: application.id,
+            title: application.title,
+            email: application.email,
+            date: application.date,
+            name: application.name,
+            phoneNumber: application.phoneNumber,
+            userId: application.userId,
+            html: file
+        }
     }
 }
 

@@ -61,7 +61,7 @@ export async function POST(req: Request) {
     } else {
         return NextResponse.json({
             type: false,
-            message: "값 결핍됨"
+            error: "값 결핍됨"
         })
     }
 }

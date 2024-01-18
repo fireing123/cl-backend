@@ -43,6 +43,12 @@ export interface FetchMinUser extends MinUser, Fetch {
 
 }
 
+export interface CreateFile extends Fetch {
+  fileId: string;
+  userId: string;
+  publicAuthority: string;
+}
+
 export interface FetchFile extends Fetch {
   md: string;
 }
@@ -81,26 +87,25 @@ export interface FetchPostItem extends Fetch {
   posts: PostItem[];
 }
 
-export interface Application {
-  id: string;
-  name: string;
+export interface ApplicationItem {
+  id?: string;
   title: string;
   email: string;
+  date?: Date;
+}
+
+export interface Application extends ApplicationItem {
+  name: string;
   phoneNumber: string;
-  date: Date;
+  userId?: string;
+  html: string;
+}
+
+export interface FetchApplication extends ApplicationItem, Fetch {
+  name: string;
+  phoneNumber: string;
   userId: string;
   fileId: string;
-}
-
-export interface FetchApplication extends Application, Fetch {
-  
-}
-
-export interface ApplicationItem {
-  id: string;
-  title: string;
-  email: string;
-  date: Date;
 }
 
 export interface FetchApplicationItems extends Fetch {

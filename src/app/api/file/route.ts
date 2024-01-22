@@ -61,28 +61,80 @@ export async function DELETE(request: NextRequest) {
   const session = await getServerSession(authOptions);
   if (session) {
     const { searchParams } = new URL(request.url);
-    const urlToDelete = searchParams.get('url') as string;
+    const id = searchParams.get('id') as string;
     const file = await prisma.file.findFirst({
       where: {
-        url: urlToDelete
+        id: id
       }
     })
-    if (file?.userId == session.user.userId || isAdmin(session.user.rank)) {
-      await del(`${process.env.BLOB_URL}/${urlToDelete}`);
+    if (file && file.userId == session.user.userId || isAdmin(session.user.rank)) {
+      await del(`${process.env.BLOB_URL}/${file?.url}`);
       return NextResponse.json({
         type: true,
-        message: `delete ${urlToDelete}`
+        fileId: file?.id,
+        userId: file?.userId,
+        publicAuthority: file?.publicAuthority
       })
     } else {
       return NextResponse.json({
         type: false,
-        message: "파일이 존재하지않음/ 다른 유저가 소유한 파일일수도 있습니다"
+        error: "파일이 존재하지않음/ 다른 유저가 소유한 파일일수도 있습니다"
       })
     }
   } else {
     return NextResponse.json({
       type: false,
-      message: "Undefined Session"
+      error: "Undefined Session"
+    })
+  }
+}
+
+export async function PATCH(req: Request) {
+  const session = await getServerSession(authOptions);
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get('id') as string;
+  const publicAuthority = searchParams.get('publicAuthority'); 
+  const newFile = req.body as File | null;    
+  if (session && newFile) {
+    
+    const file = await prisma.file.findFirst({
+      where: {
+        id: id
+      }
+    })
+    if (file && file.userId == session.user.userId || isAdmin(session.user.rank)) {
+      await del(`${process.env.BLOB_URL}/${file?.url}`);
+    } else {
+      return NextResponse.json({
+        type: false,
+        error: "파일이 존재하지않음/ 다른 유저가 소유한 파일일수도 있습니다"
+      })
+    }
+
+    const blob = await put(newFile.name, newFile, {
+      access: 'public',
+    });
+
+     const updateFile = await prisma.file.update({
+      where: {
+        id: file?.id
+      },
+      data: {
+        url: blob.url,
+        publicAuthority: publicAuthority || file?.publicAuthority
+      }
+    })
+    return NextResponse.json({
+      type: true,
+      fileId: updateFile?.id,
+      userId: updateFile?.userId,
+      publicAuthority: updateFile?.publicAuthority
+
+    })
+  } else {
+    return NextResponse.json({
+      type: false,
+      error: "session 결핍 / 또는 변경될 파일 결핍"
     })
   }
 }

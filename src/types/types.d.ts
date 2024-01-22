@@ -43,7 +43,9 @@ export interface FetchMinUser extends MinUser, Fetch {
 
 }
 
-export interface CreateFile extends Fetch {
+
+
+export interface File extends Fetch {
   fileId: string;
   userId: string;
   publicAuthority: string;

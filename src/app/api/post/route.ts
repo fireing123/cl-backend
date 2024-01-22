@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth"
 import { NextResponse, NextRequest } from "next/server"
 import { authOptions } from "@lib/authOptions"
 import prisma from "@/lib/prisma"
+import { isAdmin } from "@/lib/auth"
 
 export async function POST(req: Request) {
     const { fileId, title } = await req.json()
@@ -94,38 +95,32 @@ export async function DELETE(req: NextRequest) {
             }
         })
         if (post) {
-            const user = await prisma.user.findFirst({
-                where: {
-                    id: post.userId
-                }
-            })
-            const you = await prisma.user.findFirst({
-                where: {
-                    email: session.user?.email!
-                }
-            })
-            if (user?.email === session?.user?.email || you?.rank === "admin") {
-                await prisma.post.delete({
+            if (post.userId === session.user.userId || isAdmin(session.user.rank)) {
+                const delPost = await prisma.post.delete({
                     where: {
                         id: id
                     }
                 })
                 return NextResponse.json({
-                    fileId: post.fileId
+                    type: true,
+                    ...delPost
                 })
             } else {
                 return NextResponse.json({
-                    message: '당신은 이 블로그를 삭제할 권한이 없습니다'
+                    type: false,
+                    error: '당신은 이 블로그를 삭제할 권한이 없습니다'
                 })
             }
         } else {
             return NextResponse.json({
-                message: '포스트가 존재하지 않음'
+                type: false,
+                error: '포스트가 존재하지 않음'
             })
         }
     } else {
         return NextResponse.json({
-            message: 'id 결핍됨!'
+            type: false,
+            error: 'id 결핍됨!'
         })
     }
 }

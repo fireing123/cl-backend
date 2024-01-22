@@ -50,13 +50,13 @@ export async function DELETE(req: Request, { params }: { params : { id: string} 
             })
             return NextResponse.json({
                 type: true,
-                fileId: application.fileId
+                ...application
             })
         }
     } else {
         return NextResponse.json({
             type: false,
-            message: "접근 거부됨!"
+            error: "접근 거부됨!"
         })
     } 
     

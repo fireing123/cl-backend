@@ -65,3 +65,49 @@ export async function POST(req: Request) {
         })
     }
 }
+
+
+export async function PATCH(req: Request) {
+    const session = await getServerSession(authOptions)
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+    const title = searchParams.get('title');
+    const email = searchParams.get('email');
+    const name = searchParams.get('name');
+    const phoneNumber = searchParams.get('phoneNumber');
+
+    if (session) {
+        const application = await prisma.application.findUnique({
+            where: {
+                id: id || ""
+            }
+        })
+        if (session.user.userId == application?.userId) {
+            const patchApplication = await prisma.application.update({
+                where: {
+                    id: id!
+                },
+                data: {
+                    title: title || application.title,
+                    email: email || application.email,
+                    name: name || application.name,
+                    phoneNumber: phoneNumber || application.phoneNumber
+                }
+            })
+            return NextResponse.json({
+                type: true,
+                ...patchApplication
+            })
+        } else {
+            return NextResponse.json({
+                type: false,
+                error: "본인 소유가 아닙니다"
+            })
+        }
+    } else {
+        return NextResponse.json({
+            type: false,
+            error: "로그인하세요"
+        })
+    }
+}

@@ -1,4 +1,4 @@
-import { FetchError, File } from "@/types/types";
+import { FetchError, File as patchFile } from "@/types/types";
 
 export async function patchFile({ id, file, publicAuthority } : { id: string, file: File, publicAuthority: string | undefined} ) {
     let value: string
@@ -7,7 +7,7 @@ export async function patchFile({ id, file, publicAuthority } : { id: string, fi
     } else {
         value = `/api/file?=${id}`
     }
-    const message = await fetch(value, { method: "PATCH" }).then(async (res) => await res.json()) as File | FetchError
+    const message = await fetch(value, { method: "PATCH" }).then(async (res) => await res.json()) as patchFile | FetchError
     if ('error' in message) {
         throw new Error(message.error)
     } else {

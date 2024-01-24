@@ -1,6 +1,22 @@
 import { FetchDBPost, FetchError, FetchPostItem, Post, PostItem } from "@/types/types";
 import { getFile } from "../file/get";
 
+export async function getPostInformation(id: string) {
+    const post = await fetch(`/api/post?id=${id}`)
+        .then(async (res) => await res.json()) as FetchDBPost | FetchError
+    if ('error' in post) {
+        throw new Error(post.error)
+    } else {
+        return {
+            id: post.id,
+            title: post.title,
+            date: post.date,
+            userId: post.userId,
+            fileId: post.fileId
+        }
+    }    
+}
+
 export async function getPost(id: string) : Promise<Post> {
     const post = await fetch(`/api/post?id=${id}`)
         .then(async (res) => await res.json()) as FetchDBPost | FetchError
@@ -16,7 +32,6 @@ export async function getPost(id: string) : Promise<Post> {
             html: file
         }
     }
-    
 }
 
 export async function getPostItems() : Promise<PostItem[]> {

@@ -124,3 +124,40 @@ export async function DELETE(req: NextRequest) {
         })
     }
 }
+
+export async function PATCH(req: Request) {
+    const session = await getServerSession(authOptions)
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+    const title = searchParams.get('title');
+
+    if (!title) {
+        return NextResponse.json({
+            type: false,
+            error: "바꿀 제목이 주어지지않음"
+        })
+    }
+
+
+    if (session) {
+        const post = await prisma.post.findUnique({
+            where: {
+                id: id || ""
+            }
+        })
+        if (session.user.userId == post?.userId) {
+            const patchPost = await prisma.post.update({
+                where: {
+                    id: id!
+                },
+                data: {
+                    title: title
+                }
+            })
+            return NextResponse.json({
+                type: true,
+                ...patchPost
+            })
+        }
+    }
+}

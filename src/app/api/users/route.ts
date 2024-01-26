@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/authOptions";
 import prisma from "@/lib/prisma";
 import { User } from "@prisma/client";
 import { isAdmin } from "@/lib/auth";
+import ApiError from "@/lib/error/APIError";
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
@@ -13,10 +14,10 @@ export async function GET(req: NextRequest) {
     const session = await getServerSession(authOptions);
     let user : User | null
     if (id && email) {
-        return NextResponse.json({
-            type: false,
+        return ApiError({
+            type: 'params',
             error: "id 와 email은 동시에 주어질수 없습니다"
-        })   
+        })  
     } else if (id) {
         user = await prisma.user.findFirst({
             where: {
@@ -24,8 +25,8 @@ export async function GET(req: NextRequest) {
             }
         })
         if (!user) {
-            return NextResponse.json({
-                type: false,
+            return ApiError({
+                type: 'params',
                 error: "해당 id 의 유저가 존재하지 않습니다"
             })
         }
@@ -36,14 +37,14 @@ export async function GET(req: NextRequest) {
             }
         }) 
         if (!user) {
-            return NextResponse.json({
-                type: false,
-                error: "해당 email 의 유저가 존재하지않습니다"
+            return ApiError({
+                type: 'params',
+                error: "해당 email 의 유저가 존재하지 않습니다"
             })
         }
     } else {
-        return NextResponse.json({
-            type: false,
+        return ApiError({
+            type: 'params',
             error: "id 또는 email 파라미터가 있어야합니다"
         })
     } 
@@ -61,8 +62,8 @@ export async function GET(req: NextRequest) {
                 
             })
         } else {
-            return NextResponse.json({
-                type: false,
+            return ApiError({
+                type: "authority",
                 error: "접근거부: 권한부족"
             })
         }
@@ -145,16 +146,17 @@ export async function PATCH(req: Request) {
                 ...user
             })
         } else {
-            return NextResponse.json({
-                type: false,
+            return ApiError({
+                type: 'params',
                 error: "해당 이메일의 유저는 존재하지 않습니다."
             })
         }
     } else {
-        return NextResponse.json({
-            type: false,
-            error: "세션없음"
+        return ApiError({
+            type: "session",
+            error: "세션이 확인되지않음"
         })
+
     }
     
 }

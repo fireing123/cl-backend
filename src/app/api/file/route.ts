@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/authOptions';
 import prisma from '@/lib/prisma';
 import { isAdmin } from '@/lib/auth';
+import ApiError from '@/lib/error/APIError';
 
 export async function POST(request: Request){
   const session = await getServerSession(authOptions);
@@ -95,7 +96,13 @@ export async function PATCH(req: Request) {
   const id = searchParams.get('id') as string;
   const publicAuthority = searchParams.get('publicAuthority'); 
   const newFile = req.body as File | null;    
-  if (session && newFile) {
+  if (session) {
+    if (!newFile) {
+      return ApiError({
+        type: 'undefined',
+        error: "변경될 파일 결핍"
+      })
+    }
     
     const file = await prisma.file.findFirst({
       where: {
@@ -105,8 +112,8 @@ export async function PATCH(req: Request) {
     if (file && file.userId == session.user.userId || isAdmin(session.user.rank)) {
       await del(`${process.env.BLOB_URL}/${file?.url}`);
     } else {
-      return NextResponse.json({
-        type: false,
+      return ApiError({
+        type: 'undefined',
         error: "파일이 존재하지않음/ 다른 유저가 소유한 파일일수도 있습니다"
       })
     }
@@ -132,9 +139,9 @@ export async function PATCH(req: Request) {
 
     })
   } else {
-    return NextResponse.json({
-      type: false,
-      error: "session 결핍 / 또는 변경될 파일 결핍"
+    return ApiError({
+      type: 'session',
+      error: "session 결핍"
     })
   }
 }
@@ -165,15 +172,15 @@ export async function GET(request: NextRequest) {
           md
         });
       } else {
-        return NextResponse.json({
-          type: false,
+        return ApiError({
+          type: "authority",
           error: "읽기 권한없음"
         })
       }
     }
   } else {
-    return NextResponse.json({
-      type: false,
+    return ApiError({
+      type: 'undefined',
       error: "파일 없음"
     })
   }

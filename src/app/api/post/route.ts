@@ -3,6 +3,7 @@ import { NextResponse, NextRequest } from "next/server"
 import { authOptions } from "@lib/authOptions"
 import prisma from "@/lib/prisma"
 import { isAdmin } from "@/lib/auth"
+import ApiError from "@/lib/error/APIError"
 
 export async function POST(req: Request) {
     const { fileId, title } = await req.json()
@@ -42,8 +43,8 @@ export async function GET(req: NextRequest) {
                 ...post
             })
         } else {
-            return NextResponse.json({
-                type: false,
+            return ApiError({
+                type: 'params',
                 error: "해당 id 의 포스트가 존재하지않음"
             })
         }
@@ -59,8 +60,8 @@ export async function GET(req: NextRequest) {
                 posts: posts
             })
         } else {
-            return NextResponse.json({
-                type: false,
+            return ApiError({
+                type: 'params',
                 error: "해당 id 의 포스트가 존재하지않음"
             })
         }
@@ -75,8 +76,8 @@ export async function GET(req: NextRequest) {
                 posts: posts
             })
         } else {
-            return NextResponse.json({
-                type: false,
+            return ApiError({
+                type: "undefined",
                 error: "포스트가 생성되지않음"
             })
         }
@@ -106,20 +107,20 @@ export async function DELETE(req: NextRequest) {
                     ...delPost
                 })
             } else {
-                return NextResponse.json({
-                    type: false,
+                return ApiError({
+                    type: 'authority',
                     error: '당신은 이 블로그를 삭제할 권한이 없습니다'
                 })
             }
         } else {
-            return NextResponse.json({
-                type: false,
+            return ApiError({
+                type: 'params',
                 error: '포스트가 존재하지 않음'
             })
         }
     } else {
-        return NextResponse.json({
-            type: false,
+        return ApiError({
+            type: 'params',
             error: 'id 결핍됨!'
         })
     }
@@ -132,8 +133,8 @@ export async function PATCH(req: Request) {
     const title = searchParams.get('title');
 
     if (!title) {
-        return NextResponse.json({
-            type: false,
+        return ApiError({
+            type: 'params',
             error: "바꿀 제목이 주어지지않음"
         })
     }

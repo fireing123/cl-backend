@@ -27,11 +27,18 @@ export type Rank = "admin" | "observer" | "member" | "person"
 
 export interface User extends MinUser {
     phoneNumber: string | null;
-  }
+}
   
 export interface Fetch {
-  type: boolean;
+  type: FetchType;
 }
+
+export type FetchType = 
+true |
+"session" |
+"authority" |
+"params" |
+"undefined"
 
 export interface FetchError extends Fetch {
   error: string; 

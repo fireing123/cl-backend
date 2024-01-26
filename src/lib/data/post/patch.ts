@@ -3,7 +3,7 @@ import { patchFile } from "../file/patch"
 import { getPost, getPostInformation } from "./get"
 
 
-export async function patchPost(id: string, title: string | undefined, file: File | undefined, publicAuthority: string | undefined) {
+export async function patchPost(id: string, title?: string, file?: File, publicAuthority?: string) {
     const information = await getPostInformation(id)
     
     if (title) {

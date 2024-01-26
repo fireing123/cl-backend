@@ -20,8 +20,10 @@ export interface MinUser {
     image?: string | null;
 
     username: string | null;
-    rank: String;
+    rank: Rank
 }
+
+export type Rank = "admin" | "observer" | "member" | "person"
 
 export interface User extends MinUser {
     phoneNumber: string | null;

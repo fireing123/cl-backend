@@ -3,7 +3,7 @@ import { patchFile } from "../file/patch"
 import { getApplicationInfo } from "./get"
 
 
-export async function patchApplication(id: string, title: string | undefined, email: string | undefined, name: string | undefined, phoneNumber: string | undefined, file: File | undefined) {
+export async function patchApplication(id: string, title?: string, email?: string, name?: string, phoneNumber?: string, file?: File) {
     const info = await getApplicationInfo(id)
     let reqeustMessage = `/api/applications?${id}`
 
@@ -15,8 +15,7 @@ export async function patchApplication(id: string, title: string | undefined, em
     if (file) {
         await patchFile({
             id: info.fileId,
-            file: file,
-            publicAuthority: undefined
+            file: file
         })
     }
 

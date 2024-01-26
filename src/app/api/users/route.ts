@@ -119,8 +119,9 @@ export async function PATCH(req: Request) {
                     method: "PATCH"
                 })
             }
+            let user: User | undefined
             if (phoneNumber && (self == other || isAdmin(self?.rank!))) {
-                await prisma.user.update({
+                user = await prisma.user.update({
                     where: {
                         email: email
                     },
@@ -130,7 +131,7 @@ export async function PATCH(req: Request) {
                 });
             }
             if (name && (self == other || isAdmin(self?.rank!))) {
-                await prisma.user.update({
+                user = await prisma.user.update({
                     where: {
                         email: email
                     },
@@ -141,18 +142,18 @@ export async function PATCH(req: Request) {
             }
             return NextResponse.json({
                 type: true,
-                message: '변경됨'
+                ...user
             })
         } else {
             return NextResponse.json({
                 type: false,
-                message: "해당 이메일의 유저는 존재하지 않습니다."
+                error: "해당 이메일의 유저는 존재하지 않습니다."
             })
         }
     } else {
         return NextResponse.json({
             type: false,
-            message: "세션없음"
+            error: "세션없음"
         })
     }
     

@@ -1,6 +1,6 @@
 import { FetchError, File as patchFile } from "@/types/types";
 
-export async function patchFile({ id, file, publicAuthority } : { id: string, file: File, publicAuthority: string | undefined} ) {
+export async function patchFile({ id, file, publicAuthority } : { id: string, file: File, publicAuthority?: string} ) {
     let value: string
     if (publicAuthority) {
         value = `/api/file?=${id}&publicAuthority=${publicAuthority}`

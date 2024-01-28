@@ -11,48 +11,36 @@ export async function POST(request: Request){
   const { searchParams } = new URL(request.url);
   const filename = searchParams.get('filename');
   if (session && filename) {
-    const user = await prisma.user.findFirst({
-      where: {
-        email: session?.user?.email!
-      }
-    })
-    if (user) {
-      const blob = await put(filename, request.body!, {
-        access: 'public',
-      });
-    
-      if (blob) {
-        const file = await prisma.file.create({
-          data: {
-            url: blob.url.replace(`${process.env.BLOB_URL}/`, ""),
-            user: {
-              connect: {
-                id: user.id
-              }
+    const blob = await put(filename, request.body!, {
+      access: 'public',
+    });
+  
+    if (blob) {
+      const file = await prisma.file.create({
+        data: {
+          url: blob.url.replace(`${process.env.BLOB_URL}/`, ""),
+          user: {
+            connect: {
+              id: session.user.userId
             }
           }
-        })
-        return NextResponse.json({
-          type: true,
-          fileId: file.id,
-          userId: file.userId,
-          publicAuthority: file.publicAuthority
-        });        
-      } else {
-        return NextResponse.json({
-          type: false,
-          error: "blob error"
-        })
-      }
-    } else {
+        }
+      })
       return NextResponse.json({
-        type: false,
-        error: "유저 결핍"
+        type: true,
+        fileId: file.id,
+        userId: file.userId,
+        publicAuthority: file.publicAuthority
+      });        
+    } else {
+      return ApiError({
+        type: 'undefined',
+        error: "blob error"
       })
     }
   } else {
-    return NextResponse.json({ 
-      type: false,
+    return ApiError({
+      type: 'session',
       error: "No filename detected!" 
     })
   }
@@ -77,14 +65,14 @@ export async function DELETE(request: NextRequest) {
         publicAuthority: file?.publicAuthority
       })
     } else {
-      return NextResponse.json({
-        type: false,
+      return ApiError({
+        type: 'undefined',
         error: "파일이 존재하지않음/ 다른 유저가 소유한 파일일수도 있습니다"
       })
     }
   } else {
-    return NextResponse.json({
-      type: false,
+    return ApiError({
+      type: 'session',
       error: "Undefined Session"
     })
   }

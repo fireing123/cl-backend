@@ -3,6 +3,7 @@ import { NextResponse } from "next/server"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
 import { isAdmin } from "@/lib/auth";
+import ApiError from "@/lib/error/APIError";
 
 
 export async function GET(req: Request) {
@@ -27,8 +28,8 @@ export async function GET(req: Request) {
             applications: applicationItems
         })
     } else {
-        return NextResponse.json({
-            type: false,
+        return ApiError({
+            type: 'authority',
             error: "권한없음"
         })
     }
@@ -59,8 +60,8 @@ export async function POST(req: Request) {
             })
         }
     } else {
-        return NextResponse.json({
-            type: false,
+        return ApiError({
+            type: 'params',
             error: "값 결핍됨"
         })
     }
@@ -99,14 +100,14 @@ export async function PATCH(req: Request) {
                 ...patchApplication
             })
         } else {
-            return NextResponse.json({
-                type: false,
+            return ApiError({
+                type: 'authority',
                 error: "본인 소유가 아닙니다"
             })
         }
     } else {
-        return NextResponse.json({
-            type: false,
+        return ApiError({
+            type: 'session',
             error: "로그인하세요"
         })
     }

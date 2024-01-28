@@ -1,3 +1,4 @@
+import { ErrorCheck } from "@/lib/error/ErrorCheck";
 import { FetchError, File as patchFile } from "@/types/types";
 
 export async function patchFile({ id, file, publicAuthority } : { id: string, file: File, publicAuthority?: string} ) {
@@ -9,7 +10,7 @@ export async function patchFile({ id, file, publicAuthority } : { id: string, fi
     }
     const message = await fetch(value, { method: "PATCH" }).then(async (res) => await res.json()) as patchFile | FetchError
     if ('error' in message) {
-        throw new Error(message.error)
+        throw ErrorCheck(message)
     } else {
         return message
     }

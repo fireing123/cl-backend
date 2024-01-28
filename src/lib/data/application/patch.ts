@@ -1,6 +1,7 @@
 import { FetchApplication, FetchError } from "@/types/types"
 import { patchFile } from "../file/patch"
 import { getApplicationInfo } from "./get"
+import { ErrorCheck } from "@/lib/error/ErrorCheck"
 
 
 export async function patchApplication(id: string, title?: string, email?: string, name?: string, phoneNumber?: string, file?: File) {
@@ -22,7 +23,7 @@ export async function patchApplication(id: string, title?: string, email?: strin
     const patch = await fetch(reqeustMessage, { method: "PATCH" })
         .then(async (res) => await res.json()) as FetchApplication | FetchError
     if ('error' in patch) {
-        throw new Error(patch.error)
+        throw ErrorCheck(patch)
     } else {
         return patch
     }

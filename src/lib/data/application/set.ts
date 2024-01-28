@@ -1,5 +1,6 @@
 import { Application, Fetch, FetchError } from "@/types/types";
 import { createFile } from "../file/set";
+import { ErrorCheck } from "@/lib/error/ErrorCheck";
 
 export async function createApplication({ title, email, name, phoneNumber, html } : Application) : Promise<void> {
     
@@ -16,6 +17,6 @@ export async function createApplication({ title, email, name, phoneNumber, html 
         })
     }).then(async (res) => await res.json()) as FetchError | Fetch
     if ('error' in res) {
-        throw new Error(res.error)
+        throw ErrorCheck(res)
     }
 }

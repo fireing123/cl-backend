@@ -33,7 +33,7 @@ export interface Fetch {
   type: FetchType;
 }
 
-export type FetchType = 
+export type FetchType =
 true |
 "session" |
 "authority" |

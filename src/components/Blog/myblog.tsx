@@ -5,21 +5,18 @@ import { useEffect, useState } from "react";
 import { Table, Anchor, Text, Paper, ScrollArea } from '@mantine/core';
 import classes from './blog.module.css'
 import { useSession } from "next-auth/react";
+import { getPostsByUserId } from "@/lib/data/post/get";
+import { PostItem } from "@/types/types";
 
 export default function MyBlog() {
     const [scrolled, setScrolled] = useState(false);
-    const [list, setList] = useState<[] | undefined>();
+    const [posts, setPosts] = useState<PostItem[]>();
     const { data: session, status } = useSession();
 
     useEffect(() => {
         if (status === "authenticated" && session) {
-            fetch(`/api/users?email=${session.user?.email}`)
-                .then(async (res: any) => {
-                    const user = await res.json() 
-                    const posts = await fetch(`/api/post?user=${user.id}`) 
-                        .then(async res => await res.json())
-                    setList(posts)
-                })
+            getPostsByUserId(session.user.userId)
+                .then((items) => setPosts(items))
         }
     }, [session, status])
 
@@ -35,7 +32,7 @@ export default function MyBlog() {
                         <Table.Th>date</Table.Th>
                     </Table.Tr>
                 </Table.Thead>
-                <Table.Tbody>{list && list.map((value: any, i: any) => {
+                <Table.Tbody>{posts && posts.map((value) => {
                     return (
                         <Table.Tr key={value.id}>
                             <Table.Td>

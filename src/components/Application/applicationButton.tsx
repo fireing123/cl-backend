@@ -1,7 +1,8 @@
+import { Application } from "@/types/types"
 import { Button } from "@mantine/core"
 import { notifications } from "@mantine/notifications"
 
-export async function PassButton({ app }: { app: { title: string, name: string, md: string, email: string, phoneNumber: string, date: string} }) {
+export async function PassButton({ app }: { app: Application }) {
     return <Button onClick={async () => {
         const res = await fetch(`/api/users?email=${app.email}`)
         const user = await res.json()
@@ -36,7 +37,7 @@ export async function PassButton({ app }: { app: { title: string, name: string, 
         }}}>합격</Button>
 }
 
-export function DeleteButton({ app }: { app: { title: string, md: string, email: string, phoneNumber: string, date: string} }) {
+export function DeleteButton({ app }: { app: Application }) {
     return <Button>
         삭제
     </Button>

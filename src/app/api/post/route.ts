@@ -2,52 +2,29 @@ import { getServerSession } from "next-auth"
 import { NextResponse, NextRequest } from "next/server"
 import { authOptions } from "@lib/authOptions"
 import prisma from "@/lib/prisma"
+import { isAdmin } from "@/lib/auth"
+import ApiError from "@/lib/error/APIError"
 
 export async function POST(req: Request) {
-    const { url, title } = await req.json()
+    const { fileId, title } = await req.json()
     const session = await getServerSession(authOptions)
-    
-    if (!(url && title && session)) {
-        return NextResponse.json({
-            type: false,
-            message: "fail undefined user"
-        })
-    } else {
-        const email = session.user?.email
-        if (email) {
-            const file = await prisma.file.findFirst({
-                where: {
-                    url: url.replace(`${process.env.BLOB_URL}/`, "")
+
+    const post = await prisma.post.create({
+        data: {
+            title: title,
+            fileId: fileId,
+            user: {
+                connect:{
+                    id: session?.user.userId
                 }
-            })
-
-            if (file) {
-                await prisma.post.create({
-                    data: {
-                        title: title,
-                        fileId: file.id,
-                        user: {
-                            connect:{
-                                email: email
-                            }
-                        }
-                    }
-                })
-
-                return NextResponse.json({
-                    type: true,
-                    message: "success create new post" 
-                })
-            } else {
-                return NextResponse.json({
-                    type: false,
-                    message: "해당 id의 파일이 존재하지 않음!"
-                })
             }
-        } else {
-            return NextResponse.json({ type: false, message: "유저의 이메일이 존재하지 않음" })
         }
-    }
+    })
+
+    return NextResponse.json({
+        type: true,
+        ...post
+    })
 }
 
 export async function GET(req: NextRequest) {
@@ -66,8 +43,8 @@ export async function GET(req: NextRequest) {
                 ...post
             })
         } else {
-            return NextResponse.json({
-                type: false,
+            return ApiError({
+                type: 'params',
                 error: "해당 id 의 포스트가 존재하지않음"
             })
         }
@@ -83,8 +60,8 @@ export async function GET(req: NextRequest) {
                 posts: posts
             })
         } else {
-            return NextResponse.json({
-                type: false,
+            return ApiError({
+                type: 'params',
                 error: "해당 id 의 포스트가 존재하지않음"
             })
         }
@@ -99,8 +76,8 @@ export async function GET(req: NextRequest) {
                 posts: posts
             })
         } else {
-            return NextResponse.json({
-                type: false,
+            return ApiError({
+                type: "undefined",
                 error: "포스트가 생성되지않음"
             })
         }
@@ -119,38 +96,69 @@ export async function DELETE(req: NextRequest) {
             }
         })
         if (post) {
-            const user = await prisma.user.findFirst({
-                where: {
-                    id: post.userId
-                }
-            })
-            const you = await prisma.user.findFirst({
-                where: {
-                    email: session.user?.email!
-                }
-            })
-            if (user?.email === session?.user?.email || you?.rank === "admin") {
-                await prisma.post.delete({
+            if (post.userId === session.user.userId || isAdmin(session.user.rank)) {
+                const delPost = await prisma.post.delete({
                     where: {
                         id: id
                     }
                 })
                 return NextResponse.json({
-                    fileId: post.fileId
+                    type: true,
+                    ...delPost
                 })
             } else {
-                return NextResponse.json({
-                    message: '당신은 이 블로그를 삭제할 권한이 없습니다'
+                return ApiError({
+                    type: 'authority',
+                    error: '당신은 이 블로그를 삭제할 권한이 없습니다'
                 })
             }
         } else {
-            return NextResponse.json({
-                message: '포스트가 존재하지 않음'
+            return ApiError({
+                type: 'params',
+                error: '포스트가 존재하지 않음'
             })
         }
     } else {
-        return NextResponse.json({
-            message: 'id 결핍됨!'
+        return ApiError({
+            type: 'params',
+            error: 'id 결핍됨!'
         })
+    }
+}
+
+export async function PATCH(req: Request) {
+    const session = await getServerSession(authOptions)
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+    const title = searchParams.get('title');
+
+    if (!title) {
+        return ApiError({
+            type: 'params',
+            error: "바꿀 제목이 주어지지않음"
+        })
+    }
+
+
+    if (session) {
+        const post = await prisma.post.findUnique({
+            where: {
+                id: id || ""
+            }
+        })
+        if (session.user.userId == post?.userId) {
+            const patchPost = await prisma.post.update({
+                where: {
+                    id: id!
+                },
+                data: {
+                    title: title
+                }
+            })
+            return NextResponse.json({
+                type: true,
+                ...patchPost
+            })
+        }
     }
 }

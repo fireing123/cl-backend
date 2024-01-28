@@ -24,6 +24,9 @@ export default function UserPage({ params }: { params: { email: string} }) {
         if (user) {
             return (
                 <Paper radius="md" withBorder p="lg" bg="var(--mantine-color-body)">
+                    <head>
+                        <title>{`${user.name} 의 정보`}</title>
+                    </head>
                     <Avatar
                         src={user.image}
                         size={120}

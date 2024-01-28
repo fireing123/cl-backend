@@ -4,52 +4,43 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/authOptions';
 import prisma from '@/lib/prisma';
 import { isAdmin } from '@/lib/auth';
+import ApiError from '@/lib/error/APIError';
 
 export async function POST(request: Request){
   const session = await getServerSession(authOptions);
   const { searchParams } = new URL(request.url);
   const filename = searchParams.get('filename');
   if (session && filename) {
-    const user = await prisma.user.findFirst({
-      where: {
-        email: session?.user?.email!
-      }
-    })
-    if (user) {
-      const blob = await put(filename, request.body!, {
-        access: 'public',
-      });
-    
-      if (blob) {
-        await prisma.file.create({
-          data: {
-            url: blob.url.replace(`${process.env.BLOB_URL}/`, ""),
-            user: {
-              connect: {
-                id: user.id
-              }
+    const blob = await put(filename, request.body!, {
+      access: 'public',
+    });
+  
+    if (blob) {
+      const file = await prisma.file.create({
+        data: {
+          url: blob.url.replace(`${process.env.BLOB_URL}/`, ""),
+          user: {
+            connect: {
+              id: session.user.userId
             }
           }
-        })
-        return NextResponse.json({
-          type: true,
-          ...blob
-        });        
-      } else {
-        return NextResponse.json({
-          type: false,
-          error: "blob error"
-        })
-      }
-    } else {
+        }
+      })
       return NextResponse.json({
-        type: false,
-        error: "유저 결핍"
+        type: true,
+        fileId: file.id,
+        userId: file.userId,
+        publicAuthority: file.publicAuthority
+      });        
+    } else {
+      return ApiError({
+        type: 'undefined',
+        error: "blob error"
       })
     }
   } else {
-    return NextResponse.json({ 
-      type: false,
+    return ApiError({
+      type: 'session',
       error: "No filename detected!" 
     })
   }
@@ -59,28 +50,86 @@ export async function DELETE(request: NextRequest) {
   const session = await getServerSession(authOptions);
   if (session) {
     const { searchParams } = new URL(request.url);
-    const urlToDelete = searchParams.get('url') as string;
+    const id = searchParams.get('id') as string;
     const file = await prisma.file.findFirst({
       where: {
-        url: urlToDelete
+        id: id
       }
     })
-    if (file?.userId == session.user.userId || isAdmin(session.user.rank)) {
-      await del(`${process.env.BLOB_URL}/${urlToDelete}`);
+    if (file && file.userId == session.user.userId || isAdmin(session.user.rank)) {
+      await del(`${process.env.BLOB_URL}/${file?.url}`);
       return NextResponse.json({
         type: true,
-        message: `delete ${urlToDelete}`
+        fileId: file?.id,
+        userId: file?.userId,
+        publicAuthority: file?.publicAuthority
       })
     } else {
-      return NextResponse.json({
-        type: false,
-        message: "파일이 존재하지않음/ 다른 유저가 소유한 파일일수도 있습니다"
+      return ApiError({
+        type: 'undefined',
+        error: "파일이 존재하지않음/ 다른 유저가 소유한 파일일수도 있습니다"
       })
     }
   } else {
+    return ApiError({
+      type: 'session',
+      error: "Undefined Session"
+    })
+  }
+}
+
+export async function PATCH(req: Request) {
+  const session = await getServerSession(authOptions);
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get('id') as string;
+  const publicAuthority = searchParams.get('publicAuthority'); 
+  const newFile = req.body as File | null;    
+  if (session) {
+    if (!newFile) {
+      return ApiError({
+        type: 'undefined',
+        error: "변경될 파일 결핍"
+      })
+    }
+    
+    const file = await prisma.file.findFirst({
+      where: {
+        id: id
+      }
+    })
+    if (file && file.userId == session.user.userId || isAdmin(session.user.rank)) {
+      await del(`${process.env.BLOB_URL}/${file?.url}`);
+    } else {
+      return ApiError({
+        type: 'undefined',
+        error: "파일이 존재하지않음/ 다른 유저가 소유한 파일일수도 있습니다"
+      })
+    }
+
+    const blob = await put(newFile.name, newFile, {
+      access: 'public',
+    });
+
+     const updateFile = await prisma.file.update({
+      where: {
+        id: file?.id
+      },
+      data: {
+        url: blob.url,
+        publicAuthority: publicAuthority || file?.publicAuthority
+      }
+    })
     return NextResponse.json({
-      type: false,
-      message: "Undefined Session"
+      type: true,
+      fileId: updateFile?.id,
+      userId: updateFile?.userId,
+      publicAuthority: updateFile?.publicAuthority
+
+    })
+  } else {
+    return ApiError({
+      type: 'session',
+      error: "session 결핍"
     })
   }
 }
@@ -111,15 +160,15 @@ export async function GET(request: NextRequest) {
           md
         });
       } else {
-        return NextResponse.json({
-          type: false,
+        return ApiError({
+          type: "authority",
           error: "읽기 권한없음"
         })
       }
     }
   } else {
-    return NextResponse.json({
-      type: false,
+    return ApiError({
+      type: 'undefined',
       error: "파일 없음"
     })
   }

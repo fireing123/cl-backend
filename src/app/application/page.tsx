@@ -15,6 +15,7 @@ import { RichTextEditor, Link } from '@mantine/tiptap';
 import { notifications } from '@mantine/notifications';
 import type { PutBlobResult } from '@vercel/blob';
 import { isEmail, isNotEmpty, useForm } from '@mantine/form';
+import { createApplication } from '@/lib/data/application/set';
 
 export default function Application() {
 
@@ -55,35 +56,19 @@ export default function Application() {
     phoneNumber: string;
 }) => {
     
-    const file = new File([editer?.getHTML() || ""], `${values.title}`)
+    createApplication({ 
+      title: values.title,
+      email: values.email,
+      name: values.name,
+      phoneNumber: values.phoneNumber,
+      html: editer?.getHTML() || "not text"
+    })
+    notifications.show({
+      title: 'create application',
+      message: `Success Create application ${values.title}`
+    })
 
-      const response = await fetch(
-        `/api/file?filename=${file.name}`,
-        {
-          method: 'POST',
-          body: file,
-        },
-      );
-      const newBlob = (await response.json()) as PutBlobResult;
-
-      const res = await fetch(`/api/application`, {
-        method: "POST",
-        body: JSON.stringify({
-          fileurl: newBlob.url,
-          title: file.name,
-          name: values.name,
-          email: values.email,
-          phoneNumber: values.phoneNumber
-        })
-      }).then(async res => {
-        return await res.json()
-      })
-      notifications.show({
-        title: 'create application',
-        message: `Success Create application ${values.title}`
-      })
-
-      router.push('/')
+    router.push('/')
   }
 
   if (status === "authenticated") {

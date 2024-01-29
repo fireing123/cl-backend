@@ -13,12 +13,13 @@ import {
 } from '@mantine/core';
 import { IconBrandTwitter, IconBrandYoutube, IconBrandInstagram, IconPhone } from '@tabler/icons-react';
 import classes from './ContactUs.module.css';
-import { User } from "@prisma/client";
 import ContactIcon from "@/components/ContactIcons/ContactIcons";
 import { IconAt } from "@tabler/icons-react";
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@mantine/core';
+import { getUserDetails } from '@/lib/data/user/get';
+import { User } from '@/types/types';
 
 const social = [IconBrandTwitter, IconBrandYoutube, IconBrandInstagram];
 
@@ -28,13 +29,13 @@ export default function Mypage() {
   const [visible, setVisible] = useState(false)
   useEffect(() => {
     if (status === "authenticated") {
-      fetch(`/api/users?email=${session?.user?.email}`)
-      .then(async res => {
-        const user = await res.json() as User;
-        setUser(user)
-        setVisible(false)
-      })
+      getUserDetails(session.user.userId)
+        .then((user) => {
+          setUser(user)
+          setVisible(false)
+        })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]) 
   
   return (

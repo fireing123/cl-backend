@@ -16,6 +16,7 @@ import { RichTextEditor, Link } from '@mantine/tiptap';
 import { notifications } from '@mantine/notifications';
 import { useForm } from '@mantine/form';
 import { useState } from 'react';
+import { createPost } from '@/lib/data/post/set';
 
 export default function CreateBlog() {
   const { data: session, status } = useSession();
@@ -44,39 +45,25 @@ export default function CreateBlog() {
 
   const submit = async (values: { title: string }) => {
     setCanSubmit(true)
-    const file = new File([editer?.getHTML() || ""], `${values.title}`)
+    
+    try { 
+      await createPost({ 
+        title: values.title,
+        html: editer?.getHTML() || "not text"
+      })
+      notifications.show({
+        title: 'create Blog',
+        message: `Success Create Blog ${values.title}`
+      })
 
-      const response = await fetch(
-        `/api/file?filename=${file.name}`,
-        {
-          method: 'POST',
-          body: file,
-        },
-      );
-      const newBlob = (await response.json()) as PutBlobResult;
-
-      const { type, message } = await fetch(`/api/post`, {
-        method: "POST",
-        body: JSON.stringify({
-          url: newBlob.url,
-          title: file.name,
-        })
-      }).then(async res => await res.json())
-
-      if (type) {
-        notifications.show({
-          title: 'create Blog',
-          message: `Success Create Blog ${values.title}`
-        })
-  
-        router.push('/')
-      } else {
-        notifications.show({
-          color: "red",
-          title: 'fail create',
-          message: message
-        })
-      } 
+      router.push('/')
+    } catch (error: any) {
+      notifications.show({
+        color: "red",
+        title: 'fail create',
+        message: error
+      })
+    }
   }
 
   if (session?.user) {

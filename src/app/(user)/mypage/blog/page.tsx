@@ -8,56 +8,41 @@ import { useSession } from "next-auth/react";
 import { IconTrash } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
+import { getPostsByUserId } from "@/lib/data/post/get";
+import { PostItem } from "@/types/types";
+import { deletePost } from "@/lib/data/post/del";
 
 export default function MyBlog() {
     const [scrolled, setScrolled] = useState(false);
-    const [list, setList] = useState([]);
+    const [list, setList] = useState<PostItem[]>();
     const { data: session, status } = useSession();
     const [userMenuOpened, setUserMenuOpened] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
         if (status === "authenticated") {
-            fetch(`/api/users?email=${session.user?.email}`)
-                .then(async (res: any) => {
-                    const user = await res.json() 
-                    const posts = await fetch(`/api/post?user=${user.id}`) 
-                        .then(async res => await res.json())
-                    setList(posts)
-                    
-                })
+            getPostsByUserId(session.user.userId).then((res) => {
+                setList(res)
+            })
         }
-    }, [session, status])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [status])
 
-    const DeleteBlog = (id: string) => {
-        fetch(`/api/post?id=${id}`, { method: "DELETE" })
-            .then(async (res) => {
-                
-            const newm = await res.json()
-            const { message } = newm
-            if (!message) {
-                const {fileId } = newm
-                const { type, message } = await fetch(`/api/file?url=${fileId}`, {
-                    method: "DELETE"
-                }).then(async r => await r.json())
-                if (type) {
-                    notifications.show({
-                        message: message,
-                        color: "red"
-                    })
-                } else {
-                    notifications.show({
-                        message: "삭제 성공"
-                    })
-                    router.refresh()
-                }
-            } else {
-                notifications.show({
-                    message: "삭제 실패",
-                    color: "red"
-                })
-            }
-        })
+    const DeleteBlog = async (id: string) => {
+        
+        try {
+            const res = await deletePost(id)
+            notifications.show({
+                message: "삭제 성공"
+            })
+            router.refresh()
+        } catch (error) {
+            notifications.show({
+                message: "오류 발생",
+                color: "red"
+            })
+
+        }
     }
 
     return (
@@ -71,7 +56,7 @@ export default function MyBlog() {
                         <Table.Th>date</Table.Th>
                     </Table.Tr>
                 </Table.Thead>
-                <Table.Tbody>{list.map((value: any, i: any) => {
+                <Table.Tbody>{list && list.map((value: any, i: any) => {
                     return (
                         <Table.Tr key={value.id}>
                             <Table.Td>

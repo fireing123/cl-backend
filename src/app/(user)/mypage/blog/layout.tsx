@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: 'CL | Youtube',
+    title: '블로그 관리',
 }
    
 export default async function Layout({

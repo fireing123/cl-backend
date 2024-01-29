@@ -1,5 +1,6 @@
 import { isAdmin } from "@/lib/auth"
 import { authOptions } from "@/lib/authOptions"
+import ApiError from "@/lib/error/APIError"
 import prisma from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
@@ -8,7 +9,13 @@ import { NextResponse } from "next/server"
 export async function GET(req: Request, { params }: { params : { id: string} }) {
     const session = await getServerSession(authOptions)
 
-    if (params.id && session) {
+    if (params.id) {
+        if (!session) {
+            return ApiError({
+                type: 'session',
+                error: "세션결핍"
+            })
+        }
         const application = await prisma.application.findFirst({
             where: {
                 id: params.id
@@ -20,15 +27,15 @@ export async function GET(req: Request, { params }: { params : { id: string} }) 
                 ...application
             })
         } else {
-            return NextResponse.json({
-                type: false,
-                message: "자신의 소유가 아닙니다/ 관리자만 다른사람의 신청서를 볼수있습니다"
+            return ApiError({
+                type: 'authority',
+                error: "자신의 소유가 아닙니다/ 관리자만 다른사람의 신청서를 볼수있습니다"
             })
         }
     } else {
-        return NextResponse.json({
-            type: false,
-            message: "아이디 결핍 또는 세션 결핍"
+        return ApiError({
+            type: "params",
+            error: "아이디 결핍"
         })
     }
 }
@@ -50,14 +57,15 @@ export async function DELETE(req: Request, { params }: { params : { id: string} 
             })
             return NextResponse.json({
                 type: true,
-                fileId: application.fileId
+                ...application
             })
         }
     } else {
-        return NextResponse.json({
-            type: false,
-            message: "접근 거부됨!"
+        return ApiError({
+            type: 'authority',
+            error: "접근 거부됨!"
         })
     } 
     
 }
+

@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/authOptions";
 import prisma from "@/lib/prisma";
 import { User } from "@prisma/client";
 import { isAdmin } from "@/lib/auth";
+import ApiError from "@/lib/error/APIError";
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
@@ -13,10 +14,10 @@ export async function GET(req: NextRequest) {
     const session = await getServerSession(authOptions);
     let user : User | null
     if (id && email) {
-        return NextResponse.json({
-            type: false,
+        return ApiError({
+            type: 'params',
             error: "id 와 email은 동시에 주어질수 없습니다"
-        })   
+        })  
     } else if (id) {
         user = await prisma.user.findFirst({
             where: {
@@ -24,8 +25,8 @@ export async function GET(req: NextRequest) {
             }
         })
         if (!user) {
-            return NextResponse.json({
-                type: false,
+            return ApiError({
+                type: 'params',
                 error: "해당 id 의 유저가 존재하지 않습니다"
             })
         }
@@ -36,14 +37,14 @@ export async function GET(req: NextRequest) {
             }
         }) 
         if (!user) {
-            return NextResponse.json({
-                type: false,
-                error: "해당 email 의 유저가 존재하지않습니다"
+            return ApiError({
+                type: 'params',
+                error: "해당 email 의 유저가 존재하지 않습니다"
             })
         }
     } else {
-        return NextResponse.json({
-            type: false,
+        return ApiError({
+            type: 'params',
             error: "id 또는 email 파라미터가 있어야합니다"
         })
     } 
@@ -61,8 +62,8 @@ export async function GET(req: NextRequest) {
                 
             })
         } else {
-            return NextResponse.json({
-                type: false,
+            return ApiError({
+                type: "authority",
                 error: "접근거부: 권한부족"
             })
         }
@@ -93,7 +94,7 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: Request) {
     const session = await getServerSession(authOptions);
-    const { email ,rank  ,name  ,phoneNumber } =  await req.json();
+    const { email ,rank  ,username  ,phoneNumber } =  await req.json();
     if (session) {
         const self = await prisma.user.findFirst({
             where: {
@@ -106,8 +107,9 @@ export async function PATCH(req: Request) {
             }
         })
         if (other) {
+            let user: User | undefined
             if (rank && isAdmin(self?.rank!) || rank !== 'admin' && other?.rank !== 'admin') { 
-                await prisma.user.update({
+                user = await prisma.user.update({
                     where: {
                         email: email
                     },
@@ -120,7 +122,7 @@ export async function PATCH(req: Request) {
                 })
             }
             if (phoneNumber && (self == other || isAdmin(self?.rank!))) {
-                await prisma.user.update({
+                user = await prisma.user.update({
                     where: {
                         email: email
                     },
@@ -129,31 +131,32 @@ export async function PATCH(req: Request) {
                     }
                 });
             }
-            if (name && (self == other || isAdmin(self?.rank!))) {
-                await prisma.user.update({
+            if (username && (self == other || isAdmin(self?.rank!))) {
+                user = await prisma.user.update({
                     where: {
                         email: email
                     },
                     data: {
-                        name: name
+                        username: username
                     }
                 })
             }
             return NextResponse.json({
                 type: true,
-                message: '변경됨'
+                ...user
             })
         } else {
-            return NextResponse.json({
-                type: false,
-                message: "해당 이메일의 유저는 존재하지 않습니다."
+            return ApiError({
+                type: 'params',
+                error: "해당 이메일의 유저는 존재하지 않습니다."
             })
         }
     } else {
-        return NextResponse.json({
-            type: false,
-            message: "세션없음"
+        return ApiError({
+            type: "session",
+            error: "세션이 확인되지않음"
         })
+
     }
     
 }

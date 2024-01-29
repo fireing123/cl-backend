@@ -6,7 +6,6 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { getPost } from "@/lib/data/post/get"
 import { MinUser, Post } from "@/types/types"
-import { NextResponse } from "next/server"
 import { useRouter } from "next/navigation"
 import { getUserById } from "@/lib/data/user/get"
 
@@ -19,7 +18,7 @@ export default function Blog({ params }: { params: {id: string} }) {
     useEffect(() => {
         try {
             getPost(params.id).then((post) => {
-                getUserById(post.userId).then((user) => {
+                getUserById(post.userId!).then((user) => {
                     setUser(user)
                 })
                 setBlog(post);
@@ -27,11 +26,15 @@ export default function Blog({ params }: { params: {id: string} }) {
         } catch (error) {
             router.back()
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.id])
 
     if (blog) {
         return (
             <div>
+                <head>
+                    <title>{blog.title}</title>
+                </head>
                 <Box className={classes.floor}>
                     <Title order={1}>{blog.title}</Title>
                     <br></br>

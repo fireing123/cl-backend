@@ -35,6 +35,16 @@ export async function getPost(id: string) : Promise<Post> {
     }
 }
 
+export async function getSitemapPosts(): Promise<PostItem[]> {
+    const posts = await fetch("https://jeonil.vercel.app/api/post")
+        .then(async (res) => await res.json()) as FetchPostItem | FetchError
+    if ('error' in posts) {
+        throw ErrorCheck(posts)
+    } else {
+        return posts.posts
+    }
+}
+
 export async function getPostItems() : Promise<PostItem[]> {
     const posts = await fetch("/api/post")
         .then(async (res) => await res.json()) as FetchPostItem | FetchError

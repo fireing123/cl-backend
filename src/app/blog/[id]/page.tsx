@@ -6,7 +6,6 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { getPost } from "@/lib/data/post/get"
 import { MinUser, Post } from "@/types/types"
-import { NextResponse } from "next/server"
 import { useRouter } from "next/navigation"
 import { getUserById } from "@/lib/data/user/get"
 

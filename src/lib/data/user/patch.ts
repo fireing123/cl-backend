@@ -1,10 +1,11 @@
 import { FetchError, FetchUser, Rank, User } from "@/types/types";
 
 
-export async function patchUser({ id, rank, phoneNumber }: { id: string, rank?: Rank, phoneNumber: string }) {
+export async function patchUser({ id, rank, username, phoneNumber }: { id: string, rank?: Rank, username?: string, phoneNumber?: string }) {
     let reqeustMessage = `/api/users?id=${id}`
 
     if (rank) reqeustMessage += `&rank=${rank}`
+    if (username) reqeustMessage += `&username=${username}`
     if (phoneNumber) reqeustMessage += `&phoneNumber=${phoneNumber}`
 
     const patch = await fetch(reqeustMessage, { method: "PATCH" })

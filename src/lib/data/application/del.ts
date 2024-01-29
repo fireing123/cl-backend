@@ -15,5 +15,4 @@ export async function deleteApplication(id: string) : Promise<FetchApplication> 
             return message
         }
     }
-    
 }

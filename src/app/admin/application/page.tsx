@@ -3,12 +3,14 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Table, Anchor, Text, Paper } from '@mantine/core';
 import classes from './blog.module.css'
+import { getApplicationItems } from "@/lib/data/application/get";
+import { ApplicationItem } from "@/types/types";
 
 export default function Application() {
-    const [list, setList] = useState([]);
+    const [list, setList] = useState<ApplicationItem[]>();
     useEffect(() => {
-        fetch("/api/application").then(async (res) => {
-            setList((await res.json()).applications)
+        getApplicationItems().then((res) => {
+            setList(res)
         })
     }, [])
     return (
@@ -23,7 +25,7 @@ export default function Application() {
                         <Table.Th>date</Table.Th>
                     </Table.Tr>
                 </Table.Thead>
-                <Table.Tbody>{list.map((value: any, i: any) => {
+                <Table.Tbody>{list && list.map((value: any, i: any) => {
                     return (
                         <Table.Tr key={value.id}>
                             <Table.Td>

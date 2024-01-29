@@ -94,7 +94,7 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: Request) {
     const session = await getServerSession(authOptions);
-    const { email ,rank  ,name  ,phoneNumber } =  await req.json();
+    const { email ,rank  ,username  ,phoneNumber } =  await req.json();
     if (session) {
         const self = await prisma.user.findFirst({
             where: {
@@ -107,8 +107,9 @@ export async function PATCH(req: Request) {
             }
         })
         if (other) {
+            let user: User | undefined
             if (rank && isAdmin(self?.rank!) || rank !== 'admin' && other?.rank !== 'admin') { 
-                await prisma.user.update({
+                user = await prisma.user.update({
                     where: {
                         email: email
                     },
@@ -120,7 +121,6 @@ export async function PATCH(req: Request) {
                     method: "PATCH"
                 })
             }
-            let user: User | undefined
             if (phoneNumber && (self == other || isAdmin(self?.rank!))) {
                 user = await prisma.user.update({
                     where: {
@@ -131,13 +131,13 @@ export async function PATCH(req: Request) {
                     }
                 });
             }
-            if (name && (self == other || isAdmin(self?.rank!))) {
+            if (username && (self == other || isAdmin(self?.rank!))) {
                 user = await prisma.user.update({
                     where: {
                         email: email
                     },
                     data: {
-                        name: name
+                        username: username
                     }
                 })
             }

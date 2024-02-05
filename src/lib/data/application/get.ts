@@ -16,7 +16,9 @@ export async function getApplication(id : string) : Promise<Application> {
     const application = await fetch(`/api/applications/${id}`)
         .then(async (res) => await res.json()) as FetchApplication | FetchError
     if ('error' in application) {
-        throw ErrorCheck(application)
+        const error = ErrorCheck(application)
+
+        throw new error(application.error)
     } else {
         const file = await getFile(application.fileId)
         return {

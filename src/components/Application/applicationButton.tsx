@@ -5,7 +5,7 @@ import { Application, Rank } from "@/types/types"
 import { Button } from "@mantine/core"
 import { notifications } from "@mantine/notifications"
 
-export async function PassButton({ app }: { app: Application }) {
+export function PassButton({ app }: { app: Application }) {
     return <Button onClick={async () => {
         const user = await getUserById(app.userId!)
         if (user) {

@@ -6,7 +6,9 @@ export async function deletePost(id: string) : Promise<DBPost>{
     const message = await fetch(`/api/post?id=${id}`, { method: "DELETE" })
         .then(async (res) => await res.json()) as FetchDBPost | FetchError
     if ('error' in message) {
-        throw ErrorCheck(message)
+        const error = ErrorCheck(message)
+
+        throw new error(message.error)
     } else {
         try {
             await deleteFile(message.fileId)

@@ -54,9 +54,9 @@ export default function Application() {
     name: string;
     email: string;
     phoneNumber: string;
-}) => {
+  }) => {
     
-    createApplication({ 
+    await createApplication({ 
       title: values.title,
       email: values.email,
       name: values.name,

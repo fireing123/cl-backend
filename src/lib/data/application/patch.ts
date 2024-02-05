@@ -23,7 +23,9 @@ export async function patchApplication(id: string, title?: string, email?: strin
     const patch = await fetch(reqeustMessage, { method: "PATCH" })
         .then(async (res) => await res.json()) as FetchApplication | FetchError
     if ('error' in patch) {
-        throw ErrorCheck(patch)
+        const error = ErrorCheck(patch)
+
+        throw new error(patch.error)
     } else {
         return patch
     }

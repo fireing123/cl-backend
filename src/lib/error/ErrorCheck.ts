@@ -2,16 +2,16 @@ import { FetchError } from "@/types/types";
 
 export function ErrorCheck(res: FetchError) {
     if (res.type === 'session') {
-        return new SessionError(res.error)
-    }
+        return SessionError
+    } else
     if (res.type === 'authority') {
-        return new AuthorityError(res.error)
-    }
+        return AuthorityError
+    } else
     if (res.type === 'params') {
-        return new ParamsError(res.error)
-    }
+        return ParamsError
+    } else
     if (res.type === 'undefined') {
-        return new ValueError(res.error)
+        return UndefiendError
     }
-    return new Error("[알수없는 에러 에러] 메세지: " + res.error)
+    return Error
 }

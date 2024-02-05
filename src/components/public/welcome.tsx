@@ -1,8 +1,9 @@
+import { fullName, group } from "@/config";
 import { Title, Text } from "@mantine/core";
 
 export const CLTitle = ({ title, highlight }: { title: string, highlight: string }) => (
     <Title className={title}>
-        전일고 <span className={highlight}>코딩</span> 동아리 <br /> Computer Language 동아리
+        {group} <span className={highlight}>코딩</span> 동아리 <br /> {fullName} 동아리
     </Title>
 )
 

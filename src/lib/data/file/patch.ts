@@ -10,7 +10,9 @@ export async function patchFile({ id, file, publicAuthority } : { id: string, fi
     }
     const message = await fetch(value, { method: "PATCH" }).then(async (res) => await res.json()) as patchFile | FetchError
     if ('error' in message) {
-        throw ErrorCheck(message)
+        const error = ErrorCheck(message)
+
+        throw new error(message.error)
     } else {
         return message
     }

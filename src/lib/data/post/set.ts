@@ -14,7 +14,9 @@ export async function createPost({ title, html } : Post) : Promise<Post> {
         })
     }).then(async (res) => await res.json()) as FetchPost | FetchError
     if ('error' in post) {
-        throw ErrorCheck(post)
+        const error = ErrorCheck(post)
+
+        throw new error(post.error)
     } else {
         return {
             ...post,

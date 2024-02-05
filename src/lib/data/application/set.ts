@@ -17,6 +17,8 @@ export async function createApplication({ title, email, name, phoneNumber, html 
         })
     }).then(async (res) => await res.json()) as FetchError | Fetch
     if ('error' in res) {
-        throw ErrorCheck(res)
+        const error = ErrorCheck(res)
+
+        throw new error(res.error)
     }
 }

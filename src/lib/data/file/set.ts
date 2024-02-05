@@ -7,7 +7,9 @@ export async function createFile(file: File) : Promise<createFile> {
         body: file
     }).then(async (res) => await res.json()) as createFile | FetchError
     if ('error' in res) {
-        throw ErrorCheck(res)
+        const error = ErrorCheck(res)
+
+        throw new error(res.error)
     } else {
         return res
     }

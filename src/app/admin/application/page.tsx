@@ -7,10 +7,32 @@ import { getApplicationItems } from "@/lib/data/application/get";
 import { ApplicationItem } from "@/types/types";
 
 export default function Application() {
-    const [list, setList] = useState<ApplicationItem[]>();
+    const [list, setList] = useState<JSX.Element[]>([<></>]);
     useEffect(() => {
         getApplicationItems().then((res) => {
-            setList(res)
+            const nodes = res.map((value: any, i: any) => {
+                return (
+                    <Table.Tr key={value.id}>
+                        <Table.Td>
+                            <Link href={`/admin/application/${value.id}`}>
+                            <Anchor component="button" fz="sm">
+                                {value.title}
+                            </Anchor>
+                            </Link>
+                        </Table.Td>
+                        <Table.Td>
+                            <Anchor component="button" fz="sm">
+                                {value.email}
+                            </Anchor>
+                        </Table.Td>
+                        <Table.Td>
+                            <Anchor component="button" fz="sm">
+                                {value.date}
+                            </Anchor>
+                        </Table.Td>
+                    </Table.Tr>
+                )})
+            setList(nodes)
         })
     }, [])
     return (
@@ -25,29 +47,7 @@ export default function Application() {
                         <Table.Th>date</Table.Th>
                     </Table.Tr>
                 </Table.Thead>
-                <Table.Tbody>{list && list.map((value: any, i: any) => {
-                    return (
-                        <Table.Tr key={value.id}>
-                            <Table.Td>
-                                <Link href={`/admin/application/${value.id}`}>
-                                <Anchor component="button" fz="sm">
-                                    {value.title}
-                                </Anchor>
-                                </Link>
-                            </Table.Td>
-                            <Table.Td>
-                                <Anchor component="button" fz="sm">
-                                    {value.email}
-                                </Anchor>
-                            </Table.Td>
-                            <Table.Td>
-                                <Anchor component="button" fz="sm">
-                                    {value.date}
-                                </Anchor>
-                            </Table.Td>
-                        </Table.Tr>
-                    )})
-                }
+                <Table.Tbody>{list}
                 </Table.Tbody>
             </Table>
         </Table.ScrollContainer>

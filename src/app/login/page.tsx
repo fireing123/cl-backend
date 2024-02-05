@@ -12,7 +12,7 @@ export default function Login() {
   return (
     <Paper shadow="xl" radius="md" p="xl" withBorder className={classes.login}  >
       <Text size="lg" fw={500}>
-        Welcome to CL, login with
+        Welcome to , login with
       </Text>
 
       <Group grow mb="md" mt="md">

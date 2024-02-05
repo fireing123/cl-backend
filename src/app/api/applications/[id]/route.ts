@@ -59,6 +59,11 @@ export async function DELETE(req: Request, { params }: { params : { id: string} 
                 type: true,
                 ...application
             })
+        } else {
+            return ApiError({
+                type: 'undefined',
+                error: "신청서 없음"
+            })
         }
     } else {
         return ApiError({

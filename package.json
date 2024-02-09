@@ -58,7 +58,7 @@
     "next-mdx-remote": "^4.4.1",
     "next-themes": "^0.2.1",
     "node-fetch": "^3.3.2",
-    "nodemailer": "^6.9.7",
+    "nodemailer": "^6.9.9",
     "react": "^18",
     "react-dom": "^18",
     "remark": "^15.0.1",

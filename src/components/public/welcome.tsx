@@ -15,7 +15,7 @@ export const SubTitle = () => (
 )
 
 export const SubTextItems = [
-    "진실을 알라 # 목도(리)하리라",
-    "Free and open source # all packages have MIT license, you can use Mantine inany project",
-    "No annoying focus ring # focus ring will appear only when user navigates withkeyboard"
+    "1번쨰 # 내용",
+    "2변쨰 # 내용",
+    "3번쨰 # 내용"
 ]

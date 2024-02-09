@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { transporter } from "@lib/email"
 import prisma from "@/lib/prisma";
+import ApiError from "@/lib/error/APIError";
 
 export async function POST(req: Request) {
     const { id, token, email } = await req.json();
@@ -21,12 +22,12 @@ export async function POST(req: Request) {
         });
         return NextResponse.json({
             type: true,
-            message: "메세지 전달 성공"
+            message: "이메일이 정상 전송되었습니다"
         })
     } else {
-        return NextResponse.json({
-            type: false,
-            message: "이 email의 계정은 생성되지않았습니다."
+        return ApiError({
+            type: 'undefined',
+            error: "이 email의 계정은 생성되지않았습니다."
         })
     }
 }

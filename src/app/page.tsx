@@ -1,8 +1,7 @@
 'use client'
+
 import { Image, Container,Button, Group } from '@mantine/core';
-
-
-import classes from '@/components/welcome/welcome.module.css';
+import classes from '@/components/Welcome/welcome.module.css';
 import { CLTitle, SubTextItems, SubTitle } from '@/components/public/welcome';
 import SubText from '@/components/Welcome/SubText';
 

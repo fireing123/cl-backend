@@ -14,7 +14,6 @@ import {
   Tabs,
   rem,
 } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
 import {
   IconLogout,
   IconSettings,
@@ -22,9 +21,9 @@ import {
   IconChevronDown,
 } from '@tabler/icons-react';
 import classes from './HeaderTabs.module.css';
-import { MantineLogo } from '@mantinex/mantine-logo';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { DiscordButton } from "../SocialButton/DiscordButton";
 
 const tabs = [
     ['Home', '/'],
@@ -55,6 +54,7 @@ export default function Header() {
               <Image src="/main.svg" alt='Logo' width={50} height={40} />
             </Link>
 
+            <DiscordButton href='https://discord.gg/DbmcPRDNTD'></DiscordButton>
             <Menu
               width={260}
               position="bottom-end"

@@ -14,7 +14,7 @@
 
 
 export interface MinUser {
-  id: string;
+    id: string;
     name?: string | null;
     email?: string | null;
     image?: string | null;

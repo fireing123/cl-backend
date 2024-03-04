@@ -1,7 +1,7 @@
 'use client'
 import { Button, Group, Paper, Text } from "@mantine/core"
 import classes from './blogpage.module.css'
-import { DeleteButton, PassButton } from "@/components/Application/applicationButton";
+import { PassButton } from "@/components/Application/applicationButton";
 import { getApplication } from "@/lib/data/application/get";
 import { useEffect, useState } from "react";
 import { Application } from "@/types/types";
@@ -33,7 +33,6 @@ export default function Application({ params }: { params: {id: string} }) {
                 <div dangerouslySetInnerHTML={{__html: app.html}} />
                 <Group>
                 <PassButton app={app} />
-                <DeleteButton app={app} />
                 </Group>
             </Paper>}
         </div>

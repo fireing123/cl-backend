@@ -24,7 +24,7 @@ export default function Application({ params }: { params: {id: string} }) {
                 <Paper radius="md" p="xl" withBorder className={classes.page} >
                 <Group>
                     <h1>{app.title}</h1>
-                    <div>{"d"}</div>
+                    <div>{app.name}</div>
                 </Group>
                 <Group>
                     <Text>{app.email}</Text>

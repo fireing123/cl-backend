@@ -16,11 +16,13 @@ import { notifications } from '@mantine/notifications';
 import type { PutBlobResult } from '@vercel/blob';
 import { isEmail, isNotEmpty, useForm } from '@mantine/form';
 import { createApplication } from '@/lib/data/application/set';
+import { useState } from 'react';
 
 export default function Application() {
 
     const { data: session, status } = useSession();
     const router = useRouter();
+    const [canSubmit, setCanSubmit] = useState(false);
     const form = useForm({
       initialValues: {
         title: '',
@@ -55,7 +57,7 @@ export default function Application() {
     email: string;
     phoneNumber: string;
   }) => {
-    
+    setCanSubmit(true)
     await createApplication({ 
       title: values.title,
       email: values.email,
@@ -140,7 +142,7 @@ export default function Application() {
               <RichTextEditor.Content />
             </RichTextEditor>
             <Group justify="flex-end" mt="md">
-              <Button type="submit">Submit</Button>
+              <Button loading={canSubmit} loaderProps={{ type: "dots" }} type="submit">Submit</Button>
             </Group>
           </form>
         </Box>

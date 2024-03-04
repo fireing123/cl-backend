@@ -4,6 +4,9 @@ import { patchUser } from "@/lib/data/user/patch"
 import { Application, Rank } from "@/types/types"
 import { Button } from "@mantine/core"
 import { notifications } from "@mantine/notifications"
+import { useState } from "react"
+
+const [wait, setWait] = useState(false);
 
 export function PassButton({ app }: { app: Application }) {
     return <Button onClick={async () => {
@@ -42,7 +45,7 @@ export function PassButton({ app }: { app: Application }) {
                 message: "이 이메일은 회원 가입을 진행하지 않았습니다!"
             })
         }
-    }}>합격</Button>
+    }} loading={wait} loaderProps={{ type: "dots" }} >합격</Button>
 }
 
 export function DeleteButton({ app }: { app: Application }) {
@@ -60,5 +63,5 @@ export function DeleteButton({ app }: { app: Application }) {
                 message: `error message: \"${error}\"`
             })
         }
-    }}>삭제</Button>
+    }} loading={wait} loaderProps={{ type: "dots" }} >삭제</Button>
 }

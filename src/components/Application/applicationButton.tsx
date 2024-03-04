@@ -6,10 +6,27 @@ import { Button } from "@mantine/core"
 import { notifications } from "@mantine/notifications"
 import { useState } from "react"
 
-const [wait, setWait] = useState(false);
+
 
 export function PassButton({ app }: { app: Application }) {
-    return <Button onClick={async () => {
+    const [wait, setWait] = useState(false);
+    return (<>
+    <Button onClick={async () => {
+        try {
+            const deleted = await deleteApplication(app.id!)
+            notifications.show({
+                title: "삭제됨",
+                message: `${deleted.name}의 ${deleted.title}은 정상적으로 삭제되었습니다`
+            })
+        } catch (error) {
+            notifications.show({
+                color: "red",
+                title: "오류발생",
+                message: `error message: \"${error}\"`
+            })
+        }
+    }} loading={wait} loaderProps={{ type: "dots" }} >삭제</Button>
+    <Button onClick={async () => {
         const user = await getUserById(app.userId!)
         if (user) {
             let rank = "member" as Rank
@@ -45,23 +62,5 @@ export function PassButton({ app }: { app: Application }) {
                 message: "이 이메일은 회원 가입을 진행하지 않았습니다!"
             })
         }
-    }} loading={wait} loaderProps={{ type: "dots" }} >합격</Button>
-}
-
-export function DeleteButton({ app }: { app: Application }) {
-    return <Button onClick={async () => {
-        try {
-            const deleted = await deleteApplication(app.id!)
-            notifications.show({
-                title: "삭제됨",
-                message: `${deleted.name}의 ${deleted.title}은 정상적으로 삭제되었습니다`
-            })
-        } catch (error) {
-            notifications.show({
-                color: "red",
-                title: "오류발생",
-                message: `error message: \"${error}\"`
-            })
-        }
-    }} loading={wait} loaderProps={{ type: "dots" }} >삭제</Button>
+    }} loading={wait} loaderProps={{ type: "dots" }} >합격</Button></>)
 }

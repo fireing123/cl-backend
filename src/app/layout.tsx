@@ -36,7 +36,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning >
+    <html lang="ko" suppressHydrationWarning >
       <body className={inter.className}>
         <SpeedInsights />
         <MantineProvider theme={theme} >

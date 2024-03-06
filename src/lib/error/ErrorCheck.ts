@@ -1,4 +1,33 @@
 import { FetchError } from "@/types/types";
+class UndefiendError extends Error {
+    constructor(message: string) {
+        super("[존재하지 않는 값]" + message);
+        this.name = this.constructor.name;
+    }
+}
+
+
+class ParamsError extends Error {
+    constructor(message: string) {
+        super("[파라미터 결핍]" + message);
+        this.name = this.constructor.name;
+    }
+}
+
+
+class AuthorityError extends Error {
+    constructor(message: string) {
+        super("required authority: " + message);
+        this.name = this.constructor.name;
+    }
+}
+
+class SessionError extends Error {
+    constructor(message: string) {
+        super("[로그인 문제]" + message);
+        this.name = this.constructor.name;
+    }
+}
 
 export function ErrorCheck(res: FetchError) {
     if (res.type === 'session') {
@@ -15,3 +44,5 @@ export function ErrorCheck(res: FetchError) {
     }
     return Error
 }
+
+

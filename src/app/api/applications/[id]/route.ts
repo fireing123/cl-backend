@@ -16,12 +16,25 @@ export async function GET(req: Request, { params }: { params : { id: string} }) 
                 error: "세션결핍"
             })
         }
-        const application = await prisma.application.findFirst({
+        let application = await prisma.application.findFirst({
             where: {
                 id: params.id
             }
         })
-        if (application?.userId == session.user.userId || isAdmin(session.user.rank)) {
+        if (!application) {
+            application = await prisma.application.findFirst({
+                where: {
+                    userId: params.id
+                }
+            })
+            if (!application) {
+                return ApiError({
+                    type: "undefined",
+                    error: "작성되지 않음!!"
+                })
+            }
+        }
+        if (application.userId == session.user.userId || isAdmin(session.user.rank)) {
             return NextResponse.json({
                 type: true,
                 ...application

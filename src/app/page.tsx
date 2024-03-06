@@ -4,6 +4,7 @@ import { Image, Container,Button, Group } from '@mantine/core';
 import classes from '@/components/Welcome/welcome.module.css';
 import { CLTitle, SubTextItems, SubTitle } from '@/components/public/welcome';
 import SubText from '@/components/Welcome/SubText';
+import ApplicationButton from '@/components/Welcome/application';
 
 
 export default function Welcome() {
@@ -20,14 +21,7 @@ export default function Welcome() {
           <SubText items={SubTextItems} />
 
           <Group mt={30}>
-            <Button 
-            component='a'
-            radius="xl" 
-            size="md" 
-            className={classes.control}
-            href='/application'>
-              신청하기
-            </Button>
+            <ApplicationButton />
           </Group>
         </div>
         <Image src={'/image.svg'} className={classes.image} alt='' />

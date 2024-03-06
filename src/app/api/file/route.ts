@@ -82,6 +82,7 @@ export async function PATCH(req: Request) {
   const session = await getServerSession(authOptions);
   const { searchParams } = new URL(req.url);
   const id = searchParams.get('id') as string;
+  const filename = searchParams.get('filename') as string;
   const publicAuthority = searchParams.get('publicAuthority'); 
   const newFile = req.body as File | null;    
   if (session) {
@@ -105,8 +106,7 @@ export async function PATCH(req: Request) {
         error: "파일이 존재하지않음/ 다른 유저가 소유한 파일일수도 있습니다"
       })
     }
-
-    const blob = await put(newFile.name, newFile, {
+    const blob = await put(filename, newFile, {
       access: 'public',
     });
 

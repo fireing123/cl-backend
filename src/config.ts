@@ -1,4 +1,4 @@
-export const fullName = "Computer Lang"
+export const fullName = "프로그래밍"
 
 export const initial = "CL"
 

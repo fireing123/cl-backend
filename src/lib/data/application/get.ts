@@ -2,11 +2,18 @@ import { Application, ApplicationItem, FetchApplication, FetchApplicationItems, 
 import { getFile } from "../file/get";
 import { ErrorCheck } from "@/lib/error/ErrorCheck";
 
+export async function getApplicationByUserId(id: string) {
+    return await getApplication(id)
+}
+
+
 export async function getApplicationInfo(id: string) {
     const application = await fetch(`/api/applications/${id}`)
         .then(async (res) => await res.json()) as FetchApplication | FetchError
     if ('error' in application) {
-        throw new Error(application.error)
+        const error = ErrorCheck(application)
+
+        throw new error(application.error)
     } else {
         return application
     }

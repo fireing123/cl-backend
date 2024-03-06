@@ -7,11 +7,13 @@ import { notifications } from "@mantine/notifications"
 import { useState } from "react"
 
 
-
 export function PassButton({ app }: { app: Application }) {
+
     const [wait, setWait] = useState(false);
+
     return (<>
     <Button onClick={async () => {
+        setWait(true)
         try {
             const deleted = await deleteApplication(app.id!)
             notifications.show({
@@ -27,6 +29,7 @@ export function PassButton({ app }: { app: Application }) {
         }
     }} loading={wait} loaderProps={{ type: "dots" }} >삭제</Button>
     <Button onClick={async () => {
+        setWait(true)
         const user = await getUserById(app.userId!)
         if (user) {
             let rank = "member" as Rank

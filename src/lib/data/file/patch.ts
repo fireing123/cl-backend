@@ -4,11 +4,15 @@ import { FetchError, File as patchFile } from "@/types/types";
 export async function patchFile({ id, file, publicAuthority } : { id: string, file: File, publicAuthority?: string} ) {
     let value: string
     if (publicAuthority) {
-        value = `/api/file?=${id}&publicAuthority=${publicAuthority}`
+        value = `/api/file?id=${id}&filename=${file.name}&publicAuthority=${publicAuthority}`
     } else {
-        value = `/api/file?=${id}`
+        value = `/api/file?id=${id}&filename=${file.name}`
     }
-    const message = await fetch(value, { method: "PATCH" }).then(async (res) => await res.json()) as patchFile | FetchError
+
+    const message = await fetch(value, { 
+        method: "PATCH",
+        body: file
+    }).then(async (res) => await res.json()) as patchFile | FetchError
     if ('error' in message) {
         const error = ErrorCheck(message)
 

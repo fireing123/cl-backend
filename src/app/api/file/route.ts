@@ -58,6 +58,11 @@ export async function DELETE(request: NextRequest) {
     })
     if (file && file.userId == session.user.userId || isAdmin(session.user.rank)) {
       await del(`${process.env.BLOB_URL}/${file?.url}`);
+      await prisma.file.delete({
+        where: {
+          id: id
+        }
+      })
       return NextResponse.json({
         type: true,
         fileId: file?.id,

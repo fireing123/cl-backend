@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@lib/authOptions";
 import { FetchError, FetchMinUser, FetchUser, MinUser, User } from "@/types/types";
 import { isAdmin } from "@lib/auth";
-import { ErrorCheck } from "@/lib/error/ErrorCheck";
+import { ErrorCheck, AuthorityError } from "@/lib/error/ErrorCheck";
 
 export async function getUserDetails(id: string) : Promise<User> {
     const session = await getServerSession(authOptions)

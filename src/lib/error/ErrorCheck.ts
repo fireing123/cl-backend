@@ -1,5 +1,6 @@
 import { FetchError } from "@/types/types";
-class UndefiendError extends Error {
+
+export class UndefiendError extends Error {
     constructor(message: string) {
         super("[존재하지 않는 값]" + message);
         this.name = this.constructor.name;
@@ -7,7 +8,7 @@ class UndefiendError extends Error {
 }
 
 
-class ParamsError extends Error {
+export class ParamsError extends Error {
     constructor(message: string) {
         super("[파라미터 결핍]" + message);
         this.name = this.constructor.name;
@@ -15,14 +16,14 @@ class ParamsError extends Error {
 }
 
 
-class AuthorityError extends Error {
+export class AuthorityError extends Error {
     constructor(message: string) {
         super("required authority: " + message);
         this.name = this.constructor.name;
     }
 }
 
-class SessionError extends Error {
+export class SessionError extends Error {
     constructor(message: string) {
         super("[로그인 문제]" + message);
         this.name = this.constructor.name;

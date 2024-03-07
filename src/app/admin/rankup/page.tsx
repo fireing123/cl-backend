@@ -3,7 +3,7 @@ import { useState } from "react";
 import { NativeSelect } from "@mantine/core";
 import { patchUser } from "@/lib/data/user/patch";
 import { getUserByEmail } from "@/lib/data/user/get";
-import { Rank } from "@/types/types";
+import { Rank, User } from "@/types/types";
 
 export default function Home() {
     const [email, setEmail] = useState('');
@@ -12,10 +12,13 @@ export default function Home() {
 
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault()
-        const user = await getUserByEmail(email)
+        const user = await getUserByEmail(email) as User
         const res = await patchUser({
             id: user.id,
-            rank: rank
+            rank: rank,
+            username: user.username!,
+            phoneNumber: user.phoneNumber!
+
         })
         setUpdate(res.username || res.name + "의 현재 랭크: " + res.rank)
     }

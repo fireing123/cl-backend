@@ -13,15 +13,20 @@ export default function ApplicationButton() {
     useEffect(() => {
         if (status == "authenticated") {
             try {
-                const post = getApplicationInfo(session.user.userId)
+                getApplicationInfo(session.user.userId)
                     .then(async (post) => {
-                        setHasApp("submit")
+                        if (post.id){
+                            setHasApp("submit")
+                        } else {
+                            setHasApp("undefined")
+                        }
+
                 })
             } catch (error) {
                 setHasApp("undefined")
             }  
         }
-    }, [session])
+    }, [status])
 
     if (status === 'authenticated') {
         if (session.user.rank == 'person') {

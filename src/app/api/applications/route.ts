@@ -12,7 +12,6 @@ export async function GET(req: Request) {
     if (session && isAdmin(session.user.rank)) {
         const applications = await prisma.application.findMany({
             where: {
-
             }
         })
         const applicationItems = applications.map((value) => {

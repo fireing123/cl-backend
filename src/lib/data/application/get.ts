@@ -2,13 +2,23 @@ import { Application, ApplicationItem, FetchApplication, FetchApplicationItems, 
 import { getFile } from "../file/get";
 import { ErrorCheck } from "@/lib/error/ErrorCheck";
 
+
+/** 유저 아이디 필요 */
 export async function getApplicationByUserId(id: string) {
-    return await getApplication(id)
+    const application = await fetch(`/api/applications/users/${id}`)
+        .then(async (res) => await res.json()) as FetchApplication | FetchError
+    if ('error' in application) {
+        const error = ErrorCheck(application)
+
+        throw new error(application.error)
+    } else {
+        return application
+    }
 }
 
-
+/**Application id 필요 */
 export async function getApplicationInfo(id: string) {
-    const application = await fetch(`/api/applications/${id}`)
+    const application = await fetch(`/api/applications/info/${id}`)
         .then(async (res) => await res.json()) as FetchApplication | FetchError
     if ('error' in application) {
         const error = ErrorCheck(application)

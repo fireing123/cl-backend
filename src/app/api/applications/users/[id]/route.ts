@@ -16,19 +16,20 @@ export async function GET(req: Request, { params }: { params : { id: string} }) 
                 error: "세션결핍"
             })
         }
-        
+
         const application = await prisma.application.findFirst({
             where: {
                 userId: params.id
             }
         })
+        
         if (!application) {
             return ApiError({
                 type: "undefined",
                 error: "작성되지 않음!!"
             })
         }
-
+        
         if (application.userId == session.user.userId || isAdmin(session.user.rank)) {
             return NextResponse.json({
                 type: true,
@@ -47,38 +48,3 @@ export async function GET(req: Request, { params }: { params : { id: string} }) 
         })
     }
 }
-
-export async function DELETE(req: Request, { params }: { params : { id: string} }) {
-    const session = await getServerSession(authOptions);
-
-    if (params.id && session && isAdmin(session.user.rank)) {
-        const application = await prisma.application.findFirst({
-            where: {
-                id: params.id
-            }
-        })
-        if (application) {
-            await prisma.application.delete({
-                where: {
-                    id: application.id
-                }
-            })
-            return NextResponse.json({
-                type: true,
-                ...application
-            })
-        } else {
-            return ApiError({
-                type: 'undefined',
-                error: "신청서 없음"
-            })
-        }
-    } else {
-        return ApiError({
-            type: 'authority',
-            error: "접근 거부됨!"
-        })
-    } 
-    
-}
-

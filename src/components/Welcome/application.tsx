@@ -9,7 +9,7 @@ import { getApplicationInfo } from "@/lib/data/application/get";
 export default function ApplicationButton() {
     const {status, data: session } = useSession();
     const [hasApp, setHasApp] = useState<"loading" | "undefined" | "submit">("loading");
-
+    console.log(hasApp, status)
     useEffect(() => {
         if (status == "authenticated") {
             try {

@@ -8,17 +8,16 @@ import { getApplicationInfo } from "@/lib/data/application/get";
 
 export default function ApplicationButton() {
     const {status, data: session } = useSession();
-    const [hasApp, setHasApp] = useState<"loading" | "undefined" | "submit">("loading");
+    const [hasApp, setHasApp] = useState<"undefined" | "submit">("undefined");
     console.log(hasApp, status)
     useEffect(() => {
         if (status == "authenticated") {
             try {
                 getApplicationInfo(session.user.userId)
                     .then(async (post) => {
+                        console.log(post)
                         if (post.id){
                             setHasApp("submit")
-                        } else {
-                            setHasApp("undefined")
                         }
 
                 })
@@ -30,9 +29,7 @@ export default function ApplicationButton() {
 
     if (status === 'authenticated') {
         if (session.user.rank == 'person') {
-            if (hasApp == "loading") {
-                return <Button disabled>로딩중...</Button>
-            } else if (hasApp == "submit") {
+            if (hasApp == "submit") {
                 return <Button 
                 component='a'
                 radius="xl" 

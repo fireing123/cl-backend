@@ -94,7 +94,7 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: Request) {
     const session = await getServerSession(authOptions);
-    const { email ,rank  ,username  ,phoneNumber } =  await req.json();
+    const { id ,rank  ,username  ,phoneNumber } =  await req.json();
     if (session) {
         const self = await prisma.user.findFirst({
             where: {
@@ -103,7 +103,7 @@ export async function PATCH(req: Request) {
         });
         const other = await prisma.user.findFirst({
             where: {
-                email: email
+                id
             }
         })
         if (other) {
@@ -111,20 +111,20 @@ export async function PATCH(req: Request) {
             if (rank && isAdmin(self?.rank!) || rank !== 'admin' && other?.rank !== 'admin') { 
                 user = await prisma.user.update({
                     where: {
-                        email: email
+                        id: id
                     },
                     data: {
                         rank: rank
                     }
                 });
-                await fetch(`${process.env.DISCORD_URL}/api/rankup?email=${email}`, {
+                await fetch(`${process.env.DISCORD_URL}/api/rankup?email=${other.email}`, {
                     method: "PATCH"
                 })
             }
             if (phoneNumber && (self == other || isAdmin(self?.rank!))) {
                 user = await prisma.user.update({
                     where: {
-                        email: email
+                        id
                     },
                     data: {
                         phoneNumber: phoneNumber
@@ -134,7 +134,7 @@ export async function PATCH(req: Request) {
             if (username && (self == other || isAdmin(self?.rank!))) {
                 user = await prisma.user.update({
                     where: {
-                        email: email
+                        id
                     },
                     data: {
                         username: username

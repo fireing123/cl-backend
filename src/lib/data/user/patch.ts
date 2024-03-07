@@ -1,7 +1,7 @@
 import { FetchError, FetchUser, Rank, User } from "@/types/types";
 
 
-export async function patchUser({ id, rank, username, phoneNumber }: { id: string, rank: Rank, username: string, phoneNumber: string }) {
+export async function patchUser({ id, rank, username, phoneNumber }: { id: string, rank?: Rank, username?: string, phoneNumber?: string }) {
 
     const patch = await fetch("/api/users", {
          method: "PATCH",

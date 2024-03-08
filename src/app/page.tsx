@@ -1,6 +1,6 @@
 'use client'
 
-import { Image, Container,Button, Group } from '@mantine/core';
+import { Image, Container,Button, Group, Title } from '@mantine/core';
 import classes from '@/components/Welcome/welcome.module.css';
 import { CLTitle, SubTextItems, SubTitle } from '@/components/public/welcome';
 import SubText from '@/components/Welcome/SubText';
@@ -22,6 +22,7 @@ export default function Welcome() {
 
           <Group mt={30}>
             <ApplicationButton />
+            <Title>무조건 크롬 브라우저로 로그인!!!</Title>
           </Group>
         </div>
         <Image src={'/image.svg'} className={classes.image} alt='' />

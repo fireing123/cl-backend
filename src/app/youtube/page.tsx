@@ -23,7 +23,7 @@ export default function YoutubeList() {
             <Container py="xl">
                 <SimpleGrid cols={{ base: 1, sm: 2}}>{list.map((value: any, i: any) => {
                     return (
-                        <Card key={i} p="md" radius="md" component="a" href={`https://www.youtube.com/watch?v=${value.id}`} className={classes.card}>
+                        <Card key={value.id} p="md" radius="md" component="a" href={`https://www.youtube.com/watch?v=${value.id}`} className={classes.card}>
                             <AspectRatio ratio={1920 / 1080}>
                                 <Image src={value.image.url} alt="youtube image" />
                             </AspectRatio>

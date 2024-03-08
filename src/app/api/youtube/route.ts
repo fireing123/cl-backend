@@ -14,10 +14,18 @@ export async function GET(req: NextRequest) {
             return await value.json()
         })
         const fixed = youtubes.items.map((item: any) => {
-            return {
-                title: item.snippet.title,
-                image: item.snippet.thumbnails.maxres,
-                id: item.snippet.resourceId.videoId
+            if (item.snippet.thumbnails.maxres) {
+                return {
+                    title: item.snippet.title,
+                    image: item.snippet.thumbnails.maxres,
+                    id: item.snippet.resourceId.videoId
+                }
+            } else {
+                return {
+                    title: item.snippet.title,
+                    image: item.snippet.thumbnails.default,
+                    id: item.snippet.resourceId.videoId
+                }   
             }
         })
         return NextResponse.json(fixed)

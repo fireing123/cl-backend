@@ -63,13 +63,18 @@ export function Retouch({ app }: { app: Application }) {
     }) => {
         setCanSubmit(true)
         const file = new File([editer?.getHTML() || "작성되지 않음"], values.title)
-        await patchApplication(app.id!, values.title, values.email, values.name, values.phoneNumber, file)
-        notifications.show({
-          title: 'create application',
-          message: `Success Create application ${values.title}`
-        })
-
-        router.push('/')
+        try {
+          await patchApplication(app.id!, values.title, values.email, values.name, values.phoneNumber, file)
+          notifications.show({
+            title: 'create application',
+            message: `Success Create application ${values.title}`
+          })
+  
+          router.push('/')
+        } catch (error) {
+          console.error(error)
+        }
+        
     }
 
     if (status === "authenticated") {

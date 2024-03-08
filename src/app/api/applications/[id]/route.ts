@@ -19,7 +19,7 @@ export async function GET(req: Request, { params }: { params : { id: string} }) 
         
         const application = await prisma.application.findFirst({
             where: {
-                userId: params.id
+                id: params.id
             }
         })
         if (!application) {

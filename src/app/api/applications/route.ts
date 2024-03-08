@@ -79,9 +79,15 @@ export async function PATCH(req: Request) {
     if (session) {
         const application = await prisma.application.findUnique({
             where: {
-                id: id || ""
+                id: id!
             }
         })
+        if (!application) {
+            return ApiError({
+                type: "params",
+                error: "id 결핌"
+            })
+        }
         if (session.user.userId == application?.userId) {
             const patchApplication = await prisma.application.update({
                 where: {

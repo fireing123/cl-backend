@@ -5,15 +5,19 @@ import { PassButton } from "@/components/Application/applicationButton";
 import { getApplication } from "@/lib/data/application/get";
 import { useEffect, useState } from "react";
 import { Application } from "@/types/types";
+import { useRouter } from "next/navigation";
 
 export default function Application({ params }: { params: {id: string} }) {
-
+    const router = useRouter();
     const [app, setApp] = useState<Application>();
 
     useEffect(() => {
         getApplication(params.id)
             .then((res) => {
                 setApp(res)
+            }).catch((error) => {
+                console.log(error)
+                router.push("/admin/application")
             })
     }, [params.id])
 

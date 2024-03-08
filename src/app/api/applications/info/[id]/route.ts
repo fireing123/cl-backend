@@ -18,7 +18,7 @@ export async function GET(req: Request, { params }: { params : { id: string} }) 
         
         const application = await prisma.application.findFirst({
             where: {
-                userId: params.id
+                id: params.id
             }
         })
         if (!application) {
@@ -29,10 +29,7 @@ export async function GET(req: Request, { params }: { params : { id: string} }) 
         }
         return NextResponse.json({
             type: true,
-            id: application.id,
-            title: application.title,
-            email: application.email,
-            date: application.date
+            ...application
         })
         
     } else {

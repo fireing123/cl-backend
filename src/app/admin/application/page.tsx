@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Table, Anchor, Text, Paper } from '@mantine/core';
 import classes from './blog.module.css'
 import { getApplicationItems } from "@/lib/data/application/get";
-import { ApplicationItem } from "@/types/types";
 
 export default function Application() {
     const [list, setList] = useState<JSX.Element[]>([<></>]);
@@ -20,12 +19,12 @@ export default function Application() {
                             </Anchor>
                             </Link>
                         </Table.Td>
-                        <Table.Td>
+                        <Table.Td >
                             <Anchor component="button" fz="sm">
                                 {value.email}
                             </Anchor>
                         </Table.Td>
-                        <Table.Td>
+                        <Table.Td >
                             <Anchor component="button" fz="sm">
                                 {value.date}
                             </Anchor>

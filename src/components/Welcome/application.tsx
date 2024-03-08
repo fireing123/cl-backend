@@ -4,38 +4,36 @@ import { useSession } from "next-auth/react";
 import classes from './welcome.module.css';
 
 import { useEffect, useState } from "react";
-import { getApplicationInfo } from "@/lib/data/application/get";
+import { getApplicationByUserId, getApplicationInfo } from "@/lib/data/application/get";
+import { error } from "console";
 
 export default function ApplicationButton() {
     const {status, data: session } = useSession();
-    const [hasApp, setHasApp] = useState<"undefined" | "submit">("undefined");
-    console.log(hasApp, status)
+    const [hasApp, setHasApp] = useState<"loading" | "undefined" | "submit">("loading");
     useEffect(() => {
         if (status == "authenticated") {
-            try {
-                getApplicationInfo(session.user.userId)
-                    .then(async (post) => {
-                        console.log(post)
-                        if (post.id){
-                            setHasApp("submit")
-                        }
-
+            getApplicationByUserId(session.user.userId)
+                .then(async (post) => {
+                    setHasApp("submit")
+                }).catch((error) => {
+                    console.log(error)
+                    setHasApp("undefined")
                 })
-            } catch (error) {
-                setHasApp("undefined")
-            }  
+ 
         }
     }, [status])
 
     if (status === 'authenticated') {
         if (session.user.rank == 'person') {
-            if (hasApp == "submit") {
+            if (hasApp == 'loading') {
+                return <Button disabled>신청 유무 확인중...</Button>
+            } else if (hasApp == "submit") {
                 return <Button 
                 component='a'
                 radius="xl" 
                 size="md" 
                 className={classes.control}
-                href='/application'>
+                href='/application/retouch'>
                     수정하기
                 </Button>
             } else {

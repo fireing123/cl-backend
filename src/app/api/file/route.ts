@@ -97,7 +97,6 @@ export async function PATCH(req: Request) {
         error: "변경될 파일 결핍"
       })
     }
-    
     const file = await prisma.file.findFirst({
       where: {
         id: id
@@ -120,7 +119,7 @@ export async function PATCH(req: Request) {
         id: file?.id
       },
       data: {
-        url: blob.url,
+        url: blob.url.replace(`${process.env.BLOB_URL}/`, ""),
         publicAuthority: publicAuthority || file?.publicAuthority
       }
     })

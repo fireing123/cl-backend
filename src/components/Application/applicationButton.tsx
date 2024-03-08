@@ -12,7 +12,7 @@ export function PassButton({ app }: { app: Application }) {
     const [wait, setWait] = useState(false);
 
     return (<>
-    <Button onClick={async () => {
+    <Button color="red" onClick={async () => {
         setWait(true)
         try {
             const deleted = await deleteApplication(app.id!)

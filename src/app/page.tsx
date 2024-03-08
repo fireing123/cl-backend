@@ -23,6 +23,8 @@ export default function Welcome() {
           <Group mt={30}>
             <ApplicationButton />
             <Title>무조건 크롬 브라우저로 로그인!!!</Title>
+            <Title>디스코드는 합격하지 않아도 들어와도 됩니다.</Title>
+            <Title>디스코드에서 동아리에 대해 질문하세요</Title>
           </Group>
         </div>
         <Image src={'/image.svg'} className={classes.image} alt='' />

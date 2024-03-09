@@ -1,25 +1,17 @@
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@lib/authOptions";
 import { FetchError, FetchMinUser, FetchUser, MinUser, User } from "@/types/types";
-import { isAdmin } from "@lib/auth";
-import { ErrorCheck, AuthorityError } from "@/lib/error/ErrorCheck";
+import { ErrorCheck} from "@/lib/error/ErrorCheck";
 
 export async function getUserDetails(id: string) : Promise<User> {
-    const session = await getServerSession(authOptions)
-    if (isAdmin(session?.user.rank!)) {
-        const fetchUser = await fetch(`/api/users?id=${id}&auth=true`)
-            .then(async (res) => await res.json()) as FetchUser | FetchError
-        if ('error' in fetchUser) {
-            throw new Error(fetchUser.error)
-        } else {
-            const user = {
-                ...fetchUser,
-                type: undefined
-                } as User
-            return user
-        }
+    const fetchUser = await fetch(`/api/users?id=${id}&auth=true`)
+        .then(async (res) => await res.json()) as FetchUser | FetchError
+    if ('error' in fetchUser) {
+        throw new Error(fetchUser.error)
     } else {
-        throw new AuthorityError("Admin")
+        const user = {
+            ...fetchUser,
+            type: undefined
+            } as User
+        return user
     }
 }
 

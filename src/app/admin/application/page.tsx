@@ -20,9 +20,11 @@ export default function Application() {
                             </Link>
                         </Table.Td>
                         <Table.Td >
+                            <Link href={`/user/${value.email}`}>
                             <Anchor component="button" fz="sm">
                                 {value.email}
                             </Anchor>
+                            </Link>
                         </Table.Td>
                         <Table.Td >
                             <Anchor component="button" fz="sm">

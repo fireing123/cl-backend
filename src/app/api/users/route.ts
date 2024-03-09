@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
         })
     } 
     if (auth == "true") {
-        if (isAdmin(session?.user.rank!)) {
+        if (isAdmin(session?.user.rank!) || session?.user.userId == user.id ) {
             return NextResponse.json({
                 type: true,
                 id: user.id,

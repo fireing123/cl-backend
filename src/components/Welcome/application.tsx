@@ -29,8 +29,7 @@ export default function ApplicationButton() {
             if (hasApp == 'loading') {
                 return <Button disabled>신청 유무 확인중...</Button>
             } else if (hasApp == "submit") {
-                if (application) {
-                    return <Button 
+                return <Button 
                 component='a'
                 radius="xl" 
                 size="md" 
@@ -38,18 +37,21 @@ export default function ApplicationButton() {
                 href='/application/retouch'>
                     수정하기
                 </Button>
-                } else {
-                    return <Button disabled>모집이 끝났습니다</Button>
-                }
+                
             } else {
-                return <Button 
+                if (application) {
+                    return <Button 
                 component='a'
                 radius="xl" 
                 size="md" 
                 className={classes.control}
                 href='/application'>
                   신청하기
-                </Button>
+                  </Button>
+                } else {
+                    return <Button disabled>모집이 끝났습니다</Button>
+                }
+                
             }
         } else if (session.user.rank == 'admin') {
             return <Button 

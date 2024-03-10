@@ -1,6 +1,7 @@
 'use client'
 import { Button } from "@mantine/core";
 import { useSession } from "next-auth/react";
+import { application } from "../../config"
 import classes from './welcome.module.css';
 
 import { useEffect, useState } from "react";
@@ -28,7 +29,8 @@ export default function ApplicationButton() {
             if (hasApp == 'loading') {
                 return <Button disabled>신청 유무 확인중...</Button>
             } else if (hasApp == "submit") {
-                return <Button 
+                if (application) {
+                    return <Button 
                 component='a'
                 radius="xl" 
                 size="md" 
@@ -36,6 +38,9 @@ export default function ApplicationButton() {
                 href='/application/retouch'>
                     수정하기
                 </Button>
+                } else {
+                    return <Button disabled>모집이 끝났습니다</Button>
+                }
             } else {
                 return <Button 
                 component='a'

@@ -4,3 +4,4 @@ export const initial = "CL"
 
 export const group = "전일고"
 
+export const application = false

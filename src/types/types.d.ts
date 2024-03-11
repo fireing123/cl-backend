@@ -18,7 +18,7 @@ export interface MinUser {
     name?: string | null;
     email?: string | null;
     image?: string | null;
-
+    mailcom?: string | null;
     username: string | null;
     rank: Rank
 }
@@ -52,6 +52,9 @@ export interface FetchMinUser extends MinUser, Fetch {
 
 }
 
+export interface FetchMinUsers extends Fetch {
+  userInfos: MinUser[]
+}
 
 
 export interface File extends Fetch {

@@ -49,6 +49,7 @@ model User {
   username      String? @map("username")
   rank          String @default("person")
   phoneNumber   String?
+  mailcom       String?
 
   application      Application?
   posts            Post[]

@@ -1,4 +1,4 @@
-import { FetchError, FetchMinUser, FetchUser, MinUser, User } from "@/types/types";
+import { FetchError, FetchMinUser, FetchMinUsers, FetchUser, MinUser, User } from "@/types/types";
 import { ErrorCheck} from "@/lib/error/ErrorCheck";
 
 export async function getUserDetails(id: string) : Promise<User> {
@@ -13,6 +13,19 @@ export async function getUserDetails(id: string) : Promise<User> {
             } as User
         return user
     }
+}
+
+export async function getUserInfos() {
+    const fetchUsers = await fetch('/api/users')
+        .then(async (res) => await res.json()) as FetchMinUsers | FetchError
+    if ('error' in fetchUsers) {
+        const error = ErrorCheck(fetchUsers)
+
+        throw new error(fetchUsers.error)
+    } else {
+        return fetchUsers.userInfos
+    }
+    
 }
 
 export async function getUserById(id: string) : Promise<MinUser | User> {

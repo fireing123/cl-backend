@@ -14,12 +14,10 @@ import { Box, Button, Center,  Group, Loader, TextInput } from '@mantine/core';
 import { RichTextEditor, Link } from '@mantine/tiptap';
 import { notifications } from '@mantine/notifications';
 
-import { createApplication } from '@/lib/data/application/set';
 import { Application } from '@/types/types';
 import { isEmail, isNotEmpty, useForm } from '@mantine/form';
 import { useState } from 'react';
 import { patchApplication } from '@/lib/data/application/patch';
-import { title } from 'process';
 
 export function Retouch({ app }: { app: Application }) {
 

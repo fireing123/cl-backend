@@ -43,9 +43,23 @@ export async function GET(req: NextRequest) {
             })
         }
     } else {
-        return ApiError({
-            type: 'params',
-            error: "id 또는 email 파라미터가 있어야합니다"
+        const users = await prisma.user.findMany({
+            where: {}
+        })
+        const userInfos = users.map((value) => {
+            return {
+                id: value.id,
+                name: value.name,
+                username: value.username,
+                image: value.image,
+                email: value.email,
+                mailcom: value.mailcom,
+                rank: value.rank
+            }
+        })
+        return NextResponse.json({
+            type: true,
+            userInfos: userInfos
         })
     } 
     if (auth == "true") {
@@ -57,6 +71,7 @@ export async function GET(req: NextRequest) {
                 email: user.email,
                 image: user.image,
                 username: user.username,
+                mailcom: user.mailcom,
                 rank: user.rank,
                 phoneNumber: user.phoneNumber,
                 
@@ -76,6 +91,7 @@ export async function GET(req: NextRequest) {
             email: user.email,
             image: user.image,
             username: user.username,
+            mailcom: user.mailcom,
             rank: user.rank,
             phoneNumber: user.phoneNumber,
         })
@@ -86,6 +102,7 @@ export async function GET(req: NextRequest) {
             name: user.name,
             email: user.email,
             image: user.image,
+            mailcom: user.mailcom,
             rank: user.rank,
             username: user.username
         })
@@ -94,7 +111,7 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: Request) {
     const session = await getServerSession(authOptions);
-    const { id ,rank  ,username  ,phoneNumber } =  await req.json();
+    const { id ,rank  ,username, mailcom  ,phoneNumber } =  await req.json();
     if (session) {
         const self = await prisma.user.findFirst({
             where: {
@@ -138,6 +155,16 @@ export async function PATCH(req: Request) {
                     },
                     data: {
                         username: username
+                    }
+                })
+            }
+            if (mailcom && (self == other || isAdmin(self?.rank!))) {
+                user = await prisma.user.update({
+                    where: {
+                        id
+                    },
+                    data: {
+                        mailcom: mailcom
                     }
                 })
             }

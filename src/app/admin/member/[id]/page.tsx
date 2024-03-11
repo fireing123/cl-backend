@@ -88,7 +88,7 @@ function Retouch({ user }: { user: User }) {
                     withAsterisk
                     label="학번-이름"
                     placeholder='10101-김모씨'
-                    {...form.getInputProps('name')}
+                    {...form.getInputProps('username')}
                 />
                 <TextInput
                     withAsterisk

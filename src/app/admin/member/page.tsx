@@ -18,8 +18,10 @@ export default function UsersTable() {
 
     useEffect(() => {
         getUserInfos().then((users) => {
-            const newUsers = users.filter((value, i, array) => value.rank !== 'person')
-            setData(newUsers)
+            const admin = users.filter((value) => value.rank == 'admin')
+            const observer = users.filter((value) => value.rank == 'observer')
+            const member = users.filter((value) => value.rank == 'member')
+            setData([...admin, ...observer, ...member])
         })
     })
 
@@ -44,6 +46,13 @@ export default function UsersTable() {
                 {item.mailcom || item.email}
               </Anchor>
             </Table.Td>
+            <Table.Td>
+              <Group gap={0} justify="flex-end">
+                <ActionIcon variant="subtle" color="gray" component='a' href={`/admin/member/${item.id}`}>
+                  <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                </ActionIcon>
+              </Group>
+            </Table.Td>
           </Table.Tr>
         ));
       
@@ -55,6 +64,7 @@ export default function UsersTable() {
                   <Table.Th>Employee</Table.Th>
                   <Table.Th>Rank</Table.Th>
                   <Table.Th>Email</Table.Th>
+                  <Table.Th />
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>{rows}</Table.Tbody>

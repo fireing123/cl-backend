@@ -17,7 +17,7 @@ export default function Member({ params }: { params: {id: string} }) {
     
     useEffect(() => {
         if (status == "authenticated") {
-            getUserDetails(session.user.userId)
+            getUserDetails(params.id)
                 .then(async (use) => {
                     setUser(use)
                 }).catch((error) => {

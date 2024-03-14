@@ -70,7 +70,7 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
     const session = await getServerSession(authOptions)
     const { searchParams } = new URL(req.url);
-    const id = searchParams.get('id');
+    const id = searchParams.get('id')!;
     const title = searchParams.get('title');
     const email = searchParams.get('email');
     const name = searchParams.get('name');
@@ -88,17 +88,17 @@ export async function PATCH(req: Request) {
                 error: "id 결핌"
             })
         }
-        if (session.user.userId == application?.userId) {
+        if (session.user.userId == application.userId) {
+            const data : any = {}
+            if (title) data.title = title
+            if (email) data.email = email
+            if (name) data.name = name
+            if (phoneNumber) data.phoneNumber = phoneNumber
             const patchApplication = await prisma.application.update({
                 where: {
-                    id: id!
+                    id: id
                 },
-                data: {
-                    title: title || application.title,
-                    email: email || application.email,
-                    name: name || application.name,
-                    phoneNumber: phoneNumber || application.phoneNumber
-                }
+                data
             })
             return NextResponse.json({
                 type: true,

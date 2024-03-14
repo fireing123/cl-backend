@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
         } else {
             return ApiError({
                 type: 'params',
-                error: "해당 id 의 포스트가 존재하지않음"
+                error: "해당 UserId 의 포스트가 존재하지않음"
             })
         }
     } else {

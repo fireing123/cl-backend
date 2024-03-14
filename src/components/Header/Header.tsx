@@ -54,7 +54,7 @@ export default function Header() {
               <Image src="/main.svg" alt='Logo' width={50} height={40} />
             </Link>
 
-            <DiscordButton href='https://discord.gg/DbmcPRDNTD'></DiscordButton>
+            <DiscordButton href='https://discord.gg/DbmcPRDNTD'>Discord</DiscordButton>
             <Menu
               width={260}
               position="bottom-end"
@@ -63,22 +63,23 @@ export default function Header() {
               onOpen={() => setUserMenuOpened(true)}
               withinPortal
             >
-              <Menu.Target>
+              {session && <Menu.Target>
                 <UnstyledButton
                   className={cx(classes.user, { [classes.userActive]: userMenuOpened})}
                 >
-                  {session && <Group gap={7}>
+                  <Group gap={7}>
                     <Avatar src={session.user?.image} alt={session.user?.name || "username"} radius='xl' size={20} />
                     <Text fw={500} size="sm" lh={1} mr={3}>
                       {session.user?.name}
                     </Text>
                     <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
-                  </Group>}
+                  </Group>
                 </UnstyledButton>
               </Menu.Target>
-                {!session && <Group>
-                  <Button component="a" href={'/login'}>Login</Button>
-                </Group>}
+              }
+              {!session && <Group>
+                <Button component="a" href={'/login'}>Login</Button>
+              </Group>}
               <Menu.Dropdown>
                 <Menu.Label>Settings</Menu.Label>
                   <Menu.Item component="a" href={'/mypage'}

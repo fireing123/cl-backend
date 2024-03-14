@@ -123,51 +123,28 @@ export async function PATCH(req: Request) {
                 id
             }
         })
-        if (other) {
-            let user: User | undefined
-            if (rank && isAdmin(self?.rank!) || rank !== 'admin' && other?.rank !== 'admin') { 
-                user = await prisma.user.update({
-                    where: {
-                        id: id
-                    },
-                    data: {
-                        rank: rank
-                    }
-                });
+        if (other && self) {
+            const data : any = {}
+            if (rank && isAdmin(self.rank) || isAdmin(self.rank) && isAdmin(other.rank)) { 
+                data.rank = rank 
                 await fetch(`${process.env.DISCORD_URL}/api/rankup?email=${other.email}`, {
                     method: "PATCH"
                 })
             }
-            if (phoneNumber && (self == other || isAdmin(self?.rank!))) {
-                user = await prisma.user.update({
-                    where: {
-                        id
-                    },
-                    data: {
-                        phoneNumber: phoneNumber
-                    }
-                });
-            }
-            if (username && (self == other || isAdmin(self?.rank!))) {
-                user = await prisma.user.update({
-                    where: {
-                        id
-                    },
-                    data: {
-                        username: username
-                    }
-                })
-            }
-            if (mailcom && (self == other || isAdmin(self?.rank!))) {
-                user = await prisma.user.update({
-                    where: {
-                        id
-                    },
-                    data: {
-                        mailcom: mailcom
-                    }
-                })
-            }
+
+            if (phoneNumber && (self == other || isAdmin(self.rank))) data.phoneNumber = phoneNumber
+
+            if (username && (self == other || isAdmin(self.rank))) data.username = username
+
+            if (mailcom && (self == other || isAdmin(self.rank))) data.mailcom = mailcom
+
+            const user = await prisma.user.update({
+                where: {
+                    id: id
+                },
+                data
+            });
+
             return NextResponse.json({
                 type: true,
                 ...user

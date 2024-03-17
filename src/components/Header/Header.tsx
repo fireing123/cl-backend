@@ -28,7 +28,8 @@ import { DiscordButton } from "../SocialButton/DiscordButton";
 const tabs = [
     ['Home', '/'],
     ['Blog', '/blog'],
-    ['Youtube', '/youtube']
+    ['Youtube', '/youtube'],
+    ['members', '/members']
 ]
 
 

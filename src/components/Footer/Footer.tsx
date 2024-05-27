@@ -1,50 +1,43 @@
 'use client'
-import { Text, Container, ActionIcon, Group, rem, RemoveScroll, Image } from '@mantine/core';
+import { ActionIcon, Group, rem, Image, Anchor } from '@mantine/core';
 import classes from './Footer.module.css';
-import { DiscordButton } from '../SocialButton/DiscordButton';
 import { links } from '../public/footer';
+import { IconBrandDiscord, IconBrandGithub, IconBrandInstagram } from '@tabler/icons-react';
 
   
-  export default function FooterLinks() {
-    const groups = links.map((group) => {
-      const footerLink = group.links.map((link, index) => (
-        <Text<'a'>
-          key={index}
-          className={classes.link}
-          component="a"
-          href={link.link}
-        >
-          {link.label}
-        </Text>
-      ));
-  
-      return (
-        <div className={classes.wrapper} key={group.title}>
-          <Text className={classes.title}>{group.title}</Text>
-          {footerLink}
-        </div>
-      );
-    });
-  
-    return (
-      <footer className={classes.footer}>
-        <Container className={classes.inner}>
-          <div className={classes.logo}>
-            <Image src="/main.svg" alt='Logo' />
-            <Text size="xs" c="dimmed" className={classes.description}>
-              Build fully functional accessible web applications faster than ever
-            </Text>
-          </div>
-          <div className={classes.groups}>{groups}</div>
-        </Container>
-        <Container className={classes.afterFooter}>
-          <Text c="dimmed" size="sm">
-            © 2024 jeonil.vercel.app. All rights reserved.
-          </Text>
-            <div className={classes.social}>
-              <DiscordButton href='https://discord.gg/DbmcPRDNTD'>Join Discord community</DiscordButton>
-            </div>
-        </Container>
-      </footer>
-    );
-  }
+export default function FooterLinks() {
+  const items = links.map((link) => (
+    <Anchor
+      c="dimmed"
+      key={link.label}
+      href={link.link}
+      lh={1}
+      onClick={(event) => event.preventDefault()}
+      size="sm"
+    >
+      {link.label}
+    </Anchor>
+  ));
+
+  return (
+    <div className={classes.footer}>
+      <div className={classes.inner}>
+      <Image src="/main.svg" alt='Logo' h={40} w={100} />
+
+        <Group className={classes.links}>{items}</Group>
+
+        <Group gap="xs" justify="flex-end" wrap="nowrap">
+          <ActionIcon size="lg" variant="default" radius="xl">
+            <IconBrandDiscord style={{ width: rem(18), height: rem(18) }} stroke={1.5} href='https://discord.gg/DbmcPRDNTD' />
+          </ActionIcon>
+          <ActionIcon size="lg" variant="default" radius="xl">
+            <IconBrandGithub style={{ width: rem(18), height: rem(18) }} stroke={1.5} href='https://github.com/fireice1234' />
+          </ActionIcon>
+          <ActionIcon size="lg" variant="default" radius="xl">
+            <IconBrandInstagram style={{ width: rem(18), height: rem(18) }} stroke={1.5} href='' />
+          </ActionIcon>
+        </Group>
+      </div>
+    </div>
+  );
+}

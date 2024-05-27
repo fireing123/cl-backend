@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import ApiError from "@/lib/error/APIError";
 
 export async function POST(req: Request) {
-    const { id, token, email } = await req.json();
+    const { token, email } = await req.json();
     const user = await prisma.user.findFirst({
         where: {
             email: email

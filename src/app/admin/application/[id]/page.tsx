@@ -4,12 +4,12 @@ import classes from './blogpage.module.css'
 import { PassButton } from "@/components/Application/applicationButton";
 import { getApplication } from "@/lib/data/application/get";
 import { useEffect, useState } from "react";
-import { Application } from "@/types/types";
+import { Application as TypeApplication } from "@/types/types";
 import { useRouter } from "next/navigation";
 
 export default function Application({ params }: { params: {id: string} }) {
     const router = useRouter();
-    const [app, setApp] = useState<Application>();
+    const [app, setApp] = useState<TypeApplication>();
 
     useEffect(() => {
         getApplication(params.id)
@@ -19,6 +19,7 @@ export default function Application({ params }: { params: {id: string} }) {
                 console.log(error)
                 router.push("/admin/application")
             })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.id])
 
     return (

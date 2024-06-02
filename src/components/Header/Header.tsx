@@ -1,5 +1,5 @@
 "use client"
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { Image } from "@mantine/core";
 import cx from 'clsx';
 import { useState } from 'react';
@@ -24,6 +24,7 @@ import classes from './HeaderTabs.module.css';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { DiscordButton } from "../SocialButton/DiscordButton";
+import { signOut } from "@/lib/authOptions";
 
 const tabs = [
     ['Home', '/'],

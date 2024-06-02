@@ -1,11 +1,11 @@
 "use client";
-import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { Text, Paper, Group } from '@mantine/core';
 
 import { GithubButton } from "@/components/Auth/GithubButton";
 import { GoogleButton } from "@/components/Auth/GoogleButton";
 import classes from './login.module.css'
+import { signIn } from "@/lib/authOptions";
 
 export default function Login() {
   const searchParams = useSearchParams();

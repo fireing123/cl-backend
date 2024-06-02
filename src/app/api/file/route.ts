@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { put, del, list } from '@vercel/blob';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/authOptions';
+import { put, del } from '@vercel/blob';
 import prisma from '@/lib/prisma';
 import { isAdmin } from '@/lib/auth';
 import ApiError from '@/lib/error/APIError';
+import { auth } from '@/lib/authOptions';
 
 export async function POST(request: Request){
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const { searchParams } = new URL(request.url);
   const filename = searchParams.get('filename');
   if (session && filename) {
@@ -47,7 +46,7 @@ export async function POST(request: Request){
 }
 
 export async function DELETE(request: NextRequest) {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   if (session) {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id') as string;
@@ -84,7 +83,7 @@ export async function DELETE(request: NextRequest) {
 }
 
 export async function PATCH(req: Request) {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const { searchParams } = new URL(req.url);
   const id = searchParams.get('id') as string;
   const filename = searchParams.get('filename') as string;
@@ -155,7 +154,7 @@ export async function GET(request: NextRequest) {
         md
       });
     } else {
-      const session = await getServerSession(authOptions)
+      const session = await auth()
       if (isAdmin(session?.user.rank!) && file.userId == session?.user.userId) {
         const md = await fetch(`${process.env.BLOB_URL}/${file?.url}`)
           .then(async res => await res.text())

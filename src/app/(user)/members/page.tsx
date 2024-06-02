@@ -1,8 +1,7 @@
 'use client'
 import { getUserInfos } from '@/lib/data/user/get';
 import { MinUser, Rank } from '@/types/types';
-import { Avatar, Badge, Table, Group, Text, ActionIcon, Anchor, rem, Center, Loader } from '@mantine/core';
-import { IconPencil, IconTrash } from '@tabler/icons-react';
+import { Avatar, Badge, Table, Group, Text, Anchor, Center, Loader } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
 const jobColors: Record<Rank, string> = {

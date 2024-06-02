@@ -2,7 +2,7 @@
 import Link from "next/link";
 import cx from 'clsx';
 import { useEffect, useState } from "react";
-import { Table, Anchor, Text, Paper, UnstyledButton, ScrollArea, Container, Tabs, Menu, rem } from '@mantine/core';
+import { Table, Anchor, Text, Paper, UnstyledButton, ScrollArea, Menu, rem } from '@mantine/core';
 import classes from './blog.module.css'
 import { useSession } from "next-auth/react";
 import { IconTrash } from "@tabler/icons-react";

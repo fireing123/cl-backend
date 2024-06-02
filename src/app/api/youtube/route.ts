@@ -1,10 +1,8 @@
-import { getServerSession } from "next-auth/next"
+import { auth } from "@/lib/authOptions"
 import { NextRequest, NextResponse } from "next/server"
 
-import { authOptions } from "@/lib/authOptions"
-
 export async function GET(req: NextRequest) {
-    const session = await getServerSession(authOptions)
+    const session = await auth();
     
     if (session?.user) {
         const youtubes = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&status=&playlistId=${process.env.YOUTUBE_PLAYLIST_ID}&key=${process.env.YOUTUBE_API_KEY}`, {

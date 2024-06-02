@@ -1,9 +1,8 @@
-import { NextRequest, NextResponse, } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/authOptions";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { User } from "@prisma/client";
 import { isAdmin } from "@/lib/auth";
+import { auth as Auth } from "@/lib/authOptions";
 import ApiError from "@/lib/error/APIError";
 
 export async function GET(req: NextRequest) {
@@ -11,7 +10,7 @@ export async function GET(req: NextRequest) {
     const id = searchParams.get('id');
     const email = searchParams.get('email')
     const auth = searchParams.get('auth');
-    const session = await getServerSession(authOptions);
+    const session = await Auth();
     let user : User | null
     if (id && email) {
         return ApiError({
@@ -110,7 +109,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(req: Request) {
-    const session = await getServerSession(authOptions);
+    const session = await Auth();
     const { id ,rank  ,username, mailcom  ,phoneNumber } =  await req.json();
     if (session) {
         const self = await prisma.user.findFirst({

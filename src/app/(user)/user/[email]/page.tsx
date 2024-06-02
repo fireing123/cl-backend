@@ -18,7 +18,7 @@ export default function UserPage({ params }: { params: { email: string} }) {
         } catch (error) {
             setType(false)
         }
-    }, [])
+    }, [params.email])
 
     if (type) {
         if (user) {

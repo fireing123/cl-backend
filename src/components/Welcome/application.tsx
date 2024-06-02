@@ -5,8 +5,7 @@ import { application } from "../../config"
 import classes from './welcome.module.css';
 
 import { useEffect, useState } from "react";
-import { getApplicationByUserId, getApplicationInfo } from "@/lib/data/application/get";
-import { error } from "console";
+import { getApplicationByUserId } from "@/lib/data/application/get";
 
 export default function ApplicationButton() {
     const {status, data: session } = useSession();
@@ -22,6 +21,7 @@ export default function ApplicationButton() {
                 })
  
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status])
 
     if (status === 'authenticated') {

@@ -4,11 +4,8 @@ import {
   Text,
   Title,
   SimpleGrid,
-  TextInput,
-  Textarea,
   Button,
   Group,
-  ActionIcon,
   Avatar,
 } from '@mantine/core';
 import { IconBrandTwitter, IconBrandYoutube, IconBrandInstagram, IconPhone } from '@tabler/icons-react';
@@ -20,8 +17,6 @@ import { useEffect, useState } from 'react';
 import { Skeleton } from '@mantine/core';
 import { getUserDetails } from '@/lib/data/user/get';
 import { User } from '@/types/types';
-
-const social = [IconBrandTwitter, IconBrandYoutube, IconBrandInstagram];
 
 export default function Mypage() {
   const { data: session, status } = useSession();

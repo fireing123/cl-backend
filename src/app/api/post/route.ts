@@ -1,13 +1,12 @@
-import { getServerSession } from "next-auth"
 import { NextResponse, NextRequest } from "next/server"
-import { authOptions } from "@lib/authOptions"
 import prisma from "@/lib/prisma"
 import { isAdmin } from "@/lib/auth"
 import ApiError from "@/lib/error/APIError"
+import { auth } from "@/lib/authOptions"
 
 export async function POST(req: Request) {
     const { fileId, title } = await req.json()
-    const session = await getServerSession(authOptions)
+    const session = await auth();
 
     const post = await prisma.post.create({
         data: {
@@ -85,7 +84,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-    const session = await getServerSession(authOptions)
+    const session = await auth();
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
 
@@ -127,7 +126,7 @@ export async function DELETE(req: NextRequest) {
 }
 
 export async function PATCH(req: Request) {
-    const session = await getServerSession(authOptions)
+    const session = await auth();
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
     const title = searchParams.get('title');

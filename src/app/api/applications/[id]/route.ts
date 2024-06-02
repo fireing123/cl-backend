@@ -1,13 +1,12 @@
 import { isAdmin } from "@/lib/auth"
-import { authOptions } from "@/lib/authOptions"
+import { auth } from "@/lib/authOptions"
 import ApiError from "@/lib/error/APIError"
 import prisma from "@/lib/prisma"
-import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 
 
 export async function GET(req: Request, { params }: { params : { id: string} }) {
-    const session = await getServerSession(authOptions)
+    const session = await auth();
 
     if (params.id) {
         if (!session) {
@@ -49,7 +48,7 @@ export async function GET(req: Request, { params }: { params : { id: string} }) 
 }
 
 export async function DELETE(req: Request, { params }: { params : { id: string} }) {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     if (params.id && session && isAdmin(session.user.rank)) {
         const application = await prisma.application.findFirst({

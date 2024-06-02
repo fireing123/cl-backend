@@ -4,47 +4,46 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("POSTGRES_PRISMA_URL")
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
 }
 
 
 model Account {
   id                String  @id @default(cuid())
-  userId            String  @map("user_id")
+  userId            String
   type              String
   provider          String
-  providerAccountId String  @map("provider_account_id")
-  refresh_token     String? @map("refresh_token")
-  access_token      String? @map("access_token")
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?
+  id_token          String? @db.Text
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  @@map("accounts")
 }
 
 model Session {
   id           String   @id @default(cuid())
-  sessionToken String   @unique @map("session_token")
-  userId       String   @map("user_id")
+  sessionToken String   @unique
+  userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("sessions")
 }
 
 model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
+  emailVerified DateTime?
   image         String?
-  publicAddress String?   @map("public_address")
+  accounts      Account[]
+  sessions      Session[]
 
   username      String? @map("username")
   rank          String @default("person")
@@ -53,11 +52,8 @@ model User {
 
   application      Application?
   posts            Post[]
-  accounts         Account[]
-  sessions         Session[]
   files            File[]
 
-  @@map("users")
 }
 
 model VerificationToken {
@@ -66,7 +62,6 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-  @@map("verificationtokens")
 }
 
 model Application {
@@ -85,7 +80,6 @@ model Application {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@unique([userId])
-  @@map("applications")
 }
 
 model Post {
@@ -97,7 +91,6 @@ model Post {
 
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@unique([fileId])
-  @@map("posts")
 }
 
 model File {
@@ -108,5 +101,4 @@ model File {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@unique([url])
-  @@map("files")
 }

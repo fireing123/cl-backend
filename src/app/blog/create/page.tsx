@@ -1,7 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import type { PutBlobResult } from '@vercel/blob';
 
 import { useEditor } from '@tiptap/react';
 import Highlight from '@tiptap/extension-highlight';

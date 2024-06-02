@@ -10,10 +10,9 @@ import TextAlign from '@tiptap/extension-text-align';
 import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
 
-import { Box, Button, Center, Checkbox, Group, Loader, TextInput } from '@mantine/core';
+import { Box, Button, Center, Group, Loader, TextInput } from '@mantine/core';
 import { RichTextEditor, Link } from '@mantine/tiptap';
 import { notifications } from '@mantine/notifications';
-import type { PutBlobResult } from '@vercel/blob';
 import { isEmail, isNotEmpty, useForm } from '@mantine/form';
 import { createApplication } from '@/lib/data/application/set';
 import { useState } from 'react';

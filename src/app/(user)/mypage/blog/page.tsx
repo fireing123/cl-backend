@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Table, Anchor, Text, Paper, UnstyledButton, ScrollArea, Menu, rem } from '@mantine/core';
 import classes from './blog.module.css'
 import { useSession } from "next-auth/react";
-import { IconTrash } from "@tabler/icons-react";
+import { IconTrash } from "@tabler/icons-react"
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { getPostsByUserId } from "@/lib/data/post/get";

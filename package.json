@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "npx prisma generate --no-engine && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -26,7 +26,7 @@
     "@next/mdx": "^14.0.2",
     "@prisma/client": "^5.14.0",
     "@prisma/extension-accelerate": "^1.1.0",
-    "@tabler/icons-react": "^2.44.0",
+    "@tabler/icons-react": "^3.5.0",
     "@tiptap/extension-highlight": "^2.1.13",
     "@tiptap/extension-link": "^2.1.13",
     "@tiptap/extension-subscript": "^2.1.13",

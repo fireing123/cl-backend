@@ -4,7 +4,8 @@ import { Text, Paper, Group } from '@mantine/core';
 
 import classes from './login.module.css'
 import { DiscordButton } from "@/components/Auth/DiscordButton";
-import { signIn } from "@/lib/authOptions";
+import { signIn } from "next-auth/react";
+
 
 export default function Login() {
   const searchParams = useSearchParams();

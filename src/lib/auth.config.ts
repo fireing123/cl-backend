@@ -1,4 +1,3 @@
-import KakaoProvider from "next-auth/providers/kakao";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import DiscordProvider from "next-auth/providers/discord";
@@ -7,10 +6,6 @@ import type { NextAuthConfig } from "next-auth";
 
 export default { 
     providers: [
-        KakaoProvider({
-          clientId: process.env.KAKAO_CLIENT_ID!,
-          clientSecret: process.env.KAKAO_CLIENT_SECRET!
-        }),
         GithubProvider({
           clientId: process.env.GITHUB_ID!,
           clientSecret: process.env.GITHUB_SECRET!

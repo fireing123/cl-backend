@@ -28,7 +28,7 @@ export default function FooterLinks() {
 
         <Group gap="xs" justify="flex-end" wrap="nowrap">
           <ActionIcon size="lg" variant="default" radius="xl">
-            <IconBrandDiscord style={{ width: rem(18), height: rem(18) }} stroke={1.5} href='https://discord.gg/DbmcPRDNTD' />
+            <IconBrandDiscord style={{ width: rem(18), height: rem(18) }} stroke={1.5} href='https://discord.gg/tnYHHXVqfE' />
           </ActionIcon>
           <ActionIcon size="lg" variant="default" radius="xl">
             <IconBrandGithub style={{ width: rem(18), height: rem(18) }} stroke={1.5} href='https://github.com/fireice1234' />

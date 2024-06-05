@@ -55,7 +55,7 @@ export default function Header() {
               <Image src="/main.svg" alt='Logo' width={50} height={40} />
             </Link>
 
-            <DiscordButton href='https://discord.gg/DbmcPRDNTD'>Discord</DiscordButton>
+            <DiscordButton href='https://discord.gg/tnYHHXVqfE'>Discord</DiscordButton>
             <Menu
               width={260}
               position="bottom-end"

@@ -20,7 +20,7 @@ export default function UsersTable() {
             const newUsers = users.filter((value, i, array) => value.rank !== 'person')
             setData(newUsers)
         })
-    })
+    }, [])
 
     if (data) {
         const rows = data.map((item) => (

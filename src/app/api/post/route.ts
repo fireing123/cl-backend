@@ -8,22 +8,31 @@ export async function POST(req: Request) {
     const { fileId, title } = await req.json()
     const session = await auth();
 
-    const post = await prisma.post.create({
-        data: {
-            title: title,
-            fileId: fileId,
-            user: {
-                connect:{
-                    id: session?.user.userId
+    if (session) {
+        const post = await prisma.post.create({
+            data: {
+                title: title,
+                fileId: fileId,
+                user: {
+                    connect:{
+                        id: session.user.userId,
+                        email: session.user.email
+                    }
                 }
             }
-        }
-    })
+        })
+        return NextResponse.json({
+            type: true,
+            ...post
+        })
+    } else {
+        return ApiError({
+            type: 'session',
+            error: '로그인 필요함'
+        })
+    }
 
-    return NextResponse.json({
-        type: true,
-        ...post
-    })
+    
 }
 
 export async function GET(req: NextRequest) {

@@ -47,7 +47,8 @@ export async function POST(req: Request) {
                     fileId: fileId,
                     user: {
                         connect: {
-                            id: session.user.userId
+                            id: session.user.userId,
+                            email: session.user.email
                         }
                     }
                 }

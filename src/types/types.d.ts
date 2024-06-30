@@ -125,3 +125,8 @@ export interface FetchApplication extends ApplicationItem, Fetch {
 export interface FetchApplicationItems extends Fetch {
   applications: ApplicationItems[];
 }
+
+export interface Schedule {
+  AA_YMD: string,
+  EVENT_NM: string
+}

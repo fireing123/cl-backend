@@ -20,7 +20,8 @@ export async function POST(request: Request){
           url: blob.url.replace(`${process.env.BLOB_URL}/`, ""),
           user: {
             connect: {
-              id: session.user.userId
+              id: session.user.userId,
+              email: session.user.email
             }
           }
         }

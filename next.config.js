@@ -8,7 +8,7 @@ const ContentSecurityPolicy = `
     media-src 'none';
     frame-src giscus.app;
     connect-src *;
-    font-src 'self';
+    font-src 'self' js.stripe.com;
 `;
  
 const securityHeaders = [

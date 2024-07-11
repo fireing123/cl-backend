@@ -1,37 +1,42 @@
 'use client'
-
-import { Image, Container,Button, Group, Title } from '@mantine/core';
+import { Group, Container, Grid, SimpleGrid } from '@mantine/core';
 import classes from '@/components/Welcome/welcome.module.css';
 import { CLTitle, SubTextItems, SubTitle } from '@/components/public/welcome';
 import SubText from '@/components/Welcome/SubText';
 import ApplicationButton from '@/components/Welcome/application';
-import Cafeteria from '@/components/Welcome/Cafeteria';
+import { Cafeteria ,BCafeteria} from '@/components/Welcome/Cafeteria';
 import Schedule from '@/components/Welcome/Schedule';
 
-
 export default function Welcome() {
-
   return (
-    <Container size="md">
-      <div className={classes.inner}>
-        <div className={classes.content}>
-          
-          <CLTitle title={classes.title} highlight={classes.highlight} />
+    <Container my="md">
+      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
+          <div className={classes.inner}>
+            <div className={classes.content}>
 
-          <SubTitle />
+              <CLTitle title={classes.title} highlight={classes.highlight} />
 
-          <SubText items={SubTextItems} />
+              <SubTitle />
 
-          <Group mt={30}>
-            <ApplicationButton />
-            <Title>무조건 크롬 브라우저로 로그인!!!</Title>
-            <Title>디스코드는 합격하지 않아도 들어와도 됩니다.</Title>
-            <Title>디스코드에서 동아리에 대해 질문하세요</Title>
-          </Group>
-        </div>
-        <Cafeteria />
-        <Schedule />
-      </div>
+              <SubText items={SubTextItems} />
+
+              <Group mt={30}>
+                <ApplicationButton />
+              </Group>
+            </div>
+          </div>
+        <Grid gutter="md">
+          <Grid.Col>
+            <Schedule />
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <Cafeteria />
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <BCafeteria />
+          </Grid.Col>
+        </Grid>
+      </SimpleGrid>
     </Container>
   );
 }

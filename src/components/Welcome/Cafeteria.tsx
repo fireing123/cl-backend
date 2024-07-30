@@ -6,9 +6,8 @@ export function Cafeteria() {
     const [cafeteria, SetCafeteria] = useState<any[]>([]);
 
     useEffect(() => {
-        getCafeteriaInfo().then(async (value) => {
-            SetCafeteria(value)
-        }).catch(() => {})
+        getCafeteriaInfo().then((value) => SetCafeteria(value))
+        .catch(() => SetCafeteria([null, {DDISH_NM:"<div>오늘 중식 없음!</div>"}]))
     }, [])
     if (cafeteria.length != 0) {
         return (
@@ -25,9 +24,8 @@ export function BCafeteria() {
     const [cafeteria, SetCafeteria] = useState<any[]>([]);
 
     useEffect(() => {
-        getCafeteriaInfo().then(async (value) => {
-            SetCafeteria(value)
-        }).catch(() => {})
+        getCafeteriaInfo().then((value) => SetCafeteria(value))
+        .catch(() => SetCafeteria(["", "", {DDISH_NM:"<div>오늘 석식 없음!</div>"}]))
     }, [])
 
     if (cafeteria.length != 0) {

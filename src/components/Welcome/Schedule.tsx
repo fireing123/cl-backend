@@ -1,4 +1,3 @@
-import { KDate } from "@/lib/date";
 import { useEffect, useState } from "react";
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' 

@@ -140,21 +140,26 @@ export async function PATCH(req: Request) {
     const id = searchParams.get('id');
     const title = searchParams.get('title');
 
-    if (!title) {
+    if (!title || !id) {
         return ApiError({
             type: 'params',
-            error: "바꿀 제목이 주어지지않음"
+            error: "입력 인자가 알맞지 않음"
         })
     }
-
 
     if (session) {
         const post = await prisma.post.findUnique({
             where: {
-                id: id || ""
+                id: id
             }
         })
-        if (session.user.userId == post?.userId) {
+        if (!post) {
+            return ApiError({
+                type: 'undefined',
+                error: "글이 존재하지 않음!"
+            })
+        }
+        if (session.user.userId == post.userId) {
             const patchPost = await prisma.post.update({
                 where: {
                     id: id!
@@ -168,5 +173,10 @@ export async function PATCH(req: Request) {
                 ...patchPost
             })
         }
+    } else {
+        return ApiError({
+            type: 'session',
+            error: '세션 결핍'
+        })
     }
 }

@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
     } else if (email) {
         user = await prisma.user.findFirst({
             where: {
-                email: email!
+                email: email
             }
         }) 
         if (!user) {
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
         })
     } 
     if (auth == "true") {
-        if (isAdmin(session?.user.rank!) || session?.user.userId == user.id ) {
+        if (session && (isAdmin(session.user.rank!) || session.user.userId == user.id)) {
             return NextResponse.json({
                 type: true,
                 id: user.id,
@@ -82,7 +82,7 @@ export async function GET(req: NextRequest) {
             })
         }
 
-    } else if (session && session.user?.email === user.email) {
+    } else if (session && session.user.email === user.email) {
         return NextResponse.json({
             type: true,
             id: user.id,
@@ -110,11 +110,12 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: Request) {
     const session = await Auth();
-    const { id ,rank  ,username, mailcom  ,phoneNumber } =  await req.json();
+    const { id, rank, username, mailcom, phoneNumber } =  await req.json();
+
     if (session) {
         const self = await prisma.user.findFirst({
             where: {
-                email: session.user?.email!
+                email: session.user.email
             }
         });
         const other = await prisma.user.findFirst({

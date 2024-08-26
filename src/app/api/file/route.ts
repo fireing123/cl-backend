@@ -50,13 +50,21 @@ export async function DELETE(request: NextRequest) {
   const session = await auth();
   if (session) {
     const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id') as string;
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return ApiError({
+        type: 'params',
+        error: "id 결핍"
+      })
+    }
+
     const file = await prisma.file.findFirst({
       where: {
         id: id
       }
     })
-    if (file && file.userId == session.user.userId || isAdmin(session.user.rank)) {
+    if (file && (file.userId == session.user.userId || isAdmin(session.user.rank))) {
       await del(`${process.env.BLOB_URL}/${file?.url}`);
       await prisma.file.delete({
         where: {
@@ -65,8 +73,8 @@ export async function DELETE(request: NextRequest) {
       })
       return NextResponse.json({
         type: true,
-        fileId: file?.id,
-        userId: file?.userId,
+        fileId: file.id,
+        userId: file.userId,
         publicAuthority: file?.publicAuthority
       })
     } else {
@@ -86,15 +94,15 @@ export async function DELETE(request: NextRequest) {
 export async function PATCH(req: Request) {
   const session = await auth();
   const { searchParams } = new URL(req.url);
-  const id = searchParams.get('id') as string;
-  const filename = searchParams.get('filename') as string;
+  const id = searchParams.get('id');
+  const filename = searchParams.get('filename');
   const publicAuthority = searchParams.get('publicAuthority'); 
   const newFile = req.body as File | null;    
   if (session) {
-    if (!newFile) {
+    if (!newFile || !id || !filename) {
       return ApiError({
-        type: 'undefined',
-        error: "변경될 파일 결핍"
+        type: 'params',
+        error: "입력값이 알맞지 않습니다"
       })
     }
     const file = await prisma.file.findFirst({
@@ -102,8 +110,8 @@ export async function PATCH(req: Request) {
         id: id
       }
     })
-    if (file && file.userId == session.user.userId || isAdmin(session.user.rank)) {
-      await del(`${process.env.BLOB_URL}/${file?.url}`);
+    if (file && (file.userId == session.user.userId || isAdmin(session.user.rank))) {
+      await del(`${process.env.BLOB_URL}/${file.url}`);
     } else {
       return ApiError({
         type: 'undefined',
@@ -120,7 +128,7 @@ export async function PATCH(req: Request) {
       },
       data: {
         url: blob.url.replace(`${process.env.BLOB_URL}/`, ""),
-        publicAuthority: publicAuthority || file?.publicAuthority
+        publicAuthority: publicAuthority || file.publicAuthority
       }
     })
     return NextResponse.json({
@@ -141,6 +149,14 @@ export async function PATCH(req: Request) {
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id')!;
+
+  if (!id) {
+    return ApiError({
+      type: 'params',
+      error: "id 결핍"
+    })
+  }
+
   const file = await prisma.file.findFirst({
     where: {
       id: id 
@@ -156,7 +172,7 @@ export async function GET(request: NextRequest) {
       });
     } else {
       const session = await auth()
-      if (isAdmin(session?.user.rank!) && file.userId == session?.user.userId) {
+      if (session && isAdmin(session.user.rank!) && file.userId == session.user.userId) {
         const md = await fetch(`${process.env.BLOB_URL}/${file?.url}`)
           .then(async res => await res.text())
         return NextResponse.json({ 

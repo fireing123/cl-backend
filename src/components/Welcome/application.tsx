@@ -16,7 +16,6 @@ export default function ApplicationButton() {
                 .then(async (post) => {
                     setHasApp("submit")
                 }).catch((error) => {
-                    console.log(error)
                     setHasApp("undefined")
                 })
  

@@ -76,10 +76,17 @@ export async function PATCH(req: Request) {
     const name = searchParams.get('name');
     const phoneNumber = searchParams.get('phoneNumber');
 
+    if (!id) {
+        return ApiError({
+            type: 'params',
+            error: "id 결핍"
+        })
+    }
+
     if (session) {
         const application = await prisma.application.findUnique({
             where: {
-                id: id!
+                id: id
             }
         })
         if (!application) {

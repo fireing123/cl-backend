@@ -6,8 +6,8 @@ export function Cafeteria() {
     const [cafeteria, SetCafeteria] = useState<any[]>([]);
 
     useEffect(() => {
-        getCafeteriaInfo().then((value) => SetCafeteria(value))
-        .catch(() => SetCafeteria([null, {DDISH_NM:"<div>오늘 중식 없음!</div>"}]))
+        getCafeteriaInfo().then((value) => {SetCafeteria(value)})
+        .catch((err) => {SetCafeteria([null, {DDISH_NM:"<div>오늘 중식 없음!</div>"}]);console.log(err)})
     }, [])
     if (cafeteria.length != 0) {
         return (

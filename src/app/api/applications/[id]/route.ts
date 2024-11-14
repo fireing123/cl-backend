@@ -5,10 +5,11 @@ import prisma from "@/lib/prisma"
 import { NextResponse } from "next/server"
 
 
-export async function GET(req: Request, { params }: { params : { id: string} }) {
+export async function GET(req: Request, { params }: { params : Promise<{ id: string}> }) {
     const session = await auth();
+    const AppId = (await params).id;
 
-    if (params.id) {
+    if (AppId) {
         if (!session) {
             return ApiError({
                 type: 'session',
@@ -18,7 +19,7 @@ export async function GET(req: Request, { params }: { params : { id: string} }) 
         
         const application = await prisma.application.findFirst({
             where: {
-                id: params.id
+                id: AppId
             }
         })
         if (!application) {
@@ -47,13 +48,14 @@ export async function GET(req: Request, { params }: { params : { id: string} }) 
     }
 }
 
-export async function DELETE(req: Request, { params }: { params : { id: string} }) {
+export async function DELETE(req: Request, { params }: { params : Promise<{ id: string }> }) {
     const session = await auth();
+    const AppId = (await params).id
 
-    if (params.id && session && isAdmin(session.user.rank)) {
+    if (AppId && session && isAdmin(session.user.rank)) {
         const application = await prisma.application.findFirst({
             where: {
-                id: params.id
+                id: AppId
             }
         })
         if (application) {

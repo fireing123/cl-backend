@@ -5,11 +5,13 @@ import { PassButton } from "@/components/Application/applicationButton";
 import { getApplication } from "@/lib/data/application/get";
 import { useEffect, useState } from "react";
 import { Application as TypeApplication } from "@/types/types";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
-export default function Application({ params }: { params: {id: string} }) {
+export default function Application() {
     const router = useRouter();
     const [app, setApp] = useState<TypeApplication>();
+    const params = useParams<{ id: string }>();
+ 
 
     useEffect(() => {
         getApplication(params.id)

@@ -4,16 +4,17 @@ import { getUserDetails } from "@/lib/data/user/get";
 import { patchUser } from "@/lib/data/user/patch";
 import { User } from "@/types/types";
 import { Box, Button, Center, Group, Loader, TextInput } from "@mantine/core";
-import { isEmail, isNotEmpty, useForm } from "@mantine/form";
+import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function Member({ params }: { params: {id: string} }) {
+export default function Member() {
     const router = useRouter();
     const { data: session, status } = useSession();
     const [user, setUser] = useState<User>();
+    const params = useParams<{ id: string }>();
     
     useEffect(() => {
         if (status == "authenticated") {

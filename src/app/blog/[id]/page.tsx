@@ -6,11 +6,11 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { getPost } from "@/lib/data/post/get"
 import { MinUser, Post } from "@/types/types"
-import { useRouter } from "next/navigation"
+import { useRouter, useParams } from "next/navigation"
 import { getUserById } from "@/lib/data/user/get"
 
-export default function Blog({ params }: { params: {id: string} }) {
-
+export default function Blog() {
+    const params = useParams<{ id: string }>()
     const [blog, setBlog] = useState<Post>();
     const [user, setUser] = useState<MinUser>();
     const router = useRouter();

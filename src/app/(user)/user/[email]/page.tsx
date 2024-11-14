@@ -4,11 +4,15 @@ import MyBlog from "@/components/Blog/myblog";
 import { getUserByEmail } from "@/lib/data/user/get";
 import { MinUser } from "@/types/types"
 import { Avatar, Center, Loader, Paper, Text } from "@mantine/core";
+import { useParams } from 'next/navigation'
 import { useEffect, useState } from "react"
 
-export default function UserPage({ params }: { params: { email: string} }) {
+type UserPageParams = { email: string };
+
+export default function UserPage() {
     const [user, setUser] = useState<MinUser>();
     const [type, setType] = useState<Boolean>(true);
+    const params = useParams<{ email: string }>()
 
     useEffect(() => {
         try {

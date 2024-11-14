@@ -34,7 +34,7 @@ export default function FooterLinks() {
             <IconBrandGithub style={{ width: rem(18), height: rem(18) }} stroke={1.5} href='https://github.com/fireice1234' />
           </ActionIcon>
           <ActionIcon size="lg" variant="default" radius="xl">
-            <IconBrandInstagram style={{ width: rem(18), height: rem(18) }} stroke={1.5} href='' />
+            <IconBrandInstagram style={{ width: rem(18), height: rem(18) }} stroke={1.5} href='https://www.instagram.com/jeonil_programming/' />
           </ActionIcon>
         </Group>
       </div>

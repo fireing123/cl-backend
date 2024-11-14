@@ -4,7 +4,6 @@ export async function getCafeteriaInfo() {
     if ('RESULT' in respone) {
         throw Error("급식 에러")
     } else {
-        const row = respone.mealServiceDietInfo as any[]
-        return row.find(value => "row" in value)
+        return respone.row
     }
 }

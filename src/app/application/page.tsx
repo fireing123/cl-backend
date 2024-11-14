@@ -92,7 +92,7 @@ export default function Application() {
                 <TextInput
                     withAsterisk
                     label="학번-이름"
-                    placeholder='10101-김모씨'
+                    placeholder='10101-홍길동'
                     {...form.getInputProps('name')}
                 />
                 <TextInput
@@ -104,7 +104,7 @@ export default function Application() {
                 <TextInput
                     withAsterisk
                     label="phoneNubmer"
-                    placeholder='01000000000'
+                    placeholder='010XXXXXXXX'
                     {...form.getInputProps('phoneNumber')}
                 />
             </Group>

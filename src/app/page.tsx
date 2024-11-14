@@ -4,7 +4,7 @@ import classes from '@/components/Welcome/welcome.module.css';
 import { CLTitle, SubTextItems, SubTitle } from '@/components/public/welcome';
 import SubText from '@/components/Welcome/SubText';
 import ApplicationButton from '@/components/Welcome/application';
-import { Cafeteria ,BCafeteria} from '@/components/Welcome/Cafeteria';
+import { Cafeteria } from '@/components/Welcome/Cafeteria';
 import Schedule from '@/components/Welcome/Schedule';
 
 export default function Welcome() {
@@ -29,12 +29,7 @@ export default function Welcome() {
           <Grid.Col>
             <Schedule />
           </Grid.Col>
-          <Grid.Col span={6}>
-            <Cafeteria />
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <BCafeteria />
-          </Grid.Col>
+          <Cafeteria />
         </Grid>
       </SimpleGrid>
     </Container>

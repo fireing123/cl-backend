@@ -13,7 +13,8 @@ export async function createApplication({ title, email, name, phoneNumber, html 
             title: title,
             name: name,
             email: email,
-            phoneNumber: phoneNumber
+            phoneNumber: phoneNumber,
+            fileData: html
         })
     }).then(async (res) => await res.json()) as FetchError | Fetch
     if ('error' in res) {

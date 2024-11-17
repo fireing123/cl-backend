@@ -12,6 +12,7 @@ export async function GET(req: NextRequest) {
     const auth = searchParams.get('auth');
     const session = await Auth();
     let user : User | null
+
     if (id && email) {
         return ApiError({
             type: 'params',
@@ -42,9 +43,8 @@ export async function GET(req: NextRequest) {
             })
         }
     } else {
-        const users = await prisma.user.findMany({
-            where: {}
-        })
+        const users = await prisma.user.findMany()
+        
         const userInfos = users.map((value) => {
             return {
                 id: value.id,
@@ -61,6 +61,7 @@ export async function GET(req: NextRequest) {
             userInfos: userInfos
         })
     } 
+
     if (auth == "true") {
         if (session && (isAdmin(session.user.rank!) || session.user.userId == user.id)) {
             return NextResponse.json({

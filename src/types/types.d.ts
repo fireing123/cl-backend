@@ -4,10 +4,9 @@
           email: string;
           name: string;
           image: string;
-
           userId: string;
           username: string;
-          rank: string
+          rank: string;
         };
       }
     }
@@ -20,10 +19,10 @@ export interface MinUser {
     image?: string | null;
     mailcom?: string | null;
     username: string | null;
-    rank: Rank
+    rank: Rank;
 }
 
-export type Rank = "admin" | "observer" | "member" | "person"
+export type Rank = "admin" | "observer" | "member" | "person";
 
 export interface User extends MinUser {
     phoneNumber: string | null;
